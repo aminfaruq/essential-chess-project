@@ -12,15 +12,29 @@ public final class FileCurriculumLoader {
     private let url: URL
     private let reader: FileReaderLoader
     
-    public typealias Result = FileReaderLoader.Result
-
+    public enum Error: Swift.Error {
+        case readError
+        case invalidData
+    }
+    
+    //public typealias Result = FileReaderLoader.Result
+    public typealias Result = Swift.Result<Data, Error>
+    
     public init(url: URL, reader: FileReaderLoader) {
         self.url = url
         self.reader = reader
     }
     
     public func load(completion: @escaping (Result) -> Void) {
-        reader.get(from: url, completion: { _ in })
+        reader.get(from: url, completion: { result in
+            switch result {
+            case .failure:
+                completion(.failure(.readError))
+                
+            case let .success(data):
+                completion(.success(data))
+            }
+        })
     }
 }
 
@@ -51,6 +65,25 @@ final class FileCurriculumLoaderTests: XCTestCase {
         XCTAssertEqual(reader.requestedURLs, [url, url])
     }
     
+    func test_load_deliversErrorOnReaderError() {
+        let (sut, reader) = makeSUT()
+        
+        var capturedErrors = [FileCurriculumLoader.Error]()
+        sut.load { result in
+            switch result {
+            case let .failure(error):
+                capturedErrors.append(error)
+            default:
+                XCTFail("Expected failure, got \(result) instead")
+            }
+        }
+        
+        let readerError = NSError(domain: "Test", code: 0)
+        reader.complete(with: readerError)
+        
+        XCTAssertEqual(capturedErrors, [.readError])
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(url: URL = URL(fileURLWithPath: "/any-url.json"), file: StaticString = #filePath, line: UInt = #line) -> (sut: FileCurriculumLoader, reader: FileReaderSpy) {
@@ -64,12 +97,23 @@ final class FileCurriculumLoaderTests: XCTestCase {
     }
     
     private class FileReaderSpy: FileReaderLoader {
+        private var messages = [(url: URL, completion: (FileReaderLoader.Result) -> Void)]()
         
-        
-        var requestedURLs = [URL]()
+        var requestedURLs: [URL] {
+            messages.map { $0.url }
+        }
         
         func get(from url: URL, completion: @escaping (FileReaderLoader.Result) -> Void) {
-            requestedURLs.append(url)
+            messages.append((url, completion))
+        }
+        
+        // Helpers
+        func complete(with error: Error, at index: Int = 0) {
+            messages[index].completion(.failure(error))
+        }
+        
+        func complete(with data: Data, at index: Int = 0) {
+            messages[index].completion(.success(data))
         }
     }
 }
