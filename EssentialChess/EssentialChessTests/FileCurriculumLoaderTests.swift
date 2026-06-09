@@ -8,36 +8,6 @@
 import XCTest
 import EssentialChess
 
-public final class FileCurriculumLoader {
-    private let url: URL
-    private let reader: FileReaderLoader
-    
-    public enum Error: Swift.Error {
-        case readError
-        case invalidData
-    }
-    
-    //public typealias Result = FileReaderLoader.Result
-    public typealias Result = Swift.Result<Data, Error>
-    
-    public init(url: URL, reader: FileReaderLoader) {
-        self.url = url
-        self.reader = reader
-    }
-    
-    public func load(completion: @escaping (Result) -> Void) {
-        reader.get(from: url, completion: { result in
-            switch result {
-            case .failure:
-                completion(.failure(.readError))
-                
-            case let .success(data):
-                completion(.success(data))
-            }
-        })
-    }
-}
-
 final class FileCurriculumLoaderTests: XCTestCase {
     
     func test_init_doesNotRequestDataFromURL() {
@@ -82,6 +52,25 @@ final class FileCurriculumLoaderTests: XCTestCase {
         reader.complete(with: readerError)
         
         XCTAssertEqual(capturedErrors, [.readError])
+    }
+    
+    func test_load_deliversErrorOnInvalidData() {
+        let (sut, reader) = makeSUT()
+        
+        var capturedErrors = [FileCurriculumLoader.Error]()
+        sut.load { result in
+            switch result {
+            case let .failure(error):
+                capturedErrors.append(error)
+            default:
+                XCTFail("Expected failure, got \(result) instead")
+            }
+        }
+        
+        let invalidData = Data("Not JSON".utf8)
+        reader.complete(with: invalidData)
+        
+        XCTAssertEqual(capturedErrors, [.invalidData])
     }
     
     // MARK: - Helpers
