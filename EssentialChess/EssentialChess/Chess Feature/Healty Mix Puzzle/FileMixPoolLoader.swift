@@ -14,21 +14,21 @@ public final class FileMixPoolLoader {
         case readError
         case invalidData
     }
-    
-    public typealias Result = Swift.Result<MixPool, Error>
-    
+        
     public init(url: URL, reader: FileReaderLoader) {
         self.url = url
         self.reader = reader
     }
-    
-    public func load(completion: @escaping (Result) -> Void) {
+}
+
+extension FileMixPoolLoader: MixPoolLoader {
+    public func load(completion: @escaping (MixPoolLoader.Result) -> Void) {
         reader.get(from: url, completion: { result in
             switch result {
             case let .success(data):
                 completion(MixPoolMapper.map(data))
             default:
-                completion(.failure(.readError))
+                completion(.failure(Error.readError))
             }
         })
     }

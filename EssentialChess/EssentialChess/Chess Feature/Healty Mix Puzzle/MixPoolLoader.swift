@@ -7,11 +7,8 @@
 
 import Foundation
 
-public enum LoadMixPoolResult {
-    case success(MixPool)
-    case failure(Error)
-}
-
 public protocol MixPoolLoader {
-    func load(completion: @escaping (LoadMixPoolResult) -> Void)
+    typealias Result = Swift.Result<MixPool, Swift.Error>
+    
+    func load(completion: @escaping (Result) -> Void)
 }

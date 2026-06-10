@@ -7,11 +7,8 @@
 
 import Foundation
 
-public enum LoadCurriculumResult {
-    case success(Curriculum)
-    case failure(Error)
-}
-
 public protocol CurriculumLoader {
-    func load(completion: @escaping (LoadCurriculumResult) -> Void)
+    typealias Result = Swift.Result<Curriculum, Swift.Error>
+
+    func load(completion: @escaping (Result) -> Void)
 }

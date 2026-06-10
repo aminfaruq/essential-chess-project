@@ -104,7 +104,7 @@ public final class CurriculumMapper {
     static func map(_ data: Data) -> FileCurriculumLoader.Result {
         guard let root = try? JSONDecoder().decode(Root.self, from: data) else {
             // If decoding fails (invalid JSON), return invalidData error
-            return .failure(.invalidData)
+            return .failure(FileCurriculumLoader.Error.invalidData)
         }
         // On success, return a clean domain entity!
         return .success(root.curriculum)

@@ -8,22 +8,6 @@
 import XCTest
 import EssentialChess
 
-public final class LocalFileReader: FileReaderLoader {
-    
-    public init() {}
-    
-    public func get(from url: URL, completion: @escaping (FileReaderLoader.Result) -> Void) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            do {
-                let data = try Data(contentsOf: url)
-                completion(.success(data))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-    }
-}
-
 final class LocalFileReaderTests: XCTestCase {
     
     func test_get_deliversErrorOnInvalidURL() {

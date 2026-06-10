@@ -76,7 +76,7 @@ public final class MixPoolMapper {
     
     static func map(_ data: Data) -> FileMixPoolLoader.Result {
         guard let root = try? JSONDecoder().decode(Root.self, from: data) else {
-            return .failure(.invalidData)
+            return .failure(FileMixPoolLoader.Error.invalidData)
         }
         return .success(root.mixPool)
     }

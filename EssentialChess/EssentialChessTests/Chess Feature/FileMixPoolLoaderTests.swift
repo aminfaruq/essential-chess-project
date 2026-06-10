@@ -42,7 +42,7 @@ final class FileMixPoolLoaderTests: XCTestCase {
         sut.load { result in
             switch result {
             case let .failure(error):
-                capturedErrors.append(error)
+                capturedErrors.append(error as! FileMixPoolLoader.Error)
             default:
                 XCTFail("Expected failure, got \(result) instead")
             }
@@ -61,7 +61,7 @@ final class FileMixPoolLoaderTests: XCTestCase {
         sut.load { result in
             switch result {
             case let .failure(error):
-                capturedErrors.append(error)
+                capturedErrors.append(error as! FileMixPoolLoader.Error)
             default:
                 XCTFail("Expected failure, got \(result) instead")
             }
@@ -79,12 +79,17 @@ final class FileMixPoolLoaderTests: XCTestCase {
         let (expectedModel, validJSON) = makeMixPool()
         let jsonData = try! JSONSerialization.data(withJSONObject: validJSON)
         
-        var capturedResults = [FileMixPoolLoader.Result]()
-        sut.load { capturedResults.append($0) }
+        var receivedResult: FileMixPoolLoader.Result?
+        sut.load { receivedResult = $0 }
         
         reader.complete(with: jsonData)
         
-        XCTAssertEqual(capturedResults, [.success(expectedModel)])
+        switch receivedResult {
+        case let .success(model):
+            XCTAssertEqual(model, expectedModel)
+        default:
+            XCTFail("Expected success, got \(String(describing: receivedResult)) instead")
+        }        
     }
     
     // MARK: - Helpers

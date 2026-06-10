@@ -16,20 +16,21 @@ public final class FileCurriculumLoader {
         case invalidData
     }
     
-    public typealias Result = Swift.Result<Curriculum, Error>
-    
     public init(url: URL, reader: FileReaderLoader) {
         self.url = url
         self.reader = reader
     }
+}
+
+extension FileCurriculumLoader: CurriculumLoader {
     
-    public func load(completion: @escaping (Result) -> Void) {
+    public func load(completion: @escaping (CurriculumLoader.Result) -> Void) {
         reader.get(from: url) { result in
             switch result {
             case let .success(data):
                 completion(CurriculumMapper.map(data))
             case .failure:
-                completion(.failure(.readError))
+                completion(.failure(Error.readError))
             }
         }
     }
