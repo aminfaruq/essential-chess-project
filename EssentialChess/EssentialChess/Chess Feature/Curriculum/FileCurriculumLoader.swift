@@ -25,7 +25,9 @@ public final class FileCurriculumLoader {
 extension FileCurriculumLoader: CurriculumLoader {
     
     public func load(completion: @escaping (CurriculumLoader.Result) -> Void) {
-        reader.get(from: url) { result in
+        reader.get(from: url) { [weak self] result in
+            guard self != nil else { return }
+            
             switch result {
             case let .success(data):
                 completion(CurriculumMapper.map(data))

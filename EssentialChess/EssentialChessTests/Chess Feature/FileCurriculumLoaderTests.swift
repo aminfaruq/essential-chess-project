@@ -92,6 +92,24 @@ final class FileCurriculumLoaderTests: XCTestCase {
         }
     }
     
+    func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
+        let url = URL(fileURLWithPath: "/a-given-url.json")
+        let client = FileReaderSpy()
+        var sut: FileCurriculumLoader? = FileCurriculumLoader(url: url, reader: client)
+        
+        var capturedResults = [FileCurriculumLoader.Result]()
+        sut?.load(completion: { capturedResults.append($0) })
+        
+        sut = nil
+        
+        let (_, validJSON) = makeCurriculum()
+        let jsonData = try! JSONSerialization.data(withJSONObject: validJSON)
+
+        client.complete(with: jsonData)
+        
+        XCTAssertTrue(capturedResults.isEmpty)
+    }
+    
     // MARK: - Helpers
     
     private func makeCurriculum() -> (model: Curriculum, json: [String: Any]) {
