@@ -8,35 +8,6 @@
 import XCTest
 import EssentialChess
 
-public final class FileMixPoolLoader {
-    private let url: URL
-    private let reader: FileReaderLoader
-    
-    public enum Error: Swift.Error {
-        case readError
-        case invalidData
-    }
-    
-    public typealias Result = Swift.Result<MixPool, Error>
-    
-    public init(url: URL, reader: FileReaderLoader) {
-        self.url = url
-        self.reader = reader
-    }
-    
-    public func load(completion: @escaping (Result) -> Void) {
-        reader.get(from: url, completion: { result in
-            switch result {
-            case  .success(_):
-                completion(.failure(.invalidData))
-            default:
-                completion(.failure(.readError))
-            }
-        })
-    }
-}
-
-
 final class FileMixPoolLoaderTests: XCTestCase {
     
     func test_init_doesNotRequestDataFromURL() {
@@ -102,7 +73,59 @@ final class FileMixPoolLoaderTests: XCTestCase {
         XCTAssertEqual(capturedErrors, [.invalidData])
     }
     
+    func test_load_deliversSuccessOnValidJSONData() {
+        let (sut, reader) = makeSUT()
+        
+        let (expectedModel, validJSON) = makeMixPool()
+        let jsonData = try! JSONSerialization.data(withJSONObject: validJSON)
+        
+        var capturedResults = [FileMixPoolLoader.Result]()
+        sut.load { capturedResults.append($0) }
+        
+        reader.complete(with: jsonData)
+        
+        XCTAssertEqual(capturedResults, [.success(expectedModel)])
+    }
+    
     // MARK: - Helpers
+    
+    private func makeMixPool() -> (model: MixPool, json: [String: Any]) {
+        let puzzle = Puzzle(id: "p1", fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", moves: ["e2e4"], rating: 1200, tags: ["pin"])
+        
+        let tier = DifficultyTier(id: "t1", displayName: "Beginner", eloRange: "0-500", accentColorHex: "#FFFFFF", description: "Easy puzzles", puzzles: [puzzle])
+        
+        let metadata = MixPoolMetadata(totalPuzzles: 1, supportedModes: ["survival"])
+        
+        let model = MixPool(id: "pool1", metadata: metadata, difficultyTiers: [tier])
+        
+        let json: [String: Any] = [
+            "mix_pool_id": "pool1",
+            "metadata": [
+                "total_puzzles": 1,
+                "supported_modes": ["survival"]
+            ] as [String : Any],
+            "difficulty_tiers": [
+                [
+                    "tier_id": "t1",
+                    "display_name": "Beginner",
+                    "elo_range": "0-500",
+                    "accent_color_hex": "#FFFFFF",
+                    "description": "Easy puzzles",
+                    "puzzles": [
+                        [
+                            "id": "p1",
+                            "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+                            "moves": ["e2e4"],
+                            "rating": 1200,
+                            "hidden_theme": "pin"
+                        ] as [String : Any]
+                    ]
+                ] as [String : Any]
+            ]
+        ]
+        
+        return (model, json)
+    }
     
     private func makeSUT(url: URL = URL(fileURLWithPath: "/any-url.json"), file: StaticString = #filePath, line: UInt = #line) -> (sut: FileMixPoolLoader, reader: FileReaderSpy) {
         let reader = FileReaderSpy()

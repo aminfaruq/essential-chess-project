@@ -4,10 +4,10 @@
 //
 //  Created by Amin faruq on 09/06/26.
 //
+import Foundation
 
 // MARK: - Mapper & DTOs (Data Transfer Objects)
 
-import Foundation
 // These DTOs are kept PRIVATE so that the details of 'Codable' and 'snake_case'
 // never leak outside of this file.
 public final class CurriculumMapper {
