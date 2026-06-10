@@ -57,7 +57,97 @@ final class CurriculumProgressTrackerTests: XCTestCase {
         XCTAssertEqual(CurriculumProgressTracker.progress(for: subTheme, progress: progress2), 1.0)
     }
     
+    // MARK: - Category Progress Logic
+    
+    func test_progressForCategory_returnsZeroIfNoSubThemes() {
+        let category = makeCategory(isExam: false, subThemes: [])
+        let progress = UserProgress()
+        
+        XCTAssertEqual(CurriculumProgressTracker.progress(for: category, progress: progress), 0.0)
+    }
+    
+    func test_progressForCategory_calculatesCombinedSubThemeProgress() {
+        let sub1 = makeSubTheme(totalPuzzles: 2, puzzleIDs: ["p1", "p2"])
+        let sub2 = makeSubTheme(totalPuzzles: 2, puzzleIDs: ["p3", "p4"])
+        let category = makeCategory(isExam: false, subThemes: [sub1, sub2])
+        
+        let progress = UserProgress(completedPuzzleIDs: ["p1", "p3", "p4"]) // 3 out of 4 (75%)
+        
+        XCTAssertEqual(CurriculumProgressTracker.progress(for: category, progress: progress), 0.75)
+    }
+    
+    // MARK: - Section Progress Logic
+    
+    func test_progressForSection_returnsOneIfExamPassed() {
+        let examCategory = makeCategory(id: "exam_cat", isExam: true, subThemes: [])
+        let section = EloSection(id: "s1", title: "any", eloRange: "0-500", isLockedByDefault: false, categories: [examCategory])
+        
+        let progress = UserProgress(passedExamIDs: ["exam_cat"]) // Exam passed!
+        
+        XCTAssertEqual(CurriculumProgressTracker.progress(for: section, progress: progress), 1.0)
+    }
+    
+    func test_progressForSection_capsAt99PercentIfExamNotPassed() {
+        let sub = makeSubTheme(totalPuzzles: 2, puzzleIDs: ["p1", "p2"])
+        let nonExamCat = makeCategory(id: "c1", isExam: false, subThemes: [sub])
+        let section = EloSection(id: "s1", title: "any", eloRange: "0-500", isLockedByDefault: false, categories: [nonExamCat])
+        
+        let progress = UserProgress(completedPuzzleIDs: ["p1", "p2"]) // 100% of puzzles done
+        
+        // Because exam is not passed, it should cap at 0.99
+        XCTAssertEqual(CurriculumProgressTracker.progress(for: section, progress: progress), 0.99)
+    }
+    
+    func test_isExamUnlocked_returnsTrueOnlyWhenAllNonExamPuzzlesAreCompleted() {
+        let sub = makeSubTheme(totalPuzzles: 2, puzzleIDs: ["p1", "p2"])
+        let nonExamCat = makeCategory(id: "c1", isExam: false, subThemes: [sub])
+        let section = EloSection(id: "s1", title: "any", eloRange: "0-500", isLockedByDefault: false, categories: [nonExamCat])
+        
+        let incompleteProgress = UserProgress(completedPuzzleIDs: ["p1"])
+        XCTAssertFalse(CurriculumProgressTracker.isExamUnlocked(for: section, progress: incompleteProgress))
+        
+        let completeProgress = UserProgress(completedPuzzleIDs: ["p1", "p2"])
+        XCTAssertTrue(CurriculumProgressTracker.isExamUnlocked(for: section, progress: completeProgress))
+    }
+    
+    // MARK: - Exam Cooldown Logic
+    
+    func test_canStartExam_returnsTrueIfNoFailureRecorded() {
+        let progress = UserProgress(examFailureTimes: [:])
+        XCTAssertTrue(CurriculumProgressTracker.canStartExam(categoryID: "exam1", progress: progress, currentDate: Date()))
+    }
+    
+    func test_canStartExam_enforcesThreeHourCooldown() {
+        let failureDate = Date()
+        let progress = UserProgress(examFailureTimes: ["exam1": failureDate])
+        
+        // 2 hours later -> Cannot start
+        let twoHoursLater = failureDate.addingTimeInterval(2 * 3600)
+        XCTAssertFalse(CurriculumProgressTracker.canStartExam(categoryID: "exam1", progress: progress, currentDate: twoHoursLater))
+        
+        // 3 hours later -> Can start
+        let threeHoursLater = failureDate.addingTimeInterval(3 * 3600)
+        XCTAssertTrue(CurriculumProgressTracker.canStartExam(categoryID: "exam1", progress: progress, currentDate: threeHoursLater))
+    }
+    
+    func test_remainingCooldown_returnsCorrectTimeInterval() {
+        let failureDate = Date()
+        let progress = UserProgress(examFailureTimes: ["exam1": failureDate])
+        
+        // 1 hour has passed, 2 hours (7200 seconds) remaining
+        let oneHourLater = failureDate.addingTimeInterval(3600)
+        XCTAssertEqual(CurriculumProgressTracker.remainingCooldown(categoryID: "exam1", progress: progress, currentDate: oneHourLater), 7200)
+        
+        // 4 hours have passed, 0 remaining
+        let fourHoursLater = failureDate.addingTimeInterval(4 * 3600)
+        XCTAssertEqual(CurriculumProgressTracker.remainingCooldown(categoryID: "exam1", progress: progress, currentDate: fourHoursLater), 0)
+    }
+    
     // MARK: - Helpers
+    
+    private func makeCategory(id: String = "any_id", isExam: Bool, subThemes: [SubTheme]) -> EssentialChess.Category {
+        return Category(id: id, title: "any", isExamMode: isExam, description: nil, totalPuzzles: nil, puzzles: nil, subThemes: subThemes)
+    }
     
     private func makeSection(isLocked: Bool, eloRange: String) -> EloSection {
         return EloSection(id: "any", title: "any", eloRange: eloRange, isLockedByDefault: isLocked, categories: [])
