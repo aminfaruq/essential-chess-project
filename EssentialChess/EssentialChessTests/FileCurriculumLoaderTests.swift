@@ -73,7 +73,79 @@ final class FileCurriculumLoaderTests: XCTestCase {
         XCTAssertEqual(capturedErrors, [.invalidData])
     }
     
+    func test_load_deliversSuccesOnValidJsonData() {
+        let (sut, reader) = makeSUT()
+        
+        let (expectedModel, validJSON) = makeCurriculum()
+        let jsonData = try! JSONSerialization.data(withJSONObject: validJSON)
+        
+        var capturedResults = [FileCurriculumLoader.Result]()
+        sut.load { capturedResults.append($0) }
+        
+        reader.complete(with: jsonData)
+        
+        XCTAssertEqual(capturedResults, [.success(expectedModel)])
+    }
+    
     // MARK: - Helpers
+    
+    private func makeCurriculum() -> (model: Curriculum, json: [String: Any]) {
+        let puzzle = Puzzle(id: "p1", fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", moves: ["e2e4"], rating: 1200, tags: ["opening"])
+        
+        let subTheme = SubTheme(id: "st1", title: "Basic Tactics", totalPuzzles: 1, puzzles: [puzzle])
+        
+        let category = Category(id: "c1", title: "Tactics", isExamMode: false, description: "Basic tactics category", totalPuzzles: 1, puzzles: nil, subThemes: [subTheme])
+        
+        let section = EloSection(id: "sec1", title: "Beginner", eloRange: "0-500", isLockedByDefault: false, categories: [category])
+        
+        let metadata = CurriculumMetadata(description: "Test Curriculum", totalSections: 1, targetPuzzlesPerSubTheme: 10, targetPuzzlesPerExam: nil)
+        
+        let model = Curriculum(version: "1.0", metadata: metadata, sections: [section])
+        
+        let json: [String: Any] = [
+            "curriculum_version": "1.0",
+            "metadata": [
+                "description": "Test Curriculum",
+                "total_sections": 1,
+                "target_puzzles_per_sub_theme": 10
+            ] as [String : Any],
+            "elo_sections": [
+                [
+                    "section_id": "sec1",
+                    "title": "Beginner",
+                    "elo_range": "0-500",
+                    "is_locked_by_default": false,
+                    "categories": [
+                        [
+                            "category_id": "c1",
+                            "title": "Tactics",
+                            "is_exam_mode": false,
+                            "description": "Basic tactics category",
+                            "total_puzzles": 1,
+                            "sub_themes": [
+                                [
+                                    "sub_theme_id": "st1",
+                                    "title": "Basic Tactics",
+                                    "total_puzzles": 1,
+                                    "puzzles": [
+                                        [
+                                            "id": "p1",
+                                            "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+                                            "moves": ["e2e4"],
+                                            "rating": 1200,
+                                            "tags": ["opening"]
+                                        ] as [String : Any]
+                                    ]
+                                ] as [String : Any]
+                            ]
+                        ] as [String : Any]
+                    ]
+                ] as [String : Any]
+            ]
+        ]
+        
+        return (model, json)
+    }
     
     private func makeSUT(url: URL = URL(fileURLWithPath: "/any-url.json"), file: StaticString = #filePath, line: UInt = #line) -> (sut: FileCurriculumLoader, reader: FileReaderSpy) {
         let reader = FileReaderSpy()
