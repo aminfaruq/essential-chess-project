@@ -23,7 +23,9 @@ public final class FileMixPoolLoader {
 
 extension FileMixPoolLoader: MixPoolLoader {
     public func load(completion: @escaping (MixPoolLoader.Result) -> Void) {
-        reader.get(from: url, completion: { result in
+        reader.get(from: url, completion: { [weak self] result in
+            guard self != nil else { return }
+
             switch result {
             case let .success(data):
                 completion(MixPoolMapper.map(data))

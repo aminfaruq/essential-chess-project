@@ -92,6 +92,25 @@ final class FileMixPoolLoaderTests: XCTestCase {
         }        
     }
     
+    func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
+        let url = URL(fileURLWithPath: "/a-given-url.json")
+        let client = FileReaderSpy()
+        var sut: FileMixPoolLoader? = FileMixPoolLoader(url: url, reader: client)
+        
+        var capturedResults = [FileMixPoolLoader.Result]()
+        sut?.load(completion: { capturedResults.append($0) })
+        
+        sut = nil
+        
+        let (_, validJSON) = makeMixPool()
+        let jsonData = try! JSONSerialization.data(withJSONObject: validJSON)
+
+        client.complete(with: jsonData)
+        
+        XCTAssertTrue(capturedResults.isEmpty)
+    }
+    
+    
     // MARK: - Helpers
     
     private func makeMixPool() -> (model: MixPool, json: [String: Any]) {
