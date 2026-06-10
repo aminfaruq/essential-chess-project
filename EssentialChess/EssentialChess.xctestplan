@@ -1,0 +1,35 @@
+{
+  "configurations" : [
+    {
+      "id" : "5A41794E-716D-4779-9D9E-0C3AF520FFC1",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:EssentialChess.xcodeproj",
+          "identifier" : "832B0AE62FD7D04E0009FCFE",
+          "name" : "EssentialChess"
+        }
+      ]
+    },
+    "performanceAntipatternCheckerEnabled" : true,
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:EssentialChess.xcodeproj",
+        "identifier" : "832B0AEF2FD7D04E0009FCFE",
+        "name" : "EssentialChessTests"
+      }
+    }
+  ],
+  "version" : 1
+}

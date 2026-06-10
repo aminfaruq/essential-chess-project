@@ -1,14 +1,14 @@
 //
-//  EssentialChessTests.swift
-//  EssentialChessTests
+//  EssentialChessAppTests.swift
+//  EssentialChessAppTests
 //
-//  Created by Amin faruq on 09/06/26.
+//  Created by Amin faruq on 10/06/26.
 //
 
 import XCTest
-@testable import EssentialChess
+@testable import EssentialChessApp
 
-final class EssentialChessTests: XCTestCase {
+final class EssentialChessAppTests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
