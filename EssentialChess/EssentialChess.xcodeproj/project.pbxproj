@@ -23,6 +23,7 @@
 /* Begin PBXFileReference section */
 		832B0AE72FD7D04E0009FCFE /* EssentialChess.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialChess.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		832B0AF02FD7D04E0009FCFE /* EssentialChessTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialChessTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		832B0B3E2FD8F3040009FCFE /* EssentialChess.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialChess.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -60,6 +61,7 @@
 		832B0ADD2FD7D04E0009FCFE = {
 			isa = PBXGroup;
 			children = (
+				832B0B3E2FD8F3040009FCFE /* EssentialChess.xctestplan */,
 				832B0AE92FD7D04E0009FCFE /* EssentialChess */,
 				832B0AF42FD7D04E0009FCFE /* EssentialChessTests */,
 				832B0AE82FD7D04E0009FCFE /* Products */,
