@@ -23,7 +23,7 @@
   },
   "testTargets" : [
     {
-      "parallelizable" : true,
+      "parallelizable" : false,
       "target" : {
         "containerPath" : "container:EssentialChess.xcodeproj",
         "identifier" : "832B0AEF2FD7D04E0009FCFE",

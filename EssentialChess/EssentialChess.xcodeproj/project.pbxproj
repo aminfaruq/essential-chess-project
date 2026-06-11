@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		832B0AF12FD7D04E0009FCFE /* EssentialChess.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 832B0AE72FD7D04E0009FCFE /* EssentialChess.framework */; };
+		83FD3FC32FDA686500CA0675 /* EssentialChess.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 832B0AE72FD7D04E0009FCFE /* EssentialChess.framework */; platformFilter = ios; };
+		83FD3FC42FDA686500CA0675 /* EssentialChess.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 832B0AE72FD7D04E0009FCFE /* EssentialChess.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		83FD3FCD2FDA68C900CA0675 /* EssentialChessUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83FD3FAD2FDA685300CA0675 /* EssentialChessUI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -18,13 +21,54 @@
 			remoteGlobalIDString = 832B0AE62FD7D04E0009FCFE;
 			remoteInfo = EssentialChess;
 		};
+		83FD3FB72FDA685300CA0675 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 832B0ADE2FD7D04E0009FCFE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 83FD3FAC2FDA685300CA0675;
+			remoteInfo = EssentialChessUI;
+		};
+		83FD3FC52FDA686500CA0675 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 832B0ADE2FD7D04E0009FCFE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 832B0AE62FD7D04E0009FCFE;
+			remoteInfo = EssentialChess;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		83FD3FC72FDA686500CA0675 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				83FD3FC42FDA686500CA0675 /* EssentialChess.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		832B0AE72FD7D04E0009FCFE /* EssentialChess.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialChess.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		832B0AF02FD7D04E0009FCFE /* EssentialChessTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialChessTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		832B0B3E2FD8F3040009FCFE /* EssentialChess.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialChess.xctestplan; sourceTree = "<group>"; };
+		83FD3FAD2FDA685300CA0675 /* EssentialChessUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialChessUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		83FD3FB52FDA685300CA0675 /* EssentialChessUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialChessUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		83FD3FD02FDA690200CA0675 /* EssentialChessUI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialChessUI.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		83FD3FC92FDA688B00CA0675 /* Exceptions for "EssentialChessTests" folder in "EssentialChessUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Helpers/XCTestCase+MemoryLeakTracking.swift",
+			);
+			target = 83FD3FB42FDA685300CA0675 /* EssentialChessUITests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		832B0AE92FD7D04E0009FCFE /* EssentialChess */ = {
@@ -34,7 +78,20 @@
 		};
 		832B0AF42FD7D04E0009FCFE /* EssentialChessTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				83FD3FC92FDA688B00CA0675 /* Exceptions for "EssentialChessTests" folder in "EssentialChessUITests" target */,
+			);
 			path = EssentialChessTests;
+			sourceTree = "<group>";
+		};
+		83FD3FAE2FDA685300CA0675 /* EssentialChessUI */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = EssentialChessUI;
+			sourceTree = "<group>";
+		};
+		83FD3FB92FDA685300CA0675 /* EssentialChessUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = EssentialChessUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -55,15 +112,35 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		83FD3FAA2FDA685300CA0675 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				83FD3FC32FDA686500CA0675 /* EssentialChess.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		83FD3FB22FDA685300CA0675 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				83FD3FCD2FDA68C900CA0675 /* EssentialChessUI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		832B0ADD2FD7D04E0009FCFE = {
 			isa = PBXGroup;
 			children = (
+				83FD3FD02FDA690200CA0675 /* EssentialChessUI.xctestplan */,
 				832B0B3E2FD8F3040009FCFE /* EssentialChess.xctestplan */,
 				832B0AE92FD7D04E0009FCFE /* EssentialChess */,
 				832B0AF42FD7D04E0009FCFE /* EssentialChessTests */,
+				83FD3FAE2FDA685300CA0675 /* EssentialChessUI */,
+				83FD3FB92FDA685300CA0675 /* EssentialChessUITests */,
+				83FD3FC22FDA686500CA0675 /* Frameworks */,
 				832B0AE82FD7D04E0009FCFE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -73,14 +150,30 @@
 			children = (
 				832B0AE72FD7D04E0009FCFE /* EssentialChess.framework */,
 				832B0AF02FD7D04E0009FCFE /* EssentialChessTests.xctest */,
+				83FD3FAD2FDA685300CA0675 /* EssentialChessUI.framework */,
+				83FD3FB52FDA685300CA0675 /* EssentialChessUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		83FD3FC22FDA686500CA0675 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
 		832B0AE22FD7D04E0009FCFE /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		83FD3FA82FDA685300CA0675 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -136,6 +229,54 @@
 			productReference = 832B0AF02FD7D04E0009FCFE /* EssentialChessTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		83FD3FAC2FDA685300CA0675 /* EssentialChessUI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 83FD3FC02FDA685300CA0675 /* Build configuration list for PBXNativeTarget "EssentialChessUI" */;
+			buildPhases = (
+				83FD3FA82FDA685300CA0675 /* Headers */,
+				83FD3FA92FDA685300CA0675 /* Sources */,
+				83FD3FAA2FDA685300CA0675 /* Frameworks */,
+				83FD3FAB2FDA685300CA0675 /* Resources */,
+				83FD3FC72FDA686500CA0675 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				83FD3FC62FDA686500CA0675 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				83FD3FAE2FDA685300CA0675 /* EssentialChessUI */,
+			);
+			name = EssentialChessUI;
+			packageProductDependencies = (
+			);
+			productName = EssentialChessUI;
+			productReference = 83FD3FAD2FDA685300CA0675 /* EssentialChessUI.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		83FD3FB42FDA685300CA0675 /* EssentialChessUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 83FD3FC12FDA685300CA0675 /* Build configuration list for PBXNativeTarget "EssentialChessUITests" */;
+			buildPhases = (
+				83FD3FB12FDA685300CA0675 /* Sources */,
+				83FD3FB22FDA685300CA0675 /* Frameworks */,
+				83FD3FB32FDA685300CA0675 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				83FD3FB82FDA685300CA0675 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				83FD3FB92FDA685300CA0675 /* EssentialChessUITests */,
+			);
+			name = EssentialChessUITests;
+			packageProductDependencies = (
+			);
+			productName = EssentialChessUITests;
+			productReference = 83FD3FB52FDA685300CA0675 /* EssentialChessUITests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -150,6 +291,12 @@
 						CreatedOnToolsVersion = 26.2;
 					};
 					832B0AEF2FD7D04E0009FCFE = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					83FD3FAC2FDA685300CA0675 = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					83FD3FB42FDA685300CA0675 = {
 						CreatedOnToolsVersion = 26.2;
 					};
 				};
@@ -170,6 +317,8 @@
 			targets = (
 				832B0AE62FD7D04E0009FCFE /* EssentialChess */,
 				832B0AEF2FD7D04E0009FCFE /* EssentialChessTests */,
+				83FD3FAC2FDA685300CA0675 /* EssentialChessUI */,
+				83FD3FB42FDA685300CA0675 /* EssentialChessUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -183,6 +332,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		832B0AEE2FD7D04E0009FCFE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		83FD3FAB2FDA685300CA0675 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		83FD3FB32FDA685300CA0675 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -206,6 +369,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		83FD3FA92FDA685300CA0675 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		83FD3FB12FDA685300CA0675 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -213,6 +390,17 @@
 			isa = PBXTargetDependency;
 			target = 832B0AE62FD7D04E0009FCFE /* EssentialChess */;
 			targetProxy = 832B0AF22FD7D04E0009FCFE /* PBXContainerItemProxy */;
+		};
+		83FD3FB82FDA685300CA0675 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 83FD3FAC2FDA685300CA0675 /* EssentialChessUI */;
+			targetProxy = 83FD3FB72FDA685300CA0675 /* PBXContainerItemProxy */;
+		};
+		83FD3FC62FDA686500CA0675 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			platformFilter = ios;
+			target = 832B0AE62FD7D04E0009FCFE /* EssentialChess */;
+			targetProxy = 83FD3FC52FDA686500CA0675 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -370,12 +558,15 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_INSTALL_MODULE = YES;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -406,12 +597,15 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_INSTALL_MODULE = YES;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -451,6 +645,126 @@
 			};
 			name = Release;
 		};
+		83FD3FBC2FDA685300CA0675 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WZB5R9B92Y;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = com.aminfaruq.EssentialChessUI;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_INSTALL_MODULE = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		83FD3FBD2FDA685300CA0675 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WZB5R9B92Y;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = com.aminfaruq.EssentialChessUI;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_INSTALL_MODULE = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		83FD3FBE2FDA685300CA0675 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WZB5R9B92Y;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.aminfaruq.EssentialChessUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		83FD3FBF2FDA685300CA0675 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WZB5R9B92Y;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.aminfaruq.EssentialChessUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -477,6 +791,24 @@
 			buildConfigurations = (
 				832B0AFD2FD7D04E0009FCFE /* Debug */,
 				832B0AFE2FD7D04E0009FCFE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		83FD3FC02FDA685300CA0675 /* Build configuration list for PBXNativeTarget "EssentialChessUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				83FD3FBC2FDA685300CA0675 /* Debug */,
+				83FD3FBD2FDA685300CA0675 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		83FD3FC12FDA685300CA0675 /* Build configuration list for PBXNativeTarget "EssentialChessUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				83FD3FBE2FDA685300CA0675 /* Debug */,
+				83FD3FBF2FDA685300CA0675 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

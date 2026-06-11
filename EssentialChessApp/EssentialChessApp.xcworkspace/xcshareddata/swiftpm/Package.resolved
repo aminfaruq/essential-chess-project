@@ -1,0 +1,33 @@
+{
+  "originHash" : "e30fadb6ba502589e1c0029d6aeb017a08aff711adc98ff81d7468e3108c9976",
+  "pins" : [
+    {
+      "identity" : "chesskit-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/chesskit-app/chesskit-swift.git",
+      "state" : {
+        "revision" : "44ef7a1aa9da25bf0a9606a8960591a4dde3fad2",
+        "version" : "0.17.0"
+      }
+    },
+    {
+      "identity" : "nativechessboard",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/aminfaruq/NativeChessBoard.git",
+      "state" : {
+        "branch" : "develop",
+        "revision" : "b54b376023f1bf4230634652580ce3a3ce071d9c"
+      }
+    },
+    {
+      "identity" : "snapkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SnapKit/SnapKit.git",
+      "state" : {
+        "revision" : "2842e6e84e82eb9a8dac0100ca90d9444b0307f4",
+        "version" : "5.7.1"
+      }
+    }
+  ],
+  "version" : 3
+}
