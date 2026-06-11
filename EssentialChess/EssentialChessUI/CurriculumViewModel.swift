@@ -25,6 +25,10 @@ public struct CategoryUIModel: Identifiable, Equatable {
     public let title: String
     public let progress: Double
     public let isExamMode: Bool
+    public let description: String?
+    public let totalPuzzles: Int?
+    public let puzzles: [PuzzleUIModel]?
+    public let subThemes: [SubThemeUIModel]?
     public let examState: ExamUIState?
 }
 
@@ -34,6 +38,39 @@ public enum ExamUIState: Equatable {
     case passed(message: String)
     case onCooldown(availableIn: String)
 }
+
+public struct SubThemeUIModel: Identifiable, Equatable {
+    public let id: String
+    public let title: String
+    public let totalPuzzles: Int
+    public let completedPuzzles: Int
+    public let puzzles: [PuzzleUIModel]
+    
+    public init(id: String, title: String, totalPuzzles: Int, completedPuzzles: Int, puzzles: [PuzzleUIModel]) {
+        self.id = id
+        self.title = title
+        self.totalPuzzles = totalPuzzles
+        self.completedPuzzles = completedPuzzles
+        self.puzzles = puzzles
+    }
+}
+
+public struct PuzzleUIModel: Equatable {
+    public let id: String
+    public let fen: String
+    public let moves: [String]
+    public let rating: Int
+    public let tags: [String]
+    
+    public init(id: String, fen: String, moves: [String], rating: Int, tags: [String]) {
+        self.id = id
+        self.fen = fen
+        self.moves = moves
+        self.rating = rating
+        self.tags = tags
+    }
+}
+
 
 public final class CurriculumViewModel: ObservableObject {
     
@@ -84,10 +121,28 @@ public final class CurriculumViewModel: ObservableObject {
     // MARK: - Mapping Logic
     
     private func mapToUIModels(curriculum: Curriculum, progress: UserProgress) -> [SectionUIModel] {
-        return curriculum.sections.map { section in
+        //  Use enumerated() so we know which level index we are processing.
+        return curriculum.sections.enumerated().map { index, section in
             
-            // FIX 2: Use the Pure Domain Service for all logic calculations
-            let isUnlocked = CurriculumProgressTracker.isSectionUnlocked(section, progress: progress)
+            let isUnlocked: Bool
+            if index == 0 {
+                // First level is always open
+                isUnlocked = true
+            } else {
+                // For level 2 and beyond, peek at the previous level
+                let previousSection = curriculum.sections[index - 1]
+                
+                // Search for exam category in previous level
+                if let previousExam = previousSection.categories.first(where: { $0.isExamMode }) {
+                    // This level is unlocked ONLY IF the previous level test has been passed
+                    isUnlocked = progress.passedExamIDs.contains(previousExam.id)
+                } else {
+                    // If the previous level strangely didn't have a test, just open this level
+                    isUnlocked = true
+                }
+            }
+            
+            // Progress of all non-exam categories in this section
             let sectionProgress = CurriculumProgressTracker.progress(for: section, progress: progress)
             
             let categories: [CategoryUIModel] = section.categories.map { category in
@@ -97,13 +152,35 @@ public final class CurriculumViewModel: ObservableObject {
                 if category.isExamMode {
                     if progress.passedExamIDs.contains(category.id) {
                         examState = .passed(message: "Passed — section unlocked!")
-                    } else if !isUnlocked {
+                    }
+                    else if !isUnlocked {
+                        examState = .locked(reason: "Complete previous section to unlock")
+                    }
+                    else if sectionProgress < 0.99 {
                         examState = .locked(reason: "Complete all themes to unlock")
-                    } else if !CurriculumProgressTracker.canStartExam(categoryID: category.id, progress: progress) {
+                    }
+                    else if let failTime = progress.examFailureTimes[category.id], Date().timeIntervalSince(failTime) < (3 * 3600) {
                         examState = .onCooldown(availableIn: "On Cooldown")
-                    } else {
+                    }
+                    else {
                         examState = .unlocked(livesText: "3 lives · 10 random puzzles")
                     }
+                }
+                
+                // Map domain models to UI models
+                let puzzleToUI: (Puzzle) -> PuzzleUIModel = { p in
+                    PuzzleUIModel(id: p.id, fen: p.fen, moves: p.moves, rating: p.rating, tags: p.tags)
+                }
+                
+                let subThemeToUI: (SubTheme) -> SubThemeUIModel = { st in
+                    let completed = st.puzzles.filter { progress.completedPuzzleIDs.contains($0.id) }.count
+                    return SubThemeUIModel(
+                        id: st.id,
+                        title: st.title,
+                        totalPuzzles: st.totalPuzzles,
+                        completedPuzzles: completed,
+                        puzzles: st.puzzles.map(puzzleToUI)
+                    )
                 }
                 
                 return CategoryUIModel(
@@ -111,6 +188,10 @@ public final class CurriculumViewModel: ObservableObject {
                     title: category.title,
                     progress: categoryProgress,
                     isExamMode: category.isExamMode,
+                    description: category.description,
+                    totalPuzzles: category.totalPuzzles,
+                    puzzles: category.puzzles?.map(puzzleToUI),
+                    subThemes: category.subThemes?.map(subThemeToUI),
                     examState: examState
                 )
             }
@@ -120,7 +201,7 @@ public final class CurriculumViewModel: ObservableObject {
                 title: section.title,
                 eloRange: "ELO \(section.eloRange)",
                 progress: sectionProgress,
-                isUnlocked: isUnlocked,
+                isUnlocked: isUnlocked, 
                 categories: categories
             )
         }
