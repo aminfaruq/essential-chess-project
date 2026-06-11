@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import EssentialChess
 
-public final class PuzzleBoardViewModel: ObservableObject {
+public final class PuzzleBoardViewModel: ObservableObject , Identifiable {
     
     // MARK: - Published State
     

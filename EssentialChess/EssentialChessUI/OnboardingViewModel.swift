@@ -9,7 +9,9 @@ import Foundation
 import Combine
 import EssentialChess
 
-public final class OnboardingViewModel: ObservableObject {
+public final class OnboardingViewModel: ObservableObject, Identifiable {
+    
+    public let id = UUID()
     
     // MARK: - Published State
     
