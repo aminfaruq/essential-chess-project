@@ -28,7 +28,7 @@ public struct OnboardingView: View {
                 VStack(spacing: 16) {
                     Text("♟")
                         .font(.system(size: 80))
-                    Text("Chess Academy")
+                    Text("Essential Chess")
                         .font(.system(size: 32, weight: .bold))
                         .foregroundColor(AppColors.textPrimary)
                     Text("Master tactics. Unlock your potential.")
