@@ -9,10 +9,10 @@ import Foundation
 
 public struct UserProgress: Equatable {
     public let hiddenRating: Double
-    public let onboardingComplete: Bool
-    public let completedPuzzleIDs: Set<String>
-    public let passedExamIDs: Set<String>
-    public let examFailureTimes: [String: Date]
+    public var onboardingComplete: Bool
+    public var completedPuzzleIDs: Set<String>
+    public var passedExamIDs: Set<String>
+    public var examFailureTimes: [String: Date]
     
     public init(
         hiddenRating: Double = 500.0,
