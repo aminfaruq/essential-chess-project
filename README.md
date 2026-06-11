@@ -543,4 +543,6 @@ public class ThemeManager: ObservableObject {
 
 ## Demo
 
-![Demo](EssentialChessApp/chess_demo.gif)
+<p align="center">
+  <img src="EssentialChessApp/essential_chess_demo.gif" width="250" alt="Essential Chess Demo">
+</p>
