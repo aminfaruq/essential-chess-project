@@ -1,0 +1,75 @@
+//
+//  RootView.swift
+//  EssentialChessApp
+//
+//  Created by Amin faruq on 11/06/26.
+//
+
+import SwiftUI
+import EssentialChess
+import EssentialChessUI
+
+public struct RootView: View {
+    @EnvironmentObject var composer: AppComposer
+    
+    @State private var onboardingComplete: Bool = false
+    
+    // We only need the state of this ViewModel now.
+    // When it's not nil, the sheet will appear.
+    @State private var placementViewModel: OnboardingViewModel?
+    
+    public init() {}
+    
+    public var body: some View {
+        Group {
+            if !onboardingComplete {
+                OnboardingView(
+                    onSelectNewbie: {
+                        composer.progressAdapter.update { progress in
+                            progress = UserProgress(
+                                hiddenRating: 500.0,
+                                onboardingComplete: true,
+                                completedPuzzleIDs: [],
+                                passedExamIDs: [],
+                                examFailureTimes: [:]
+                            )
+                        }
+                    },
+                    onSelectExperienced: {
+                        composer.fetchPlacementViewModel(
+                            onFinishedTest: { finalRating in
+                                composer.progressAdapter.update { progress in
+                                    progress = UserProgress(
+                                        hiddenRating: finalRating,
+                                        onboardingComplete: true,
+                                        completedPuzzleIDs: [],
+                                        passedExamIDs: [],
+                                        examFailureTimes: [:]
+                                    )
+                                }
+                                // Close the sheet by changing it back to nil
+                                self.placementViewModel = nil
+                            },
+                            onReady: { viewModel in
+                                // Trigger fullScreenCover to appear once the puzzle data is ready
+                                self.placementViewModel = viewModel
+                            }
+                        )
+                    }
+                )
+            } else {
+                CurriculumView()
+            }
+        }
+        .background(AppColors.background.ignoresSafeArea())
+        .onReceive(composer.progressAdapter.publisher()) { progress in
+            self.onboardingComplete = progress.onboardingComplete
+        }
+        .fullScreenCover(item: $placementViewModel) { viewModel in
+            ZStack {
+                AppColors.background.ignoresSafeArea()
+                PlacementTestView(viewModel: viewModel)
+            }
+        }
+    }
+}
