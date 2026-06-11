@@ -209,114 +209,115 @@ The Mix Puzzle acts as the final exam for each Elo section.
 
 ### Flow 1: Onboarding & Placement
 
-**Feature:** User Onboarding and Dynamic Placement Test
+```gherkin
+Feature: User Onboarding and Dynamic Placement Test
 
-* **Scenario:** User declares as an absolute beginner
-* **Given** the user is on the initial onboarding screen
-* **When** the user selects "I am new to chess"
-* **Then** the system assigns a hidden base rating of 500
-* **And** the system unlocks ONLY the "500-800" Elo Section
+Scenario: User declares as an absolute beginner
+  Given the user is on the initial onboarding screen
+  When the user selects "I am new to chess"
+  Then the system assigns a hidden base rating of 500
+  And the system unlocks ONLY the "500-800" Elo Section
 
-
-* **Scenario:** Placement test concludes and unlocks corresponding sections
-* **Given** the user completes the 15th puzzle
-* **When** the system calculates the final calibrated rating (e.g., 1350)
-* **Then** the system unlocks all sections up to the placed bracket
+Scenario: Placement test concludes and unlocks corresponding sections
+  Given the user completes the 15th puzzle
+  When the system calculates the final calibrated rating (e.g., 1350)
+  Then the system unlocks all sections up to the placed bracket
+```
 
 
 
 ### Flow 2: Progression & The 99% Rule
 
-**Feature:** Curriculum Progression and The 99% Rule
+```gherkin
+Feature: Curriculum Progression and The 99% Rule
 
-* **Scenario:** Completing all themes triggers the 99% state
-* **Given** the user is on the Theme List
-* **When** the user successfully completes all puzzles in all non-exam themes
-* **Then** the Section's overall progress bar updates to exactly 99%
-* **And** the progress bar halts
-* **And** the Mix Puzzle Exam button state changes to "Unlocked"
-
-
+Scenario: Completing all themes triggers the 99% state
+  Given the user is on the Theme List
+  When the user successfully completes all puzzles in all non-exam themes
+  Then the Section's overall progress bar updates to exactly 99%
+  And the progress bar halts
+  And the Mix Puzzle Exam button state changes to "Unlocked"
+```
 
 ### Flow 3: Exam Gameplay & Penalties
 
-**Feature:** Mix Puzzle Exam Gameplay, Lives, and Cooldown
+```gherkin
+Feature: Mix Puzzle Exam Gameplay, Lives, and Cooldown
 
-* **Scenario:** Depleting lives triggers a 3-hour cooldown
-* **Given** the user is taking the exam with 1 life remaining
-* **When** the user makes a mistake or uses a hint
-* **Then** the lives counter drops to 0
-* **And** the exam session immediately terminates
-* **And** the system records the current timestamp as the failure time
-* **And** the Mix Puzzle Exam button is locked with a 3-hour countdown timer
-
-
-* **Scenario:** Passing the exam synchronizes the progression
-* **Given** the user correctly solves the 10th puzzle with at least 1 life remaining
-* **Then** the Section's progress bar updates from 99% to 100%
-* **And** the next sequential Elo Section becomes unlocked
+Scenario: Depleting lives triggers a 3-hour cooldown
+  Given the user is taking the exam with 1 life remaining
+  When the user makes a mistake or uses a hint
+  Then the lives counter drops to 0
+  And the exam session immediately terminates
+  And the system records the current timestamp as the failure time
+  And the Mix Puzzle Exam button is locked with a 3-hour countdown timer
 
 
+Scenario: Passing the exam synchronizes the progression
+  Given the user correctly solves the 10th puzzle with at least 1 life remaining
+  Then the Section's progress bar updates from 99% to 100%
+  And the next sequential Elo Section becomes unlocked
+```
 
 ### Flow 4: Sequence Navigation & Puzzle Progression (Layer 3)
 
-**Feature:** Automatic Progress Continuation and Puzzle History Navigation
+```gherkin
+Feature: Automatic Progress Continuation and Puzzle History Navigation
 
-* **Scenario 1:** Automatically resuming an incomplete puzzle sequence (Resume Progress)
-* **Given** the user has completed for instance 5 out of 10 puzzles in the "Checkmates" theme
-* **When** the user exits the puzzle board and re-enters the "Checkmates" theme later
-* **Then** the system must detect that the 6th puzzle is the ongoing (unsolved) sequence
-* **And** the system must automatically load and present the 6th puzzle
-
-
-* **Scenario 2:** Restricting the sequence popup list to unlocked puzzles
-* **Given** the user is currently on the 6th puzzle (ongoing)
-* **When** the user taps the "Sequence List" button
-* **Then** the popup must only display options from Puzzle 1 to Puzzle 6 as selectable
-* **And** options from Puzzle 7 to Puzzle 10 must be hidden or visually locked
+Scenario 1: Automatically resuming an incomplete puzzle sequence (Resume Progress)
+  Given the user has completed for instance 5 out of 10 puzzles in the "Checkmates" theme
+  When the user exits the puzzle board and re-enters the "Checkmates" theme later
+  Then the system must detect that the 6th puzzle is the ongoing (unsolved) sequence
+  And the system must automatically load and present the 6th puzzle
 
 
-* **Scenario 3:** Returning to the main progression after reviewing an old puzzle
-* **Given** the user has an active progression frontier at Puzzle 6
-* **And** the user opens the sequence list and chooses to replay the completed Puzzle 3
-* **When** the user successfully solves Puzzle 3 again
-* **Then** the system detects that Puzzle 3 was already completed
-* **And** when the user taps "Next", the system automatically skips intermediate puzzles and routes directly back to the frontier (Puzzle 6)
+Scenario 2: Restricting the sequence popup list to unlocked puzzles
+  Given the user is currently on the 6th puzzle (ongoing)
+  When the user taps the "Sequence List" button
+  Then the popup must only display options from Puzzle 1 to Puzzle 6 as selectable
+  And options from Puzzle 7 to Puzzle 10 must be hidden or visually locked
 
 
-* **Scenario 4:** Initial entry behavior for a 100% completed theme
-* **Given** the user has successfully completed all 10 puzzles in a theme
-* **When** the user taps the theme from Layer 3
-* **Then** the system must load and present Puzzle 1 by default
-* **And** all sequence options from Puzzle 1 to Puzzle 10 must be unlocked
+Scenario 3: Returning to the main progression after reviewing an old puzzle
+  Given the user has an active progression frontier at Puzzle 6
+  And the user opens the sequence list and chooses to replay the completed Puzzle 3
+  When the user successfully solves Puzzle 3 again
+  Then the system detects that Puzzle 3 was already completed
+  And when the user taps "Next", the system automatically skips intermediate puzzles and routes directly back to the frontier (Puzzle 6)
 
 
-* **Scenario 5:** Linear progression from a free choice in a completed theme
-* **Given** the user is inside a theme that is 100% completed
-* **And** the user utilizes the sequence list to jump directly to Puzzle 6
-* **When** the user successfully solves Puzzle 6
-* **Then** the system must linearly route the user to the next puzzle (Puzzle 7)
+Scenario 4: Initial entry behavior for a 100% completed theme
+  Given the user has successfully completed all 10 puzzles in a theme
+  When the user taps the theme from Layer 3
+  Then the system must load and present Puzzle 1 by default
+  And all sequence options from Puzzle 1 to Puzzle 10 must be unlocked
 
 
+Scenario 5: Linear progression from a free choice in a completed theme
+  Given the user is inside a theme that is 100% completed
+  And the user utilizes the sequence list to jump directly to Puzzle 6
+  When the user successfully solves Puzzle 6
+  Then the system must linearly route the user to the next puzzle (Puzzle 7)
+```
 
 ### Flow 5: Theme Customization (Board & Pieces)
 
-**Feature:** Chess Board and Piece Theme Customization
+```gherkin
+Feature: Chess Board and Piece Theme Customization
 
-* **Scenario 1:** Changing the board theme
-* **Given** the user is on the Theme Settings page
-* **When** the user selects the "Green" board theme
-* **Then** the board's dark and light squares change to green-themed colors
-* **And** the board highlight color remains strictly mapped to "#2596be"
-
-
-* **Scenario 2:** Theme persistence across sessions
-* **Given** the user has selected a custom piece style and board theme
-* **When** the user completely closes and reopens the application
-* **Then** the system retrieves the saved preferences from UserDefaults (AppStorage)
-* **And** the application successfully reapplies the themes to the chess board
+Scenario 1: Changing the board theme
+  Given the user is on the Theme Settings page
+  When the user selects the "Green" board theme
+  Then the board's dark and light squares change to green-themed colors
+  And the board highlight color remains strictly mapped to "#2596be"
 
 
+Scenario 2: Theme persistence across sessions
+  Given the user has selected a custom piece style and board theme
+  When the user completely closes and reopens the application
+  Then the system retrieves the saved preferences from UserDefaults (AppStorage)
+  And the application successfully reapplies the themes to the chess board
+```
 
 ---
 
