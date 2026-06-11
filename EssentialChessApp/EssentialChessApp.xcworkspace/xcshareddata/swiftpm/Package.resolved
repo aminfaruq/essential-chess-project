@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/aminfaruq/NativeChessBoard.git",
       "state" : {
-        "branch" : "master",
-        "revision" : "df535d3a49c21466037b1cc18d15a428eabec7aa"
+        "branch" : "develop",
+        "revision" : "b54b376023f1bf4230634652580ce3a3ce071d9c"
       }
     },
     {

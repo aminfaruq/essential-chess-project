@@ -640,7 +640,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/aminfaruq/NativeChessBoard.git";
 			requirement = {
-				branch = master;
+				branch = develop;
 				kind = branch;
 			};
 		};
