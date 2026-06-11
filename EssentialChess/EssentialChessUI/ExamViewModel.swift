@@ -76,6 +76,15 @@ public final class ExamViewModel: ObservableObject {
         loseLife()
     }
     
+    public func skipPuzzle() {
+        guard phase == .active else { return }
+        currentIndex += 1
+        if currentIndex >= puzzles.count {
+            phase = .failed
+            onFailed()
+        }
+    }
+    
     // MARK: - Helpers
     
     private func loseLife() {
