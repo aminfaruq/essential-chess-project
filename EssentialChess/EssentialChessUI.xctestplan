@@ -1,7 +1,7 @@
 {
   "configurations" : [
     {
-      "id" : "5A41794E-716D-4779-9D9E-0C3AF520FFC1",
+      "id" : "62B15BB9-310A-4EA6-87AF-BF805F22BC42",
       "name" : "Test Scheme Action",
       "options" : {
 
@@ -13,8 +13,8 @@
       "targets" : [
         {
           "containerPath" : "container:EssentialChess.xcodeproj",
-          "identifier" : "832B0AE62FD7D04E0009FCFE",
-          "name" : "EssentialChess"
+          "identifier" : "83FD3FAC2FDA685300CA0675",
+          "name" : "EssentialChessUI"
         }
       ]
     },
@@ -26,8 +26,8 @@
       "parallelizable" : false,
       "target" : {
         "containerPath" : "container:EssentialChess.xcodeproj",
-        "identifier" : "832B0AEF2FD7D04E0009FCFE",
-        "name" : "EssentialChessTests"
+        "identifier" : "83FD3FB42FDA685300CA0675",
+        "name" : "EssentialChessUITests"
       }
     }
   ],
