@@ -1,21 +1,58 @@
 # ♟️ Complete Architecture & Product Specification: Progressive Chess App
 
+## Table of Contents
+
+* [1. Product Overview & Navigation Architecture](#1-product-overview--navigation-architecture)
+* [1.1 The 3-Layer UI Hierarchy](#11-the-3-layer-ui-hierarchy)
+* [1.2 The 99% Progress Bar Rule](#12-the-99-progress-bar-rule)
+
+
+* [2. JSON Data Architecture (Single Source of Truth)](#2-json-data-architecture-single-source-of-truth)
+* [2.1 JSON Schema Structure](#21-json-schema-structure)
+* [2.2 Clean Architecture: Domain vs. Presentation Models](#22-clean-architecture-domain-vs-presentation-models)
+
+
+* [3. Onboarding & Placement Test Flow](#3-onboarding--placement-test-flow)
+* [3.1 The Absolute Beginner Route](#31-the-absolute-beginner-route)
+* [3.2 The Experienced Route (Placement Test)](#32-the-experienced-route-placement-test)
+
+
+* [4. The Mix Puzzle Exam Gameplay Mechanics](#4-the-mix-puzzle-exam-gameplay-mechanics)
+* [5. Behavior-Driven Development (BDD) Specifications](#5-behavior-driven-development-bdd-specifications)
+* [Flow 1: Onboarding & Placement](#flow-1-onboarding--placement)
+* [Flow 2: Progression & The 99% Rule](#flow-2-progression--the-99-rule)
+* [Flow 3: Exam Gameplay & Penalties](#flow-3-exam-gameplay--penalties)
+* [Flow 4: Sequence Navigation & Puzzle Progression (Layer 3)](#flow-4-sequence-navigation--puzzle-progression-layer-3)
+* [Flow 5: Theme Customization (Board & Pieces)](#flow-5-theme-customization-board--pieces)
+
+
+* [7. Core Swift Implementation (Clean Architecture)](#7-core-swift-implementation-clean-architecture)
+* [7.1 Sequence Navigation Engine (PuzzleBoardViewModel)](#71-sequence-navigation-engine-puzzleboardviewmodel)
+* [7.2 Exam Gameplay Engine (ExamViewModel)](#72-exam-gameplay-engine-examviewmodel)
+* [7.3 Theme Customization Engine (ThemeManager)](#73-theme-customization-engine-thememanager)
+
+
+
+---
+
 ## 1. Product Overview & Navigation Architecture
 
 The application is a single-player, offline-first educational chess platform. It utilizes a structured, 3-layer progression system driven by a static local JSON data source. The core philosophy is to provide a linear, gamified learning path with strict mastery checkpoints.
 
 ### 1.1 The 3-Layer UI Hierarchy
 
-- **Layer 1 (Section by Elo):** The main curriculum screen divided by rating brackets (e.g., 500-800, 800-1200). Higher sections are locked by default and strictly require passing the previous section's exam.
-- **Layer 2 (Theme List):** Inside an unlocked section, users see specific tactical themes (e.g., Checkmates, Fundamental Tactics). Users can play these themes in any order. At the bottom of this list lies the Mix Puzzle Exam.
-- **Layer 3 (Puzzle Board):** The actual interactive chess board where users solve specific tactical puzzles.
+* **Layer 1 (Section by Elo):** The main curriculum screen divided by rating brackets (e.g., 500-800, 800-1200). Higher sections are locked by default and strictly require passing the previous section's exam.
+* **Layer 2 (Theme List):** Inside an unlocked section, users see specific tactical themes (e.g., Checkmates, Fundamental Tactics). Users can play these themes in any order. At the bottom of this list lies the Mix Puzzle Exam.
+* **Layer 3 (Puzzle Board):** The actual interactive chess board where users solve specific tactical puzzles.
 
 ### 1.2 The 99% Progress Bar Rule
 
-- Each Section and Sub-Theme has a visual progress bar.
-- Completing puzzles inside standard themes updates the progress bar proportionally.
-- Once all standard themes in a Section are 100% completed, the Section's overall progress bar strictly halts at **99%**.
-- The remaining 1% (which acts as the trigger to unlock the next Elo Section) can only be achieved by passing the Mix Puzzle Exam.
+* Each Section and Sub-Theme has a visual progress bar.
+* Completing puzzles inside standard themes updates the progress bar proportionally.
+* Once all standard themes in a Section are 100% completed, the Section's overall progress bar strictly halts at **99%**.
+* The remaining 1% (which acts as the trigger to unlock the next Elo Section) can only be achieved by passing the Mix Puzzle Exam.
+
+---
 
 ## 2. JSON Data Architecture (Single Source of Truth)
 
@@ -74,6 +111,7 @@ The data is structured hierarchically to perfectly match the UI layers.
     }
   ]
 }
+
 ```
 
 ### 2.2 Clean Architecture: Domain vs. Presentation Models
@@ -84,11 +122,11 @@ The application employs Clean Architecture, separating pure domain data models f
 import Foundation
 
 // MARK: - 1. Pure Domain Models (Decoded from JSON)
-public struct Curriculum: Codable{
+public struct Curriculum: Codable {
     public let sections: [EloSection]
 }
 
-public struct EloSection: Codable, Identifiable{
+public struct EloSection: Codable, Identifiable {
     public let id: String
     public let title: String
     public let eloRange: String
@@ -96,7 +134,7 @@ public struct EloSection: Codable, Identifiable{
 }
 
 // MARK: - 2. Persistent State Model (User Defaults / Database)
-public struct UserProgress: Codable{
+public struct UserProgress: Codable {
     public var hiddenRating: Double
     public var completedPuzzleIDs: Set<String>
     public var passedExamIDs: Set<String>
@@ -104,7 +142,7 @@ public struct UserProgress: Codable{
 }
 
 // MARK: - 3. Presentation UI Models (Dumb Models for SwiftUI)
-public struct SectionUIModel: Identifiable, Equatable{
+public struct SectionUIModel: Identifiable, Equatable {
     public let id: String
     public let title: String
     public let progress: Double
@@ -112,38 +150,45 @@ public struct SectionUIModel: Identifiable, Equatable{
     public let categories: [CategoryUIModel]
 }
 
-public struct SubThemeUIModel: Identifiable, Equatable{
+public struct SubThemeUIModel: Identifiable, Equatable {
     public let id: String
     public let title: String
     public let totalPuzzles: Int
     public let completedPuzzles: Int // Dynamically calculated by ViewModel
     public let puzzles: [PuzzleUIModel]
 }
+
 ```
+
+---
 
 ## 3. Onboarding & Placement Test Flow
 
 ### 3.1 The Absolute Beginner Route
 
-- If the user selects "I am new to chess", the placement test is skipped.
-- The system assigns a base HiddenRating of 500.
-- Only the "500-800" Curriculum Section is unlocked.
+* If the user selects "I am new to chess", the placement test is skipped.
+* The system assigns a base HiddenRating of 500.
+* Only the "500-800" Curriculum Section is unlocked.
 
 ### 3.2 The Experienced Route (Placement Test)
 
-- If the user selects "I have some experience", they undergo a 15-puzzle assessment.
-- **NO LIVES, NO COOLDOWN:** This is an assessment, not a punishment. Users are not penalized or locked out for failing.
-- **Dynamic Calibration:** The user starts at a provisional rating of 1000. Correct solves increase the rating and difficulty; incorrect solves decrease the rating and difficulty while showing the correct move.
-- **Final Placement:** After 15 puzzles, the system permanently unlocks all Curriculum Sections up to that rating bracket.
+* If the user selects "I have some experience", they undergo a 15-puzzle assessment.
+* **NO LIVES, NO COOLDOWN:** This is an assessment, not a punishment. Users are not penalized or locked out for failing.
+* **Dynamic Calibration:** The user starts at a provisional rating of 1000. Correct solves increase the rating and difficulty; incorrect solves decrease the rating and difficulty while showing the correct move.
+* **Final Placement:** After 15 puzzles, the system permanently unlocks all Curriculum Sections up to that rating bracket.
+
+---
 
 ## 4. The Mix Puzzle Exam Gameplay Mechanics
 
 The Mix Puzzle acts as the final exam for each Elo section.
 
-- **Bank Randomization:** The system randomly selects exactly **10 puzzles** from the category's hidden pool of 100 puzzles.
-- **3-Lives Sudden Death:** The user is granted exactly 3 lives per exam attempt. Incorrect moves or tapping the "Hint" button deducts 1 life.
-- **Move-On Mode:** When a life is lost, the correct move is briefly revealed, and the UI forces progression to the next puzzle.
-- **3-Hour Cooldown Penalty:** If the user loses all 3 lives, the exam is marked as "Failed", displaying a strict 3-hour countdown timer based on local device time.
+* **Bank Randomization:** The system randomly selects exactly **10 puzzles** from the category's hidden pool of 100 puzzles.
+* **3-Lives Sudden Death:** The user is granted exactly 3 lives per exam attempt. Incorrect moves or tapping the "Hint" button deducts 1 life.
+* **Move-On Mode:** When a life is lost, the correct move is briefly revealed, and the UI forces progression to the next puzzle.
+* **3-Hour Cooldown Penalty:** If the user loses all 3 lives, the exam is marked as "Failed", displaying a strict 3-hour countdown timer based on local device time.
+
+---
 
 ## 5. Behavior-Driven Development (BDD) Specifications
 
@@ -151,88 +196,114 @@ The Mix Puzzle acts as the final exam for each Elo section.
 
 **Feature:** User Onboarding and Dynamic Placement Test
 
-- **Scenario:** User declares as an absolute beginner
-    - **Given** the user is on the initial onboarding screen
-    - **When** the user selects "I am new to chess"
-    - **Then** the system assigns a hidden base rating of 500
-    - **And** the system unlocks ONLY the "500-800" Elo Section
-- **Scenario:** Placement test concludes and unlocks corresponding sections
-    - **Given** the user completes the 15th puzzle
-    - **When** the system calculates the final calibrated rating (e.g., 1350)
-    - **Then** the system unlocks all sections up to the placed bracket
+* **Scenario:** User declares as an absolute beginner
+* **Given** the user is on the initial onboarding screen
+* **When** the user selects "I am new to chess"
+* **Then** the system assigns a hidden base rating of 500
+* **And** the system unlocks ONLY the "500-800" Elo Section
+
+
+* **Scenario:** Placement test concludes and unlocks corresponding sections
+* **Given** the user completes the 15th puzzle
+* **When** the system calculates the final calibrated rating (e.g., 1350)
+* **Then** the system unlocks all sections up to the placed bracket
+
+
 
 ### Flow 2: Progression & The 99% Rule
 
 **Feature:** Curriculum Progression and The 99% Rule
 
-- **Scenario:** Completing all themes triggers the 99% state
-    - **Given** the user is on the Theme List
-    - **When** the user successfully completes all puzzles in all non-exam themes
-    - **Then** the Section's overall progress bar updates to exactly 99%
-    - **And** the progress bar halts
-    - **And** the Mix Puzzle Exam button state changes to "Unlocked"
+* **Scenario:** Completing all themes triggers the 99% state
+* **Given** the user is on the Theme List
+* **When** the user successfully completes all puzzles in all non-exam themes
+* **Then** the Section's overall progress bar updates to exactly 99%
+* **And** the progress bar halts
+* **And** the Mix Puzzle Exam button state changes to "Unlocked"
+
+
 
 ### Flow 3: Exam Gameplay & Penalties
 
 **Feature:** Mix Puzzle Exam Gameplay, Lives, and Cooldown
 
-- **Scenario:** Depleting lives triggers a 3-hour cooldown
-    - **Given** the user is taking the exam with 1 life remaining
-    - **When** the user makes a mistake or uses a hint
-    - **Then** the lives counter drops to 0
-    - **And** the exam session immediately terminates
-    - **And** the system records the current timestamp as the failure time
-    - **And** the Mix Puzzle Exam button is locked with a 3-hour countdown timer
-- **Scenario:** Passing the exam synchronizes the progression
-    - **Given** the user correctly solves the 10th puzzle with at least 1 life remaining
-    - **Then** the Section's progress bar updates from 99% to 100%
-    - **And** the next sequential Elo Section becomes unlocked
+* **Scenario:** Depleting lives triggers a 3-hour cooldown
+* **Given** the user is taking the exam with 1 life remaining
+* **When** the user makes a mistake or uses a hint
+* **Then** the lives counter drops to 0
+* **And** the exam session immediately terminates
+* **And** the system records the current timestamp as the failure time
+* **And** the Mix Puzzle Exam button is locked with a 3-hour countdown timer
+
+
+* **Scenario:** Passing the exam synchronizes the progression
+* **Given** the user correctly solves the 10th puzzle with at least 1 life remaining
+* **Then** the Section's progress bar updates from 99% to 100%
+* **And** the next sequential Elo Section becomes unlocked
+
+
 
 ### Flow 4: Sequence Navigation & Puzzle Progression (Layer 3)
 
 **Feature:** Automatic Progress Continuation and Puzzle History Navigation
 
-- **Scenario 1:** Automatically resuming an incomplete puzzle sequence (Resume Progress)
-    - **Given** the user has completed for instance 5 out of 10 puzzles in the "Checkmates" theme
-    - **When** the user exits the puzzle board and re-enters the "Checkmates" theme later
-    - **Then** the system must detect that the 6th puzzle is the ongoing (unsolved) sequence
-    - **And** the system must automatically load and present the 6th puzzle
-- **Scenario 2:** Restricting the sequence popup list to unlocked puzzles
-    - **Given** the user is currently on the 6th puzzle (ongoing)
-    - **When** the user taps the "Sequence List" button
-    - **Then** the popup must only display options from Puzzle 1 to Puzzle 6 as selectable
-    - **And** options from Puzzle 7 to Puzzle 10 must be hidden or visually locked
-- **Scenario 3:** Returning to the main progression after reviewing an old puzzle
-    - **Given** the user has an active progression frontier at Puzzle 6
-    - **And** the user opens the sequence list and chooses to replay the completed Puzzle 3
-    - **When** the user successfully solves Puzzle 3 again
-    - **Then** the system detects that Puzzle 3 was already completed
-    - **And** when the user taps "Next", the system automatically skips intermediate puzzles and routes directly back to the frontier (Puzzle 6)
-- **Scenario 4:** Initial entry behavior for a 100% completed theme
-    - **Given** the user has successfully completed all 10 puzzles in a theme
-    - **When** the user taps the theme from Layer 3
-    - **Then** the system must load and present Puzzle 1 by default
-    - **And** all sequence options from Puzzle 1 to Puzzle 10 must be unlocked
-- **Scenario 5:** Linear progression from a free choice in a completed theme
-    - **Given** the user is inside a theme that is 100% completed
-    - **And** the user utilizes the sequence list to jump directly to Puzzle 6
-    - **When** the user successfully solves Puzzle 6
-    - **Then** the system must linearly route the user to the next puzzle (Puzzle 7)
+* **Scenario 1:** Automatically resuming an incomplete puzzle sequence (Resume Progress)
+* **Given** the user has completed for instance 5 out of 10 puzzles in the "Checkmates" theme
+* **When** the user exits the puzzle board and re-enters the "Checkmates" theme later
+* **Then** the system must detect that the 6th puzzle is the ongoing (unsolved) sequence
+* **And** the system must automatically load and present the 6th puzzle
+
+
+* **Scenario 2:** Restricting the sequence popup list to unlocked puzzles
+* **Given** the user is currently on the 6th puzzle (ongoing)
+* **When** the user taps the "Sequence List" button
+* **Then** the popup must only display options from Puzzle 1 to Puzzle 6 as selectable
+* **And** options from Puzzle 7 to Puzzle 10 must be hidden or visually locked
+
+
+* **Scenario 3:** Returning to the main progression after reviewing an old puzzle
+* **Given** the user has an active progression frontier at Puzzle 6
+* **And** the user opens the sequence list and chooses to replay the completed Puzzle 3
+* **When** the user successfully solves Puzzle 3 again
+* **Then** the system detects that Puzzle 3 was already completed
+* **And** when the user taps "Next", the system automatically skips intermediate puzzles and routes directly back to the frontier (Puzzle 6)
+
+
+* **Scenario 4:** Initial entry behavior for a 100% completed theme
+* **Given** the user has successfully completed all 10 puzzles in a theme
+* **When** the user taps the theme from Layer 3
+* **Then** the system must load and present Puzzle 1 by default
+* **And** all sequence options from Puzzle 1 to Puzzle 10 must be unlocked
+
+
+* **Scenario 5:** Linear progression from a free choice in a completed theme
+* **Given** the user is inside a theme that is 100% completed
+* **And** the user utilizes the sequence list to jump directly to Puzzle 6
+* **When** the user successfully solves Puzzle 6
+* **Then** the system must linearly route the user to the next puzzle (Puzzle 7)
+
+
 
 ### Flow 5: Theme Customization (Board & Pieces)
 
 **Feature:** Chess Board and Piece Theme Customization
 
-- **Scenario 1:** Changing the board theme
-    - **Given** the user is on the Theme Settings page
-    - **When** the user selects the "Green" board theme
-    - **Then** the board's dark and light squares change to green-themed colors
-    - **And** the board highlight color remains strictly mapped to "#2596be"
-- **Scenario 2:** Theme persistence across sessions
-    - **Given** the user has selected a custom piece style and board theme
-    - **When** the user completely closes and reopens the application
-    - **Then** the system retrieves the saved preferences from UserDefaults (AppStorage)
-    - **And** the application successfully reapplies the themes to the chess board
+* **Scenario 1:** Changing the board theme
+* **Given** the user is on the Theme Settings page
+* **When** the user selects the "Green" board theme
+* **Then** the board's dark and light squares change to green-themed colors
+* **And** the board highlight color remains strictly mapped to "#2596be"
+
+
+* **Scenario 2:** Theme persistence across sessions
+* **Given** the user has selected a custom piece style and board theme
+* **When** the user completely closes and reopens the application
+* **Then** the system retrieves the saved preferences from UserDefaults (AppStorage)
+* **And** the application successfully reapplies the themes to the chess board
+
+
+
+---
 
 ## 7. Core Swift Implementation (Clean Architecture)
 
@@ -247,7 +318,7 @@ import Foundation
 import Combine
 import EssentialChess
 
-public final class PuzzleBoardViewModel: ObservableObject, Identifiable{
+public final class PuzzleBoardViewModel: ObservableObject, Identifiable {
 
     @Published public var currentActiveIndex: Int = 0
     @Published public var isSolved: Bool = false
@@ -332,6 +403,7 @@ public final class PuzzleBoardViewModel: ObservableObject, Identifiable{
         wrongAttempts = 0
     }
 }
+
 ```
 
 ### 7.2 Exam Gameplay Engine (`ExamViewModel`)
@@ -343,8 +415,8 @@ import Foundation
 import Combine
 import EssentialChess
 
-public final class ExamViewModel: ObservableObject{
-    public enum ExamPhase{ case active, passed, failed }
+public final class ExamViewModel: ObservableObject {
+    public enum ExamPhase { case active, passed, failed }
 
     @Published public private(set) var remainingLives: Int = 3
     @Published public private(set) var solvedCount: Int = 0
@@ -396,6 +468,7 @@ public final class ExamViewModel: ObservableObject{
         }
     }
 }
+
 ```
 
 ### 7.3 Theme Customization Engine (`ThemeManager`)
@@ -406,7 +479,7 @@ Handles UI customization preferences using standard `AppStorage` logic.
 import SwiftUI
 import Combine
 
-public enum BoardThemeOption: String, CaseIterable{
+public enum BoardThemeOption: String, CaseIterable {
     case brown = "Brown"
     case green = "Green"
     case blue = "Blue"
@@ -432,7 +505,7 @@ public enum BoardThemeOption: String, CaseIterable{
     }
 }
 
-public class ThemeManager: ObservableObject{
+public class ThemeManager: ObservableObject {
     @AppStorage("selected_board_theme") private var savedBoardThemeString: String = BoardThemeOption.brown.rawValue
     @AppStorage("selected_piece_theme") private var savedPieceThemeString: String = "default"
 
@@ -449,8 +522,5 @@ public class ThemeManager: ObservableObject{
         self.currentPieceTheme = UserDefaults.standard.string(forKey: "selected_piece_theme") ?? "default"
     }
 }
+
 ```
-
-**(Usage Note):** In `ChessBoardBridge` (SwiftUI Representable), properties from `ThemeManager` are directly passed into the underlying `NativeChessBoardView` to instantly re-render the board's appearance.
-
-
