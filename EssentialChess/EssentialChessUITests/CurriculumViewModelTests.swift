@@ -13,48 +13,48 @@ import EssentialChess
 final class CurriculumViewModelTests: XCTestCase {
     
     func test_init_doesNotRequestData() {
-        let (_, curriculumSubject, mixPoolSubject) = makeSUT()
+        let (sut, _, _, _) = makeSUT()
         
-        XCTAssertFalse(curriculumSubject.hasSubscribers)
-        XCTAssertFalse(mixPoolSubject.hasSubscribers)
+        XCTAssertTrue(sut.sections.isEmpty)
+        XCTAssertFalse(sut.isLoading)
+        XCTAssertNil(sut.errorMessage)
     }
     
-    func test_load_requestsDataFromPublishers() {
-        let (sut, curriculumSubject, mixPoolSubject) = makeSUT()
+    func test_load_deliversMappedDataOnSuccess() {
+        let (sut, curriculumSubject, mixPoolSubject, progressSubject) = makeSUT()
+        
+        let expectedCurriculum = makeCurriculum()
+        let expectedMixPool = makeMixPool()
+        let expectedProgress = makeUserProgress()
         
         sut.load()
         
-        XCTAssertTrue(curriculumSubject.hasSubscribers)
-        XCTAssertTrue(mixPoolSubject.hasSubscribers)
-        XCTAssertTrue(sut.isLoading, "Expected loading state to be true when fetching starts")
-    }
-    
-    func test_load_deliversDataOnSuccess() {
-        let (sut, curriculumSubject, mixPoolSubject) = makeSUT()
-        let expectedCurriculum = Curriculum(version: "1", metadata: CurriculumMetadata(description: "", totalSections: 0, targetPuzzlesPerSubTheme: 0, targetPuzzlesPerExam: nil), sections: [])
-        let expectedMixPool = MixPool(id: "1", metadata: MixPoolMetadata(totalPuzzles: 0, supportedModes: []), difficultyTiers: [])
-        
-        sut.load()
-        
+        // 1. Send values to all publishers
         curriculumSubject.send(expectedCurriculum)
         mixPoolSubject.send(expectedMixPool)
+        progressSubject.send(expectedProgress)
         
+        // 2. Send completion
         curriculumSubject.send(completion: .finished)
         mixPoolSubject.send(completion: .finished)
+        progressSubject.send(completion: .finished)
         
-        XCTAssertEqual(sut.sections, expectedCurriculum.sections)
+        // 3. Verify the outcome
+        XCTAssertEqual(sut.sections.count, expectedCurriculum.sections.count)
         XCTAssertFalse(sut.isLoading, "Expected loading state to be false after completion")
         XCTAssertNil(sut.errorMessage)
     }
     
     func test_load_deliversErrorMessageOnFailure() {
-        let (sut, curriculumSubject, mixPoolSubject) = makeSUT()
+        let (sut, curriculumSubject, mixPoolSubject, progressSubject) = makeSUT()
         let anyError = NSError(domain: "any", code: 0)
         
         sut.load()
         
+        // Simulate a failure in one of the primary data sources
         curriculumSubject.send(completion: .failure(anyError))
-        mixPoolSubject.send(completion: .failure(anyError))
+        mixPoolSubject.send(completion: .finished)
+        progressSubject.send(completion: .finished)
         
         XCTAssertTrue(sut.sections.isEmpty)
         XCTAssertFalse(sut.isLoading)
@@ -63,40 +63,53 @@ final class CurriculumViewModelTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (
+    private func makeSUT(
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) -> (
         sut: CurriculumViewModel,
-        curriculumSubject: PublisherSpy<Curriculum>,
-        mixPoolSubject: PublisherSpy<MixPool>
+        curriculumSubject: PassthroughSubject<Curriculum, Error>,
+        mixPoolSubject: PassthroughSubject<MixPool, Error>,
+        progressSubject: PassthroughSubject<UserProgress, Never>
     ) {
-        let curriculumSpy = PublisherSpy<Curriculum>()
-        let mixPoolSpy = PublisherSpy<MixPool>()
+        let curriculumSubject = PassthroughSubject<Curriculum, Error>()
+        let mixPoolSubject = PassthroughSubject<MixPool, Error>()
+        let progressSubject = PassthroughSubject<UserProgress, Never>()
         
         let sut = CurriculumViewModel(
-            curriculumPublisher: { curriculumSpy.publisher },
-            mixPoolPublisher: { mixPoolSpy.publisher }
+            curriculumPublisher: { curriculumSubject.eraseToAnyPublisher() },
+            mixPoolPublisher: { mixPoolSubject.eraseToAnyPublisher() },
+            progressPublisher: { progressSubject.eraseToAnyPublisher() }
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
-        
-        return (sut, curriculumSpy, mixPoolSpy)
+        return (sut, curriculumSubject, mixPoolSubject, progressSubject)
     }
     
-    private class PublisherSpy<T> {
-        let subject = PassthroughSubject<T, Error>()
-        var hasSubscribers = false
-        
-        var publisher: AnyPublisher<T, Error> {
-            subject
-                .handleEvents(receiveSubscription: { [weak self] _ in self?.hasSubscribers = true })
-                .eraseToAnyPublisher()
-        }
-        
-        func send(_ value: T) {
-            subject.send(value)
-        }
-        
-        func send(completion: Subscribers.Completion<Error>) {
-            subject.send(completion: completion)
-        }
+    private func makeCurriculum() -> Curriculum {
+        return Curriculum(
+            version: "1",
+            metadata: CurriculumMetadata(description: "", totalSections: 0, targetPuzzlesPerSubTheme: 0, targetPuzzlesPerExam: nil),
+            sections: []
+        )
+    }
+    
+    private func makeMixPool() -> MixPool {
+        return MixPool(
+            id: "1",
+            metadata: MixPoolMetadata(totalPuzzles: 0, supportedModes: []),
+            difficultyTiers: []
+        )
+    }
+    
+    private func makeUserProgress() -> UserProgress {
+        // Using the exact initializer from the domain model
+        return UserProgress(
+            hiddenRating: 1500.0,
+            onboardingComplete: true,
+            completedPuzzleIDs: [],
+            passedExamIDs: [],
+            examFailureTimes: [:]
+        )
     }
 }

@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8381964E2FDA7306009E88CF /* EssentialChess.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8381964D2FDA7306009E88CF /* EssentialChess.framework */; };
+		8381964F2FDA7306009E88CF /* EssentialChess.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8381964D2FDA7306009E88CF /* EssentialChess.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		838196522FDA7310009E88CF /* EssentialChessUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 838196512FDA7310009E88CF /* EssentialChessUI.framework */; };
+		838196532FDA7310009E88CF /* EssentialChessUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 838196512FDA7310009E88CF /* EssentialChessUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		83D025E02FD91D80008FDB64 /* NativeChessBoard in Frameworks */ = {isa = PBXBuildFile; productRef = 83D025DF2FD91D80008FDB64 /* NativeChessBoard */; };
 /* End PBXBuildFile section */
 
@@ -27,10 +31,27 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		838196502FDA7306009E88CF /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				838196532FDA7310009E88CF /* EssentialChessUI.framework in Embed Frameworks */,
+				8381964F2FDA7306009E88CF /* EssentialChess.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		832B0D032FD919F00009FCFE /* EssentialChessApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EssentialChessApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		832B0D192FD919F20009FCFE /* EssentialChessAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialChessAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		832B0D232FD919F20009FCFE /* EssentialChessAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialChessAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		8381964D2FDA7306009E88CF /* EssentialChess.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EssentialChess.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		838196512FDA7310009E88CF /* EssentialChessUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EssentialChessUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -69,7 +90,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8381964E2FDA7306009E88CF /* EssentialChess.framework in Frameworks */,
 				83D025E02FD91D80008FDB64 /* NativeChessBoard in Frameworks */,
+				838196522FDA7310009E88CF /* EssentialChessUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,6 +119,7 @@
 				832B0D052FD919F00009FCFE /* EssentialChessApp */,
 				832B0D1C2FD919F20009FCFE /* EssentialChessAppTests */,
 				832B0D262FD919F20009FCFE /* EssentialChessAppUITests */,
+				8381964C2FDA7306009E88CF /* Frameworks */,
 				832B0D042FD919F00009FCFE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -110,6 +134,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		8381964C2FDA7306009E88CF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				838196512FDA7310009E88CF /* EssentialChessUI.framework */,
+				8381964D2FDA7306009E88CF /* EssentialChess.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -120,6 +153,7 @@
 				832B0CFF2FD919F00009FCFE /* Sources */,
 				832B0D002FD919F00009FCFE /* Frameworks */,
 				832B0D012FD919F00009FCFE /* Resources */,
+				838196502FDA7306009E88CF /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
