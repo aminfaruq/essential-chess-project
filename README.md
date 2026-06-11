@@ -1,3 +1,18 @@
+![Swift](https://img.shields.io/badge/Swift-5.9+-orange?style=flat-square&logo=swift)
+![iOS](https://img.shields.io/badge/iOS-16.0+-black?style=flat-square&logo=apple)
+![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture%20%7C%20MVVM-blue?style=flat-square)
+![Framework](https://img.shields.io/badge/Framework-SwiftUI%20%7C%20Combine-blueviolet?style=flat-square)
+
+An offline-first, iOS educational chess application designed to guide players through a gamified, structured tactical curriculum. 
+
+Built with **Clean Architecture** and **MVVM**, this project demonstrates a strict separation of concerns—isolating pure domain logic from SwiftUI views and infrastructure. The app leverages **Combine** for reactive state management, highly decoupled ViewModels, and Behavior-Driven Development (BDD) specifications to handle complex progression logic, curriculum unlocking, and sudden-death exam mechanics.
+
+### ✨ Key Technical Highlights
+- **Clean Architecture:** Complete decoupling of the Domain layer, Presentation layer (SwiftUI/Dumb Views), and Data/Infrastructure layer (Adapters).
+- **Reactive MVVM:** Pure ViewModels that manage state via Combine without importing UI frameworks or directly coupling to databases.
+- **Offline-First:** The entire chess curriculum and puzzle engine run locally, driven by a robust JSON data architecture.
+- **Behavior-Driven (BDD):** Core progression algorithms, the "99% Rule," and sequence navigations are backed by strict BDD testing scenarios using `XCTest`.
+
 # ♟️ Complete Architecture & Product Specification: Progressive Chess App
 
 ## Table of Contents
