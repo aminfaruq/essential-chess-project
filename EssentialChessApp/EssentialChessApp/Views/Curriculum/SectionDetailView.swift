@@ -77,10 +77,8 @@ private struct ExamCard: View {
     @EnvironmentObject var composer: AppComposer
     @State private var showExam = false
     
-    // Cukup menerima UI Model dari SectionDetailView
     let category: CategoryUIModel
     
-    // Menerjemahkan ExamUIState ke dalam boolean visual tanpa mengubah logika UI lama
     private var isPassed: Bool {
         if case .passed = category.examState { return true }; return false
     }
