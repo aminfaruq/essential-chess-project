@@ -540,3 +540,7 @@ public class ThemeManager: ObservableObject {
 }
 
 ```
+
+## Demo
+
+![Demo](EssentialChessApp/chess_demo.gif)
