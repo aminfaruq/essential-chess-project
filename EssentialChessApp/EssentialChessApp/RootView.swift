@@ -58,7 +58,7 @@ public struct RootView: View {
                     }
                 )
             } else {
-                CurriculumView()
+                MainTabView()
             }
         }
         .background(AppColors.background.ignoresSafeArea())
