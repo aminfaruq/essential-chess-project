@@ -26,6 +26,7 @@ public struct RootView: View {
                 OnboardingView(
                     onSelectNewbie: {
                         composer.progressAdapter.update { progress in
+                            composer.navigationVM.resetToCurriculum()
                             progress = UserProgress(
                                 hiddenRating: 500.0,
                                 onboardingComplete: true,
@@ -47,6 +48,7 @@ public struct RootView: View {
                                         examFailureTimes: [:]
                                     )
                                 }
+                                composer.navigationVM.resetToCurriculum()
                                 // Close the sheet by changing it back to nil
                                 self.placementViewModel = nil
                             },
@@ -58,7 +60,7 @@ public struct RootView: View {
                     }
                 )
             } else {
-                CurriculumView()
+                MainTabView(navigationViewModel: composer.navigationVM)
             }
         }
         .background(AppColors.background.ignoresSafeArea())

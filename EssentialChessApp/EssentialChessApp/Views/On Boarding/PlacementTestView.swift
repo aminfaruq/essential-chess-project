@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import EssentialChess
 import EssentialChessUI
 
 public struct PlacementTestView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var viewModel: OnboardingViewModel
-    
+    @EnvironmentObject var themeAdapter: ThemeAdapter
+
     @StateObject private var boardController = ChessBoardController()
     
     public init(viewModel: OnboardingViewModel) {
@@ -32,7 +34,6 @@ public struct PlacementTestView: View {
                         .padding(.horizontal, 24)
                     Spacer(minLength: 12)
                     
-                    // Elemen Bridge Jembatan UI
                     ChessBoardBridge(
                         puzzle: puzzle,
                         controller: boardController,
@@ -43,15 +44,24 @@ public struct PlacementTestView: View {
                             viewModel.handleResult(isCorrect: false)
                         },
                         onReady: { color in
-                            // Simpan warna bidak pemain ke controller atau viewModel
                             boardController.userColorName = color
                         },
-                        boardThemeLight: AppColors.boardLight,
-                        boardThemeDark: AppColors.boardDark,
-                        pieceTheme: "default"
+                        boardThemeLight: Color(
+                            red: themeAdapter.currentTheme.boardTheme.lightSquareColor.red,
+                            green: themeAdapter.currentTheme.boardTheme.lightSquareColor.green,
+                            blue: themeAdapter.currentTheme.boardTheme.lightSquareColor.blue,
+                            opacity: themeAdapter.currentTheme.boardTheme.lightSquareColor.alpha
+                        ),
+                        boardThemeDark: Color(
+                            red: themeAdapter.currentTheme.boardTheme.darkSquareColor.red,
+                            green: themeAdapter.currentTheme.boardTheme.darkSquareColor.green,
+                            blue: themeAdapter.currentTheme.boardTheme.darkSquareColor.blue,
+                            opacity: themeAdapter.currentTheme.boardTheme.darkSquareColor.alpha
+                        ),
+                        pieceTheme: themeAdapter.currentTheme.pieceTheme
                     )
                     .padding(.horizontal, 16)
-                    .aspectRatio(1, contentMode: .fit) // Agar papan selalu persegi
+                    .aspectRatio(1, contentMode: .fit)
                     
                     Spacer(minLength: 12)
                     statusBar
@@ -105,9 +115,21 @@ public struct PlacementTestView: View {
     
     private var playerTurnInfo: some View {
         HStack {
-            Text("White to Move")
-                .font(.system(size: 22, weight: .light))
-                .foregroundColor(AppColors.textPrimary)
+            if !boardController.userColorName.isEmpty {
+                let colorPrefix = boardController.userColorName == "White" ? "w" : "b"
+                let pieceImageName = "\(themeAdapter.currentTheme.pieceTheme)_\(colorPrefix)k"
+                
+                HStack(spacing: 12) {
+                    Text("\(boardController.userColorName) to Move")
+                        .font(.system(size: 22, weight: .light))
+                        .foregroundColor(AppColors.textPrimary)
+                    
+                    Image(pieceImageName)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 42, height: 42)
+                }
+            }
         }
         .padding(.horizontal, 20)
         .padding(.bottom, 32)
@@ -132,7 +154,7 @@ public struct PlacementTestView: View {
             Spacer()
             
             Button {
-                dismiss()
+                viewModel.commitResults()
             } label: {
                 Text("Start Learning")
                     .font(.system(size: 17, weight: .semibold))

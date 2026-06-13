@@ -11,22 +11,34 @@ import EssentialChessUI
 public struct CurriculumView: View {
     @EnvironmentObject var curriculumVM: CurriculumViewModel
     
-    public init() {}
+    @Binding var scrollToTopTrigger: Int
+    
+    public init(scrollToTopTrigger: Binding<Int> = .constant(0)) {
+        self._scrollToTopTrigger = scrollToTopTrigger
+    }
     
     public var body: some View {
         NavigationStack {
             ZStack {
                 AppColors.background.ignoresSafeArea()
                 
-                ScrollView {
-                    VStack(spacing: 12) {
-                        ForEach(curriculumVM.sections) { sectionModel in
-                            SectionCard(model: sectionModel)
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        VStack(spacing: 12) {
+                            ForEach(curriculumVM.sections) { sectionModel in
+                                SectionCard(model: sectionModel)
+                            }
+                        }
+                        .id("top")
+                        .padding(.horizontal, 20)
+                        .padding(.top, 8)
+                        .padding(.bottom, 32)
+                    }
+                    .onChange(of: scrollToTopTrigger) { _, _ in
+                        withAnimation {
+                            proxy.scrollTo("top", anchor: .top)
                         }
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 8)
-                    .padding(.bottom, 32)
                 }
             }
             .navigationTitle("Chess Academy")

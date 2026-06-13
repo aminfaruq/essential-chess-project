@@ -121,79 +121,12 @@ public final class CurriculumViewModel: ObservableObject {
     // MARK: - Mapping Logic
     
     private func mapToUIModels(curriculum: Curriculum, progress: UserProgress) -> [SectionUIModel] {
-        //  Use enumerated() so we know which level index we are processing.
         return curriculum.sections.enumerated().map { index, section in
-            
-            let isUnlocked: Bool
-            if index == 0 {
-                // First level is always open
-                isUnlocked = true
-            } else {
-                // For level 2 and beyond, peek at the previous level
-                let previousSection = curriculum.sections[index - 1]
-                
-                // Search for exam category in previous level
-                if let previousExam = previousSection.categories.first(where: { $0.isExamMode }) {
-                    // This level is unlocked ONLY IF the previous level test has been passed
-                    isUnlocked = progress.passedExamIDs.contains(previousExam.id)
-                } else {
-                    // If the previous level strangely didn't have a test, just open this level
-                    isUnlocked = true
-                }
-            }
-            
-            // Progress of all non-exam categories in this section
+            let isUnlocked = isSectionUnlocked(section, at: index, in: curriculum, progress: progress)
             let sectionProgress = CurriculumProgressTracker.progress(for: section, progress: progress)
             
-            let categories: [CategoryUIModel] = section.categories.map { category in
-                let categoryProgress = CurriculumProgressTracker.progress(for: category, progress: progress)
-                
-                var examState: ExamUIState? = nil
-                if category.isExamMode {
-                    if progress.passedExamIDs.contains(category.id) {
-                        examState = .passed(message: "Passed — section unlocked!")
-                    }
-                    else if !isUnlocked {
-                        examState = .locked(reason: "Complete previous section to unlock")
-                    }
-                    else if sectionProgress < 0.99 {
-                        examState = .locked(reason: "Complete all themes to unlock")
-                    }
-                    else if let failTime = progress.examFailureTimes[category.id], Date().timeIntervalSince(failTime) < (3 * 3600) {
-                        examState = .onCooldown(availableIn: "On Cooldown")
-                    }
-                    else {
-                        examState = .unlocked(livesText: "3 lives · 10 random puzzles")
-                    }
-                }
-                
-                // Map domain models to UI models
-                let puzzleToUI: (Puzzle) -> PuzzleUIModel = { p in
-                    PuzzleUIModel(id: p.id, fen: p.fen, moves: p.moves, rating: p.rating, tags: p.tags)
-                }
-                
-                let subThemeToUI: (SubTheme) -> SubThemeUIModel = { st in
-                    let completed = st.puzzles.filter { progress.completedPuzzleIDs.contains($0.id) }.count
-                    return SubThemeUIModel(
-                        id: st.id,
-                        title: st.title,
-                        totalPuzzles: st.totalPuzzles,
-                        completedPuzzles: completed,
-                        puzzles: st.puzzles.map(puzzleToUI)
-                    )
-                }
-                
-                return CategoryUIModel(
-                    id: category.id,
-                    title: category.title,
-                    progress: categoryProgress,
-                    isExamMode: category.isExamMode,
-                    description: category.description,
-                    totalPuzzles: category.totalPuzzles,
-                    puzzles: category.puzzles?.map(puzzleToUI),
-                    subThemes: category.subThemes?.map(subThemeToUI),
-                    examState: examState
-                )
+            let categories = section.categories.map { category in
+                mapCategory(category, sectionProgress: sectionProgress, isSectionUnlocked: isUnlocked, progress: progress)
             }
             
             return SectionUIModel(
@@ -205,5 +138,68 @@ public final class CurriculumViewModel: ObservableObject {
                 categories: categories
             )
         }
+    }
+    
+    private func isSectionUnlocked(_ section: EloSection, at index: Int, in curriculum: Curriculum, progress: UserProgress) -> Bool {
+        if progress.hiddenRating >= section.eloFloor { return true }
+        if index == 0 { return true }
+        
+        let previousSection = curriculum.sections[index - 1]
+        guard let previousExam = previousSection.categories.first(where: { $0.isExamMode }) else {
+            return true
+        }
+        
+        return progress.passedExamIDs.contains(previousExam.id)
+    }
+    
+    private func mapCategory(_ category: EssentialChess.Category, sectionProgress: Double, isSectionUnlocked: Bool, progress: UserProgress) -> CategoryUIModel {
+        let categoryProgress = CurriculumProgressTracker.progress(for: category, progress: progress)
+        let examState = mapExamState(for: category, sectionProgress: sectionProgress, isSectionUnlocked: isSectionUnlocked, progress: progress)
+        
+        let puzzleToUI: (Puzzle) -> PuzzleUIModel = { p in
+            PuzzleUIModel(id: p.id, fen: p.fen, moves: p.moves, rating: p.rating, tags: p.tags)
+        }
+        
+        let subThemes: [SubThemeUIModel]? = category.subThemes?.map { st in
+            let completedCount = st.puzzles.filter { progress.completedPuzzleIDs.contains($0.id) }.count
+            return SubThemeUIModel(
+                id: st.id,
+                title: st.title,
+                totalPuzzles: st.totalPuzzles,
+                completedPuzzles: completedCount,
+                puzzles: st.puzzles.map(puzzleToUI)
+            )
+        }
+        
+        return CategoryUIModel(
+            id: category.id,
+            title: category.title,
+            progress: categoryProgress,
+            isExamMode: category.isExamMode,
+            description: category.description,
+            totalPuzzles: category.totalPuzzles,
+            puzzles: category.puzzles?.map(puzzleToUI),
+            subThemes: subThemes,
+            examState: examState
+        )
+    }
+    
+    private func mapExamState(for category: EssentialChess.Category, sectionProgress: Double, isSectionUnlocked: Bool, progress: UserProgress) -> ExamUIState? {
+        guard category.isExamMode else { return nil }
+        
+        if progress.passedExamIDs.contains(category.id) {
+            return .passed(message: "Passed — section unlocked!")
+        }
+        if !isSectionUnlocked {
+            return .locked(reason: "Complete previous section to unlock")
+        }
+        if sectionProgress < 0.99 {
+            return .locked(reason: "Complete all themes to unlock")
+        }
+        if let failTime = progress.examFailureTimes[category.id], Date().timeIntervalSince(failTime) < (3 * 3600) {
+            return .onCooldown(availableIn: "On Cooldown")
+        }
+        
+        return .unlocked(livesText: "3 lives · 10 random puzzles")
     }
 }

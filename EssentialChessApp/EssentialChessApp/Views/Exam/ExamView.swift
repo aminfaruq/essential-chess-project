@@ -11,6 +11,7 @@ import EssentialChessUI
 
 public struct ExamView: View {
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var themeAdapter: ThemeAdapter
     
     let categoryTitle: String
     
@@ -73,7 +74,20 @@ public struct ExamView: View {
                 },
                 onReady: { color in
                     boardController.userColorName = color
-                }
+                },
+                boardThemeLight: Color(
+                    red: themeAdapter.currentTheme.boardTheme.lightSquareColor.red,
+                    green: themeAdapter.currentTheme.boardTheme.lightSquareColor.green,
+                    blue: themeAdapter.currentTheme.boardTheme.lightSquareColor.blue,
+                    opacity: themeAdapter.currentTheme.boardTheme.lightSquareColor.alpha
+                ),
+                boardThemeDark: Color(
+                    red: themeAdapter.currentTheme.boardTheme.darkSquareColor.red,
+                    green: themeAdapter.currentTheme.boardTheme.darkSquareColor.green,
+                    blue: themeAdapter.currentTheme.boardTheme.darkSquareColor.blue,
+                    opacity: themeAdapter.currentTheme.boardTheme.darkSquareColor.alpha
+                ),
+                pieceTheme: themeAdapter.currentTheme.pieceTheme
             )
             .padding(.horizontal, 16)
             .aspectRatio(1, contentMode: .fit)
@@ -157,7 +171,7 @@ public struct ExamView: View {
         HStack {
             if !boardController.userColorName.isEmpty {
                 let colorPrefix = boardController.userColorName == "White" ? "w" : "b"
-                let pieceImageName = "default_\(colorPrefix)k"
+                let pieceImageName = "\(themeAdapter.currentTheme.pieceTheme)_\(colorPrefix)k"
                 
                 HStack(spacing: 12) {
                     Image(pieceImageName)

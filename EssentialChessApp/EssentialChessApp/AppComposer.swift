@@ -20,7 +20,15 @@ public final class AppComposer: ObservableObject {
     private let mixPoolLoader: FileMixPoolLoader?
     private var cachedCurriculum: Curriculum?
     
+    public let themeAdapter: ThemeAdapter
+    
+    public let navigationVM: MainNavigationViewModel
+
+    
     public init() {
+        let themeStore = UserDefaultsThemeStore()
+        self.themeAdapter = ThemeAdapter(store: themeStore)
+        
         let progressStore = UserDefaultsProgressStore()
         let adapter = ProgressAdapter(store: progressStore)
         self.progressAdapter = adapter
@@ -57,6 +65,9 @@ public final class AppComposer: ObservableObject {
             },
             progressPublisher: { [adapter] in adapter.publisher() }
         )
+        
+        let tabAdapter = UserDefaultsTabAdapter()
+        self.navigationVM = MainNavigationViewModel(tabStorage: tabAdapter)
     }
     
     public func start() {
@@ -72,6 +83,8 @@ public final class AppComposer: ObservableObject {
                 self?.curriculumVM.load()
             }
         }
+        
+        themeAdapter.load { }
     }
     
     // MARK: - Onboarding Presentation Factory
@@ -90,7 +103,7 @@ public final class AppComposer: ObservableObject {
                 case .success(let mixPool):
                     let allPuzzles = mixPool.difficultyTiers.flatMap { $0.puzzles }
                     placementPuzzles = Array(allPuzzles.shuffled().prefix(15))
-                case .failure(let error):
+                case .failure(_):
                     placementPuzzles = [] // Fallback to empty if reading fails
                 }
                 
