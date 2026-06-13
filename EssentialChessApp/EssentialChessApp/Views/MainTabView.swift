@@ -6,28 +6,25 @@
 //
 
 import SwiftUI
+import EssentialChess
 import EssentialChessUI
 
-enum AppTab: Hashable {
-    case curriculum
-    case puzzleMix
-    case settings
-}
-
 public struct MainTabView: View {
-    @State private var selectedTab: AppTab = .curriculum
+    @ObservedObject var navigationViewModel: MainNavigationViewModel
     @State private var curriculumScrollToTopTrigger: Int = 0
     
-    public init() {}
+    public init(navigationViewModel: MainNavigationViewModel) {
+        self.navigationViewModel = navigationViewModel
+    }
     
     public var body: some View {
         TabView(selection: Binding(
-            get: { selectedTab },
+            get: { navigationViewModel.selectedTab },
             set: { newTab in
-                if newTab == selectedTab && newTab == .curriculum {
+                if newTab == navigationViewModel.selectedTab && newTab == .curriculum {
                     curriculumScrollToTopTrigger += 1
                 }
-                selectedTab = newTab
+                navigationViewModel.selectedTab = newTab
             }
         )) {
             CurriculumView(scrollToTopTrigger: $curriculumScrollToTopTrigger)
