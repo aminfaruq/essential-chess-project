@@ -48,6 +48,7 @@ public struct RootView: View {
                                         examFailureTimes: [:]
                                     )
                                 }
+                                composer.navigationVM.resetToCurriculum()
                                 // Close the sheet by changing it back to nil
                                 self.placementViewModel = nil
                             },
