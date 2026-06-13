@@ -21,6 +21,8 @@ public final class AppComposer: ObservableObject {
     private var cachedCurriculum: Curriculum?
     
     public let themeAdapter: ThemeAdapter
+    
+    public let navigationVM: MainNavigationViewModel
 
     
     public init() {
@@ -63,6 +65,9 @@ public final class AppComposer: ObservableObject {
             },
             progressPublisher: { [adapter] in adapter.publisher() }
         )
+        
+        let tabAdapter = UserDefaultsTabAdapter()
+        self.navigationVM = MainNavigationViewModel(tabStorage: tabAdapter)
     }
     
     public func start() {
