@@ -154,7 +154,7 @@ public struct PlacementTestView: View {
             Spacer()
             
             Button {
-                dismiss()
+                viewModel.commitResults()
             } label: {
                 Text("Start Learning")
                     .font(.system(size: 17, weight: .semibold))

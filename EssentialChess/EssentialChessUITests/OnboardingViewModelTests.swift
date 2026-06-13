@@ -33,7 +33,7 @@ final class OnboardingViewModelTests: XCTestCase {
         XCTAssertEqual(sut.progress, 0.5) // 1 out of 2 puzzles completed
     }
     
-    func test_handleResult_completesOnboardingAndTriggersCallback() {
+    func test_handleResult_completesOnboardingAndRequiresCommitToTriggerCallback() {
         var completedRating: Double?
         let (sut, _) = makeSUT(puzzles: [makePuzzle(rating: 1500)], baseRating: 1500.0) { finalRating in
             completedRating = finalRating
@@ -43,8 +43,12 @@ final class OnboardingViewModelTests: XCTestCase {
         
         XCTAssertTrue(sut.isComplete)
         XCTAssertEqual(sut.currentRating, 1450.0)
-        XCTAssertEqual(completedRating, 1450.0, "Expected completion callback to be called with final rating")
+        XCTAssertNil(completedRating, "Expected completion callback to NOT be called yet")
         XCTAssertEqual(sut.progress, 1.0)
+        
+        sut.commitResults()
+        
+        XCTAssertEqual(completedRating, 1450.0, "Expected completion callback to be called with final rating after commitResults()")
     }
     
     // MARK: - Helpers

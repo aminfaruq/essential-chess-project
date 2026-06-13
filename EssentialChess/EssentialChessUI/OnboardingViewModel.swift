@@ -64,7 +64,11 @@ public final class OnboardingViewModel: ObservableObject, Identifiable {
         // Check for completion
         if currentPuzzleIndex >= puzzles.count {
             isComplete = true
-            onComplete(currentRating)
         }
+    }
+    
+    public func commitResults() {
+        guard isComplete else { return }
+        onComplete(currentRating)
     }
 }
