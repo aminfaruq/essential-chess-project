@@ -75,7 +75,7 @@ final class CurriculumViewModelTests: XCTestCase {
         mixPoolSubject.send(dummyMixPool)
         
         // SCENARIO 1: New user (Not yet passed Level 1 exam)
-        let initialProgress = makeUserProgress(passedExamIDs: [])
+        let initialProgress = makeUserProgress(hiddenRating: 150.0, passedExamIDs: [])
         progressSubject.send(initialProgress)
         
         guard sut.sections.count == 2 else {
@@ -91,7 +91,7 @@ final class CurriculumViewModelTests: XCTestCase {
         
         // SCENARIO 2: User passes Level 1 exam
         // The Level 1 exam ID in the makeSequentialCurriculum() function is "exam_1"
-        let advancedProgress = makeUserProgress(passedExamIDs: ["exam_1"])
+        let advancedProgress = makeUserProgress(hiddenRating: 150.0, passedExamIDs: ["exam_1"])
         progressSubject.send(advancedProgress)
         
         let updatedSection2 = sut.sections[1]
@@ -139,9 +139,9 @@ final class CurriculumViewModelTests: XCTestCase {
         )
     }
     
-    private func makeUserProgress(passedExamIDs: Set<String> = []) -> UserProgress {
+    private func makeUserProgress(hiddenRating: Double = 1500.0, passedExamIDs: Set<String> = []) -> UserProgress {
         return UserProgress(
-            hiddenRating: 1500.0,
+            hiddenRating: hiddenRating,
             onboardingComplete: true,
             completedPuzzleIDs: [],
             passedExamIDs: passedExamIDs,
