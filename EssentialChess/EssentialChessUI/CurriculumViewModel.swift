@@ -125,7 +125,10 @@ public final class CurriculumViewModel: ObservableObject {
         return curriculum.sections.enumerated().map { index, section in
             
             let isUnlocked: Bool
-            if index == 0 {
+            if progress.hiddenRating >= section.eloFloor {
+                // Section is unlocked because user's rating is high enough (e.g. from placement test)
+                isUnlocked = true
+            } else if index == 0 {
                 // First level is always open
                 isUnlocked = true
             } else {
