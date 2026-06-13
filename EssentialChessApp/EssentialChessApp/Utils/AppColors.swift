@@ -20,4 +20,5 @@ public enum AppColors {
     public static let incorrect   = Color(red: 0.92, green: 0.27, blue: 0.27)
     public static let hint        = Color(red: 0.95, green: 0.78, blue: 0.25).opacity(0.7)
     public static let locked      = Color(white: 0.4)
+    public static let red         = Color(red: 0.92, green: 0.34, blue: 0.34)
 }

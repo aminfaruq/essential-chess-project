@@ -10,7 +10,9 @@ import EssentialChessUI
 import EssentialChess
 
 public struct SettingsView: View {
+    @EnvironmentObject var composer: AppComposer
     @EnvironmentObject var themeAdapter: ThemeAdapter
+    @State private var showingResetAlert = false
 
     public init() {}
     
@@ -44,6 +46,24 @@ public struct SettingsView: View {
                             .foregroundColor(AppColors.textSecondary)
                             .font(.system(size: 12, weight: .semibold))
                     }
+                    
+                    Section {
+                        Button(role: .destructive) {
+                            showingResetAlert = true
+                        } label: {
+                            HStack {
+                                Image(systemName: "trash")
+                                Text("Reset All Progress")
+                                    .fontWeight(.medium)
+                            }
+                        }
+                        .foregroundColor(AppColors.red)
+                    } header: {
+                        Text("App Data")
+                            .foregroundColor(AppColors.red)
+                            .font(.system(size: 12, weight: .semibold))
+                    }
+
                 }
                 .listStyle(.insetGrouped)
                 .scrollContentBackground(.hidden)
@@ -52,6 +72,15 @@ public struct SettingsView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(AppColors.background, for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
+            .alert("Are you sure you want to reset all your progress?", isPresented: $showingResetAlert) {
+                Button("No", role: .cancel) { }
+                Button("Yes, Reset", role: .destructive) {
+                    resetProgress()
+                }
+            } message: {
+                Text("Are you sure you want to reset all your progress? This action cannot be undone.")
+            }
+
         }
     }
     
@@ -100,6 +129,15 @@ public struct SettingsView: View {
             .padding(.vertical, 4)
         }
         .listRowBackground(AppColors.surface)
+    }
+    
+    private func resetProgress() {
+        composer.progressAdapter.update { progress in
+            progress.completedPuzzleIDs.removeAll()
+            progress.passedExamIDs.removeAll()
+            progress.examFailureTimes.removeAll()
+            progress.onboardingComplete = false
+        }
     }
 }
 
