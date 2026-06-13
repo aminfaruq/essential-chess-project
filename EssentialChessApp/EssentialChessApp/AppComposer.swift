@@ -98,7 +98,7 @@ public final class AppComposer: ObservableObject {
                 case .success(let mixPool):
                     let allPuzzles = mixPool.difficultyTiers.flatMap { $0.puzzles }
                     placementPuzzles = Array(allPuzzles.shuffled().prefix(15))
-                case .failure(let error):
+                case .failure(_):
                     placementPuzzles = [] // Fallback to empty if reading fails
                 }
                 
