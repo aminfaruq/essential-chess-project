@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		830B9F4C2FDD8D39005FF768 /* NativeChessBoard in Frameworks */ = {isa = PBXBuildFile; productRef = 830B9F4B2FDD8D39005FF768 /* NativeChessBoard */; };
+		830BA0D62FDDE564005FF768 /* NativeChessBoard in Frameworks */ = {isa = PBXBuildFile; productRef = 830BA0D52FDDE564005FF768 /* NativeChessBoard */; };
+		830BA0D92FDDE587005FF768 /* NativeChessBoard in Frameworks */ = {isa = PBXBuildFile; productRef = 830BA0D82FDDE587005FF768 /* NativeChessBoard */; };
 		8381964E2FDA7306009E88CF /* EssentialChess.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8381964D2FDA7306009E88CF /* EssentialChess.framework */; };
 		8381964F2FDA7306009E88CF /* EssentialChess.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8381964D2FDA7306009E88CF /* EssentialChess.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		838196522FDA7310009E88CF /* EssentialChessUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 838196512FDA7310009E88CF /* EssentialChessUI.framework */; };
 		838196532FDA7310009E88CF /* EssentialChessUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 838196512FDA7310009E88CF /* EssentialChessUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		83D025E02FD91D80008FDB64 /* NativeChessBoard in Frameworks */ = {isa = PBXBuildFile; productRef = 83D025DF2FD91D80008FDB64 /* NativeChessBoard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,7 +93,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				8381964E2FDA7306009E88CF /* EssentialChess.framework in Frameworks */,
-				83D025E02FD91D80008FDB64 /* NativeChessBoard in Frameworks */,
+				830BA0D92FDDE587005FF768 /* NativeChessBoard in Frameworks */,
+				830BA0D62FDDE564005FF768 /* NativeChessBoard in Frameworks */,
+				830B9F4C2FDD8D39005FF768 /* NativeChessBoard in Frameworks */,
 				838196522FDA7310009E88CF /* EssentialChessUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -164,7 +168,9 @@
 			);
 			name = EssentialChessApp;
 			packageProductDependencies = (
-				83D025DF2FD91D80008FDB64 /* NativeChessBoard */,
+				830B9F4B2FDD8D39005FF768 /* NativeChessBoard */,
+				830BA0D52FDDE564005FF768 /* NativeChessBoard */,
+				830BA0D82FDDE587005FF768 /* NativeChessBoard */,
 			);
 			productName = EssentialChessApp;
 			productReference = 832B0D032FD919F00009FCFE /* EssentialChessApp.app */;
@@ -249,7 +255,7 @@
 			mainGroup = 832B0CFA2FD919F00009FCFE;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				83D025DE2FD91D80008FDB64 /* XCRemoteSwiftPackageReference "NativeChessBoard" */,
+				830BA0D72FDDE587005FF768 /* XCRemoteSwiftPackageReference "NativeChessBoard" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 832B0D042FD919F00009FCFE /* Products */;
@@ -636,7 +642,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		83D025DE2FD91D80008FDB64 /* XCRemoteSwiftPackageReference "NativeChessBoard" */ = {
+		830BA0D72FDDE587005FF768 /* XCRemoteSwiftPackageReference "NativeChessBoard" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/aminfaruq/NativeChessBoard.git";
 			requirement = {
@@ -647,9 +653,17 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		83D025DF2FD91D80008FDB64 /* NativeChessBoard */ = {
+		830B9F4B2FDD8D39005FF768 /* NativeChessBoard */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 83D025DE2FD91D80008FDB64 /* XCRemoteSwiftPackageReference "NativeChessBoard" */;
+			productName = NativeChessBoard;
+		};
+		830BA0D52FDDE564005FF768 /* NativeChessBoard */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NativeChessBoard;
+		};
+		830BA0D82FDDE587005FF768 /* NativeChessBoard */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 830BA0D72FDDE587005FF768 /* XCRemoteSwiftPackageReference "NativeChessBoard" */;
 			productName = NativeChessBoard;
 		};
 /* End XCSwiftPackageProductDependency section */
