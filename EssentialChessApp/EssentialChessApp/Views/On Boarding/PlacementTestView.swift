@@ -32,7 +32,6 @@ public struct PlacementTestView: View {
                         .padding(.horizontal, 24)
                     Spacer(minLength: 12)
                     
-                    // Elemen Bridge Jembatan UI
                     ChessBoardBridge(
                         puzzle: puzzle,
                         controller: boardController,
@@ -43,7 +42,6 @@ public struct PlacementTestView: View {
                             viewModel.handleResult(isCorrect: false)
                         },
                         onReady: { color in
-                            // Simpan warna bidak pemain ke controller atau viewModel
                             boardController.userColorName = color
                         },
                         boardThemeLight: AppColors.boardLight,
@@ -51,7 +49,7 @@ public struct PlacementTestView: View {
                         pieceTheme: "default"
                     )
                     .padding(.horizontal, 16)
-                    .aspectRatio(1, contentMode: .fit) // Agar papan selalu persegi
+                    .aspectRatio(1, contentMode: .fit)
                     
                     Spacer(minLength: 12)
                     statusBar
@@ -105,9 +103,21 @@ public struct PlacementTestView: View {
     
     private var playerTurnInfo: some View {
         HStack {
-            Text("White to Move")
-                .font(.system(size: 22, weight: .light))
-                .foregroundColor(AppColors.textPrimary)
+            if !boardController.userColorName.isEmpty {
+                let colorPrefix = boardController.userColorName == "White" ? "w" : "b"
+                let pieceImageName = "default_\(colorPrefix)k"
+                
+                HStack(spacing: 12) {
+                    Text("\(boardController.userColorName) to Move")
+                        .font(.system(size: 22, weight: .light))
+                        .foregroundColor(AppColors.textPrimary)
+                    
+                    Image(pieceImageName)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 42, height: 42)
+                }
+            }
         }
         .padding(.horizontal, 20)
         .padding(.bottom, 32)

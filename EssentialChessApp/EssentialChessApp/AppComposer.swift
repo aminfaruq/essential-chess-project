@@ -20,7 +20,13 @@ public final class AppComposer: ObservableObject {
     private let mixPoolLoader: FileMixPoolLoader?
     private var cachedCurriculum: Curriculum?
     
+    public let themeAdapter: ThemeAdapter
+
+    
     public init() {
+        let themeStore = UserDefaultsThemeStore()
+        self.themeAdapter = ThemeAdapter(store: themeStore)
+        
         let progressStore = UserDefaultsProgressStore()
         let adapter = ProgressAdapter(store: progressStore)
         self.progressAdapter = adapter
@@ -72,6 +78,8 @@ public final class AppComposer: ObservableObject {
                 self?.curriculumVM.load()
             }
         }
+        
+        themeAdapter.load { }
     }
     
     // MARK: - Onboarding Presentation Factory
