@@ -7,7 +7,6 @@
 
 import Foundation
 import Combine
-import EssentialChess
 
 public final class ProgressAdapter {
     private let store: ProgressStore

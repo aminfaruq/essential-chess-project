@@ -7,7 +7,6 @@
 
 import Foundation
 import Combine
-import EssentialChess
 
 public extension CurriculumLoader {
     func publisher() -> AnyPublisher<Curriculum, Error> {

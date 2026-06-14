@@ -7,7 +7,6 @@
 
 import Foundation
 import Combine
-import EssentialChess
 
 public extension MixPoolLoader {
     func publisher() -> AnyPublisher<MixPool, Error> {
