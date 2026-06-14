@@ -13,16 +13,22 @@ import EssentialChessUI
 public final class AppComposer: ObservableObject {
     @Published public private(set) var isReady: Bool = false
     
+    /// ViewModels
     public let curriculumVM: CurriculumViewModel
-    public let progressAdapter: ProgressAdapter
-    
+    public let navigationVM: MainNavigationViewModel
+    public let streakVM: StreakViewModel
+
+    /// Loaders
     private let curriculumLoader: FileCurriculumLoader?
     private let mixPoolLoader: FileMixPoolLoader?
-    private var cachedCurriculum: Curriculum?
     
+    /// Adapters
+    public let progressAdapter: ProgressAdapter
     public let themeAdapter: ThemeAdapter
     
-    public let navigationVM: MainNavigationViewModel
+
+    /// Models
+    private var cachedCurriculum: Curriculum?
 
     
     public init() {
@@ -32,6 +38,7 @@ public final class AppComposer: ObservableObject {
         let progressStore = UserDefaultsProgressStore()
         let adapter = ProgressAdapter(store: progressStore)
         self.progressAdapter = adapter
+        self.streakVM = StreakViewModel(progressPublisher: adapter.publisher())
         
         let reader = LocalFileReader()
         
@@ -141,6 +148,9 @@ public final class AppComposer: ObservableObject {
             onPuzzleSolved: { [weak self] solvedID in
                 self?.progressAdapter.update { progress in
                     progress.completedPuzzleIDs.insert(solvedID)
+                    
+                    //MARK: Daily streak
+                    progress.recordActivity()
                 }
             }
         )

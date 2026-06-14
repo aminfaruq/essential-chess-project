@@ -24,6 +24,7 @@ public struct AppRootView: View {
                     .environmentObject(composer)
                     .environmentObject(composer.curriculumVM)
                     .environmentObject(composer.themeAdapter)
+                    .environmentObject(composer.streakVM)
                     .preferredColorScheme(.dark)
             } else {
                 // Splash Screen / Loading State
