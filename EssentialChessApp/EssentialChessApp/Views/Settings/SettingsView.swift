@@ -10,7 +10,7 @@ import EssentialChessUI
 import EssentialChess
 
 public struct SettingsView: View {
-    @EnvironmentObject var composer: AppComposer
+    @EnvironmentObject var container: DependencyContainer
     @EnvironmentObject var themeAdapter: ThemeAdapter
     @State private var showingResetAlert = false
 
@@ -132,7 +132,7 @@ public struct SettingsView: View {
     }
     
     private func resetProgress() {
-        composer.progressAdapter.update { progress in
+        container.progressAdapter.update { progress in
             progress.completedPuzzleIDs.removeAll()
             progress.passedExamIDs.removeAll()
             progress.examFailureTimes.removeAll()

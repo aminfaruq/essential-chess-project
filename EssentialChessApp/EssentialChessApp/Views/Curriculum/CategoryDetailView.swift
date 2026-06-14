@@ -10,7 +10,7 @@ import EssentialChess
 import EssentialChessUI
 
 struct CategoryDetailView: View {
-    @EnvironmentObject var composer: AppComposer
+    @EnvironmentObject var viewFactory: ViewFactory
     let section: SectionUIModel
     let category: CategoryUIModel
     
@@ -25,7 +25,7 @@ struct CategoryDetailView: View {
                     if let themes = category.subThemes {
                         ForEach(themes) { theme in
                             NavigationLink(
-                                destination: composer.makePuzzleSessionView(title: theme.title, puzzles: theme.puzzles)
+                                destination: viewFactory.makePuzzleSessionView(title: theme.title, puzzles: theme.puzzles)
                             ) {
                                 // Pass the trigger down to the card
                                 SubThemeCard(subTheme: theme, refreshTrigger: refreshTrigger)
@@ -51,7 +51,7 @@ struct CategoryDetailView: View {
 }
 
 private struct SubThemeCard: View {
-    @EnvironmentObject var composer: AppComposer
+    @EnvironmentObject var container: DependencyContainer
     let subTheme: SubThemeUIModel
     
     // Receive the trigger from the parent view
@@ -62,7 +62,7 @@ private struct SubThemeCard: View {
         _ = refreshTrigger
         
         // Fetch the absolute latest progress directly from the adapter
-        let completedIDs = composer.progressAdapter.currentProgress.completedPuzzleIDs
+        let completedIDs = container.progressAdapter.currentProgress.completedPuzzleIDs
         return subTheme.puzzles.filter { completedIDs.contains($0.id) }.count
     }
     
