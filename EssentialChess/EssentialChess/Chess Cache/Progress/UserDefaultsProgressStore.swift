@@ -47,6 +47,8 @@ public final class UserDefaultsProgressStore: ProgressStore {
         let completedPuzzleIDs: Set<String>
         let passedExamIDs: Set<String>
         let examFailureTimes: [String: Date]
+        let currentStreak: Int
+        let lastActivityDate: Date?
         
         init(from model: UserProgress) {
             self.hiddenRating = model.hiddenRating
@@ -54,6 +56,8 @@ public final class UserDefaultsProgressStore: ProgressStore {
             self.completedPuzzleIDs = model.completedPuzzleIDs
             self.passedExamIDs = model.passedExamIDs
             self.examFailureTimes = model.examFailureTimes
+            self.currentStreak = model.currentStreak
+            self.lastActivityDate = model.lastActivityDate
         }
         
         func toModel() -> UserProgress {
@@ -62,7 +66,9 @@ public final class UserDefaultsProgressStore: ProgressStore {
                 onboardingComplete: onboardingComplete,
                 completedPuzzleIDs: completedPuzzleIDs,
                 passedExamIDs: passedExamIDs,
-                examFailureTimes: examFailureTimes
+                examFailureTimes: examFailureTimes,
+                currentStreak: currentStreak,
+                lastActivityDate: lastActivityDate
             )
         }
     }
