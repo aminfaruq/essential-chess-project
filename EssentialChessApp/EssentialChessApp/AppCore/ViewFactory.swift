@@ -84,13 +84,22 @@ public final class ViewFactory: ObservableObject {
                     pool: pool,
                     hiddenRating: progress.hiddenRating,
                     actualRating: progress.actualRating,
-                    calculateRating: { currentRating, _, isCorrect in
-                        let gain = isCorrect ? 32.0 : -32.0
-                        return max(100.0, currentRating + gain)
+                    calculateRating: { currentRating, puzzleRating, isCorrect in
+                        return RatingCalculator().calculatePlacementRating(
+                            current: currentRating,
+                            puzzleRating: puzzleRating,
+                            isCorrect: isCorrect
+                        )
                     },
                     saveActualRating: { newRating in
                         self.container.progressAdapter.update { progress in
                             progress.actualRating = newRating
+                        }
+                    },
+                    onPuzzleSolved: {
+                        //MARK: Daily streak
+                        self.container.progressAdapter.update { progress in
+                            progress.recordActivity()
                         }
                     }
                 )
