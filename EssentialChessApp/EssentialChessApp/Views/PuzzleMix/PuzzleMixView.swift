@@ -158,11 +158,11 @@ private struct PuzzleMixActiveView: View {
         )
         .padding(.horizontal, 16)
         .aspectRatio(1, contentMode: .fit)
-//        .onChange(of: vm.showCorrectMove) { _, newValue in
-//            if newValue {
-//                boardController.showHint()
-//            }
-//        }
+        //        .onChange(of: vm.showCorrectMove) { _, newValue in
+        //            if newValue {
+        //                boardController.showHint()
+        //            }
+        //        }
     }
     
     private var playerTurnInfo: some View {
@@ -193,11 +193,12 @@ private struct PuzzleMixActiveView: View {
                 boardController.showHint()
             } label: {
                 Label("Hint", systemImage: "lightbulb")
-                    .font(.system(size: 14))
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 12)
-                    .background(AppColors.surface)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .font(.system(size: 14))
+                        .foregroundStyle(.gray)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
+                        .background(AppColors.surface)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
             }
             
             
