@@ -80,7 +80,7 @@ public struct SettingsView: View {
                     resetProgress()
                 }
             } message: {
-                Text("Are you sure you want to reset all your progress? This action cannot be undone.")
+                Text("This action cannot be undone.")
             }
 
         }
