@@ -64,6 +64,7 @@ struct SequenceListView: View {
                         .listRowBackground(
                             isCurrent ? AppColors.accent.opacity(0.08) : AppColors.surface
                         )
+                        .hoverEffect(.highlight)
                     }
                 }
                 .listStyle(.plain)
@@ -77,6 +78,7 @@ struct SequenceListView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Done") { isPresented = false }
                         .foregroundColor(AppColors.accent)
+                        .hoverEffect(.highlight)
                 }
             }
         }

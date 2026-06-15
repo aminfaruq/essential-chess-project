@@ -58,6 +58,7 @@ public struct SettingsView: View {
                             }
                         }
                         .foregroundColor(AppColors.red)
+                        .hoverEffect(.highlight)
                     } header: {
                         Text("App Data")
                             .foregroundColor(AppColors.red)

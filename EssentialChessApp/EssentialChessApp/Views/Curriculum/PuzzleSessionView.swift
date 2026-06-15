@@ -123,6 +123,7 @@ public struct PuzzleSessionView: View {
                     .background(AppColors.surface)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
             }
+            .hoverEffect(.highlight)
             
             Button { showSequenceList = true } label: {
                 Label("Puzzles", systemImage: "list.number")
@@ -133,6 +134,7 @@ public struct PuzzleSessionView: View {
                     .background(AppColors.surface)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
             }
+            .hoverEffect(.highlight)
             
             Spacer()
             
@@ -146,6 +148,8 @@ public struct PuzzleSessionView: View {
                         .background(AppColors.accent)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
+                .hoverEffect(.highlight)
+                .keyboardShortcut(.defaultAction)
             }
         }
         .padding(.horizontal, 20)
@@ -196,6 +200,7 @@ public struct PuzzleSessionView: View {
                     .background(AppColors.accent)
                     .clipShape(RoundedRectangle(cornerRadius: 14))
             }
+            .hoverEffect(.highlight)
             .padding(.horizontal, 24)
             .padding(.bottom, 48)
         }

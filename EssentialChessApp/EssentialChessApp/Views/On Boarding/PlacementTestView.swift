@@ -86,6 +86,7 @@ public struct PlacementTestView: View {
                     .foregroundColor(AppColors.textSecondary)
                     .padding(8)
             }
+            .hoverEffect(.highlight)
             Spacer()
             VStack(spacing: 2) {
                 Text("Placement Test")
@@ -164,6 +165,7 @@ public struct PlacementTestView: View {
                     .background(AppColors.accent)
                     .clipShape(RoundedRectangle(cornerRadius: 14))
             }
+            .hoverEffect(.highlight)
             .padding(.horizontal, 24)
             .padding(.bottom, 48)
         }

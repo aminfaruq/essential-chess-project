@@ -114,7 +114,7 @@ private struct PuzzleMixActiveView: View {
                         .foregroundColor(AppColors.gold)
                     
                     Text(isPositive ? "+\(changeInt)" : "\(changeInt)")
-                        .font(.system(size: 10, weight: .light, design: .monospaced))
+                        .font(.system(size: 11, weight: .light, design: .monospaced))
                         .foregroundColor(isPositive ? AppColors.correct : AppColors.incorrect)
                 }
                 .padding(8)
@@ -200,6 +200,7 @@ private struct PuzzleMixActiveView: View {
                         .background(AppColors.surface)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
             }
+            .hoverEffect(.highlight)
             
             
             Spacer()
@@ -216,6 +217,8 @@ private struct PuzzleMixActiveView: View {
                         .background(AppColors.accent)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
+                .hoverEffect(.highlight)
+                .keyboardShortcut(.defaultAction)
             }
         }
         .padding(.horizontal, 20)

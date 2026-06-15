@@ -141,6 +141,7 @@ private struct ExamCard: View {
         }
         .disabled(!isUnlocked || isPassed)
         .buttonStyle(.plain)
+        .hoverEffect(.highlight)
         .fullScreenCover(isPresented: $showExam) {
             // Point to the Composer factory to assemble the Exam screen
             // Make sure you create this function in AppComposer later
