@@ -9,6 +9,7 @@ import Foundation
 
 public struct UserProgress: Equatable {
     public let hiddenRating: Double
+    public var actualRating: Double?
     public var onboardingComplete: Bool
     public var completedPuzzleIDs: Set<String>
     public var passedExamIDs: Set<String>
@@ -20,6 +21,7 @@ public struct UserProgress: Equatable {
     
     public init(
         hiddenRating: Double = 500.0,
+        actualRating: Double? = nil,
         onboardingComplete: Bool = false,
         completedPuzzleIDs: Set<String> = [],
         passedExamIDs: Set<String> = [],
@@ -28,6 +30,7 @@ public struct UserProgress: Equatable {
         lastActivityDate: Date? = nil
     ) {
         self.hiddenRating = hiddenRating
+        self.actualRating = actualRating
         self.onboardingComplete = onboardingComplete
         self.completedPuzzleIDs = completedPuzzleIDs
         self.passedExamIDs = passedExamIDs

@@ -41,6 +41,7 @@ final class UserDefaultsProgressStoreTests: XCTestCase {
         let sut = makeSUT()
         let progress = UserProgress(
             hiddenRating: 1200.0,
+            actualRating: 1215.0,
             onboardingComplete: true,
             completedPuzzleIDs: ["p1", "p2"],
             passedExamIDs: ["e1"],
