@@ -38,6 +38,10 @@ struct DebugMenuView: View {
                 .foregroundColor(.red)
                 .padding(8)
                 .background(Circle().fill(Color.red.opacity(0.15)))
+            
+            Text("Debug Menu")
+                .foregroundColor(AppColors.textSecondary)
+                .font(.system(size: 12, weight: .semibold))
         }
     }
     
