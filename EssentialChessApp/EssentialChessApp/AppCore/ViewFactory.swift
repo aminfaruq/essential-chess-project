@@ -116,6 +116,9 @@ public final class ViewFactory: ObservableObject {
                 // Save the category ID to the list of passed exams
                 self?.container.progressAdapter.update { progress in
                     progress.passedExamIDs.insert(categoryID)
+                    
+                    //MARK: Daily streak
+                    progress.recordActivity()
                 }
             },
             onFailed: { [weak self] in
