@@ -18,11 +18,14 @@ public final class PuzzleMixViewModel: ObservableObject, Identifiable {
     @Published public private(set) var currentPuzzle: Puzzle?
     @Published public private(set) var showCorrectMove: Bool = false
     @Published public private(set) var isPuzzleFinished: Bool = false
+    @Published public private(set) var hasUsedHint: Bool = false
+    @Published public private(set) var ratingChange: Double? = nil
     
     // MARK: - Dependencies
     private let pool: [Puzzle]
     private let calculateRating: (Double, Double, Bool) -> Double
     private let saveActualRating: (Double) -> Void
+    private let onPuzzleSolved: () -> Void
     
     // MARK: - Internal State
     private var solvedPuzzleIds: Set<String> = []
@@ -32,12 +35,14 @@ public final class PuzzleMixViewModel: ObservableObject, Identifiable {
         hiddenRating: Double,
         actualRating: Double?,
         calculateRating: @escaping (Double, Double, Bool) -> Double,
-        saveActualRating: @escaping (Double) -> Void
+        saveActualRating: @escaping (Double) -> Void,
+        onPuzzleSolved: @escaping () -> Void
     ) {
         self.pool = pool
         self.calculateRating = calculateRating
         self.saveActualRating = saveActualRating
-        
+        self.onPuzzleSolved = onPuzzleSolved
+
         if let current = actualRating {
             self.actualRating = current
         } else {
@@ -53,23 +58,42 @@ public final class PuzzleMixViewModel: ObservableObject, Identifiable {
     public func handlePuzzleCompletion(isCorrect: Bool) {
         guard let puzzle = currentPuzzle, !isPuzzleFinished else { return }
         
+        let oldRating = self.actualRating
         let puzzleRating = Double(puzzle.rating)
         let newRating = calculateRating(actualRating, puzzleRating, isCorrect)
         self.actualRating = newRating
+        self.ratingChange = newRating - oldRating
         saveActualRating(newRating)
         
         if isCorrect {
             isPuzzleFinished = true
             showCorrectMove = false
+            onPuzzleSolved()
         } else {
             isPuzzleFinished = true
             showCorrectMove = true
         }
     }
     
+    public func handleHint() {
+        guard let puzzle = currentPuzzle, !isPuzzleFinished, !hasUsedHint else { return }
+        
+        hasUsedHint = true
+        isPuzzleFinished = true
+        
+        let oldRating = self.actualRating
+        let puzzleRating = Double(puzzle.rating)
+        let newRating = calculateRating(actualRating, puzzleRating, false)
+        self.actualRating = newRating
+        self.ratingChange = newRating - oldRating
+        saveActualRating(newRating)
+    }
+    
     public func onNextTapped() {
         showCorrectMove = false
         isPuzzleFinished = false
+        hasUsedHint = false
+        ratingChange = nil
         loadNextPuzzle()
     }
     

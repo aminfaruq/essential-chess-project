@@ -92,6 +92,30 @@ final class PuzzleMixViewModelTests: XCTestCase {
     
     // MARK: - Scenario: Uninterrupted endless progression
     
+    func test_handleHint_decreasesRatingAndMarksFailed_butAllowsProgression() {
+        let pool = [makePuzzle(id: "1", rating: 1200)]
+        var savedRatings = [Double]()
+        
+        let sut = makeSUT(pool: pool, actualRating: 1200.0, calculateRating: { rating, _, isCorrect in
+            return isCorrect ? rating + 15 : rating - 15
+        }, saveActualRating: { rating in
+            savedRatings.append(rating)
+        })
+        
+        sut.handleHint()
+        
+        XCTAssertEqual(sut.actualRating, 1185.0, "Expected actualRating to decrease on hint")
+        XCTAssertEqual(savedRatings, [1185.0], "Expected updated rating to be saved immediately")
+        XCTAssertTrue(sut.isPuzzleFinished, "Expected progression to be allowed (shows Next button)")
+        XCTAssertTrue(sut.hasUsedHint, "Expected hasUsedHint to be true")
+        
+        // Simulating the user finishing the puzzle after clicking hint
+        sut.handlePuzzleCompletion(isCorrect: true)
+        
+        // Rating should not increase because the puzzle is already marked finished
+        XCTAssertEqual(sut.actualRating, 1185.0, "Expected actualRating not to change if completed after hint")
+    }
+    
     func test_onNextTapped_presentsNewPuzzle() {
         let pool = [
             makePuzzle(id: "1", rating: 1200),
@@ -156,7 +180,8 @@ final class PuzzleMixViewModelTests: XCTestCase {
             hiddenRating: hiddenRating,
             actualRating: actualRating,
             calculateRating: calculateRating,
-            saveActualRating: saveActualRating
+            saveActualRating: saveActualRating,
+            onPuzzleSolved: {}
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
