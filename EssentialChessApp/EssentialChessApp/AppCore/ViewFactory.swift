@@ -59,6 +59,47 @@ public final class ViewFactory: ObservableObject {
         }
     }
     
+    // MARK: - Puzzle Mix Factory
+    
+    public func fetchPuzzleMixViewModel(
+        onReady: @escaping (PuzzleMixViewModel) -> Void
+    ) {
+        guard let loader = container.mixPoolLoader else { return }
+        
+        loader.load { [weak self] result in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                
+                let pool: [Puzzle]
+                switch result {
+                case .success(let mixPool):
+                    pool = mixPool.difficultyTiers.flatMap { $0.puzzles }
+                case .failure(_):
+                    pool = []
+                }
+                
+                let progress = self.container.progressAdapter.currentProgress
+                
+                let viewModel = PuzzleMixViewModel(
+                    pool: pool,
+                    hiddenRating: progress.hiddenRating,
+                    actualRating: progress.actualRating,
+                    calculateRating: { currentRating, _, isCorrect in
+                        let gain = isCorrect ? 32.0 : -32.0
+                        return max(100.0, currentRating + gain)
+                    },
+                    saveActualRating: { newRating in
+                        self.container.progressAdapter.update { progress in
+                            progress.actualRating = newRating
+                        }
+                    }
+                )
+                
+                onReady(viewModel)
+            }
+        }
+    }
+    
     // MARK: - Curriculum Navigation Factory
     
     public func makePuzzleSessionView(title: String, puzzles: [PuzzleUIModel]) -> some View {
