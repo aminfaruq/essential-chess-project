@@ -18,7 +18,8 @@ public struct SettingsView: View {
     
     private let pieceThemes: [(id: String, label: String)] = [
         ("default", "Standard"),
-        ("neo", "Neo"),
+        ("alpha", "Alpha"),
+        ("fantasy", "Fantasy"),
     ]
 
     
@@ -107,6 +108,7 @@ public struct SettingsView: View {
             .padding(.vertical, 4)
         }
         .listRowBackground(AppColors.surface)
+        .hoverEffect(.highlight)
     }
     
     private func pieceThemeRow(_ theme: (id: String, label: String)) -> some View {
@@ -116,7 +118,12 @@ public struct SettingsView: View {
                 current = ThemeSettings(boardTheme: current.boardTheme, pieceTheme: theme.id)
             }
         } label: {
-            HStack {
+            HStack(spacing: 14) {
+                Image("\(theme.id)_wn")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 32, height: 32)
+
                 Text(theme.label)
                     .foregroundColor(AppColors.textPrimary)
                     .font(.system(size: 16))
@@ -130,6 +137,7 @@ public struct SettingsView: View {
             .padding(.vertical, 4)
         }
         .listRowBackground(AppColors.surface)
+        .hoverEffect(.highlight)
     }
     
     private func resetProgress() {
