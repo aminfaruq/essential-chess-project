@@ -10,7 +10,8 @@ import EssentialChess
 import EssentialChessUI
 
 struct DebugMenuView: View {
-    @EnvironmentObject var composer: AppComposer
+    @EnvironmentObject var curriculumVM: CurriculumViewModel
+    @EnvironmentObject var container: DependencyContainer
     
     var body: some View {
         Menu {
@@ -37,13 +38,17 @@ struct DebugMenuView: View {
                 .foregroundColor(.red)
                 .padding(8)
                 .background(Circle().fill(Color.red.opacity(0.15)))
+            
+            Text("Debug Menu")
+                .foregroundColor(AppColors.textSecondary)
+                .font(.system(size: 12, weight: .semibold))
         }
     }
     
     // MARK: - Debug Actions
     
     private func unlockFirstSection() {
-        guard let firstSection = composer.curriculumVM.sections.first else { return }
+        guard let firstSection = curriculumVM.sections.first else { return }
         var allPuzzleIDs = Set<String>()
         
         // Loop through all non-exam categories to collect every puzzle ID
@@ -59,32 +64,32 @@ struct DebugMenuView: View {
         }
         
         // Inject to database, UI will react automatically
-        composer.progressAdapter.update { progress in
+        container.progressAdapter.update { progress in
             progress.completedPuzzleIDs.formUnion(allPuzzleIDs)
         }
     }
     
     private func passFirstExam() {
-        guard let firstSection = composer.curriculumVM.sections.first,
+        guard let firstSection = curriculumVM.sections.first,
               let examCategory = firstSection.categories.first(where: { $0.isExamMode }) else { return }
         
-        composer.progressAdapter.update { progress in
+        container.progressAdapter.update { progress in
             progress.passedExamIDs.insert(examCategory.id)
         }
     }
     
     private func triggerCooldown() {
-        guard let firstSection = composer.curriculumVM.sections.first,
+        guard let firstSection = curriculumVM.sections.first,
               let examCategory = firstSection.categories.first(where: { $0.isExamMode }) else { return }
         
-        composer.progressAdapter.update { progress in
+        container.progressAdapter.update { progress in
             // Set failure time to right now
             progress.examFailureTimes[examCategory.id] = Date()
         }
     }
     
     private func resetProgress() {
-        composer.progressAdapter.update { progress in
+        container.progressAdapter.update { progress in
             progress.completedPuzzleIDs.removeAll()
             progress.passedExamIDs.removeAll()
             progress.examFailureTimes.removeAll()

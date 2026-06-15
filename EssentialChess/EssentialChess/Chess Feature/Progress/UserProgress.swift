@@ -9,22 +9,33 @@ import Foundation
 
 public struct UserProgress: Equatable {
     public let hiddenRating: Double
+    public var actualRating: Double?
     public var onboardingComplete: Bool
     public var completedPuzzleIDs: Set<String>
     public var passedExamIDs: Set<String>
     public var examFailureTimes: [String: Date]
     
+    // NEW: Daily Streak Properties
+    public var currentStreak: Int
+    public var lastActivityDate: Date?
+    
     public init(
         hiddenRating: Double = 500.0,
+        actualRating: Double? = nil,
         onboardingComplete: Bool = false,
         completedPuzzleIDs: Set<String> = [],
         passedExamIDs: Set<String> = [],
-        examFailureTimes: [String: Date] = [:]
+        examFailureTimes: [String: Date] = [:],
+        currentStreak: Int = 0,
+        lastActivityDate: Date? = nil
     ) {
         self.hiddenRating = hiddenRating
+        self.actualRating = actualRating
         self.onboardingComplete = onboardingComplete
         self.completedPuzzleIDs = completedPuzzleIDs
         self.passedExamIDs = passedExamIDs
         self.examFailureTimes = examFailureTimes
+        self.currentStreak = currentStreak
+        self.lastActivityDate = lastActivityDate
     }
 }

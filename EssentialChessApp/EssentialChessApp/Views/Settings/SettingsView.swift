@@ -10,7 +10,7 @@ import EssentialChessUI
 import EssentialChess
 
 public struct SettingsView: View {
-    @EnvironmentObject var composer: AppComposer
+    @EnvironmentObject var container: DependencyContainer
     @EnvironmentObject var themeAdapter: ThemeAdapter
     @State private var showingResetAlert = false
 
@@ -18,7 +18,8 @@ public struct SettingsView: View {
     
     private let pieceThemes: [(id: String, label: String)] = [
         ("default", "Standard"),
-        ("neo", "Neo"),
+        ("alpha", "Alpha"),
+        ("fantasy", "Fantasy"),
     ]
 
     
@@ -58,6 +59,7 @@ public struct SettingsView: View {
                             }
                         }
                         .foregroundColor(AppColors.red)
+                        .hoverEffect(.highlight)
                     } header: {
                         Text("App Data")
                             .foregroundColor(AppColors.red)
@@ -78,7 +80,7 @@ public struct SettingsView: View {
                     resetProgress()
                 }
             } message: {
-                Text("Are you sure you want to reset all your progress? This action cannot be undone.")
+                Text("This action cannot be undone.")
             }
 
         }
@@ -106,6 +108,7 @@ public struct SettingsView: View {
             .padding(.vertical, 4)
         }
         .listRowBackground(AppColors.surface)
+        .hoverEffect(.highlight)
     }
     
     private func pieceThemeRow(_ theme: (id: String, label: String)) -> some View {
@@ -115,7 +118,12 @@ public struct SettingsView: View {
                 current = ThemeSettings(boardTheme: current.boardTheme, pieceTheme: theme.id)
             }
         } label: {
-            HStack {
+            HStack(spacing: 14) {
+                Image("\(theme.id)_wn")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 32, height: 32)
+
                 Text(theme.label)
                     .foregroundColor(AppColors.textPrimary)
                     .font(.system(size: 16))
@@ -129,10 +137,11 @@ public struct SettingsView: View {
             .padding(.vertical, 4)
         }
         .listRowBackground(AppColors.surface)
+        .hoverEffect(.highlight)
     }
     
     private func resetProgress() {
-        composer.progressAdapter.update { progress in
+        container.progressAdapter.update { progress in
             progress.completedPuzzleIDs.removeAll()
             progress.passedExamIDs.removeAll()
             progress.examFailureTimes.removeAll()

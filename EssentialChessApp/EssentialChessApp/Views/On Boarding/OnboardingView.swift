@@ -65,6 +65,7 @@ public struct OnboardingView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 14))
                     }
                     .buttonStyle(.plain)
+                    .hoverEffect(.highlight)
                     
                     Button(action: onSelectExperienced) {
                         HStack {
@@ -85,6 +86,7 @@ public struct OnboardingView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 14))
                     }
                     .buttonStyle(.plain)
+                    .hoverEffect(.highlight)
                 }
                 .padding(.horizontal, 24)
                 .padding(.bottom, 48)

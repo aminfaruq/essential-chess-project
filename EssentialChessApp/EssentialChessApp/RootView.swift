@@ -25,7 +25,7 @@ public struct RootView: View {
             if !onboardingComplete {
                 OnboardingView(
                     onSelectNewbie: {
-                        composer.progressAdapter.update { progress in
+                        composer.container.progressAdapter.update { progress in
                             composer.navigationVM.resetToCurriculum()
                             progress = UserProgress(
                                 hiddenRating: 500.0,
@@ -37,9 +37,9 @@ public struct RootView: View {
                         }
                     },
                     onSelectExperienced: {
-                        composer.fetchPlacementViewModel(
+                        composer.viewFactory.fetchPlacementViewModel(
                             onFinishedTest: { finalRating in
-                                composer.progressAdapter.update { progress in
+                                composer.container.progressAdapter.update { progress in
                                     progress = UserProgress(
                                         hiddenRating: finalRating,
                                         onboardingComplete: true,
@@ -64,7 +64,7 @@ public struct RootView: View {
             }
         }
         .background(AppColors.background.ignoresSafeArea())
-        .onReceive(composer.progressAdapter.publisher()) { progress in
+        .onReceive(composer.container.progressAdapter.publisher()) { progress in
             self.onboardingComplete = progress.onboardingComplete
         }
         .fullScreenCover(item: $placementViewModel) { viewModel in

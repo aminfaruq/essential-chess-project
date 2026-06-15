@@ -22,8 +22,11 @@ public struct AppRootView: View {
                 RootView()
                 // Inject a pure ViewModel into the SwiftUI environment
                     .environmentObject(composer)
+                    .environmentObject(composer.container)
+                    .environmentObject(composer.viewFactory)
                     .environmentObject(composer.curriculumVM)
-                    .environmentObject(composer.themeAdapter)
+                    .environmentObject(composer.container.themeAdapter)
+                    .environmentObject(composer.streakVM)
                     .preferredColorScheme(.dark)
             } else {
                 // Splash Screen / Loading State

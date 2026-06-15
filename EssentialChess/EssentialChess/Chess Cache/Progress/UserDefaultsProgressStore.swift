@@ -43,26 +43,35 @@ public final class UserDefaultsProgressStore: ProgressStore {
     
     private struct ProgressCacheDTO: Codable {
         let hiddenRating: Double
+        let actualRating: Double?
         let onboardingComplete: Bool
         let completedPuzzleIDs: Set<String>
         let passedExamIDs: Set<String>
         let examFailureTimes: [String: Date]
+        let currentStreak: Int
+        let lastActivityDate: Date?
         
         init(from model: UserProgress) {
             self.hiddenRating = model.hiddenRating
+            self.actualRating = model.actualRating
             self.onboardingComplete = model.onboardingComplete
             self.completedPuzzleIDs = model.completedPuzzleIDs
             self.passedExamIDs = model.passedExamIDs
             self.examFailureTimes = model.examFailureTimes
+            self.currentStreak = model.currentStreak
+            self.lastActivityDate = model.lastActivityDate
         }
         
         func toModel() -> UserProgress {
             UserProgress(
                 hiddenRating: hiddenRating,
+                actualRating: actualRating,
                 onboardingComplete: onboardingComplete,
                 completedPuzzleIDs: completedPuzzleIDs,
                 passedExamIDs: passedExamIDs,
-                examFailureTimes: examFailureTimes
+                examFailureTimes: examFailureTimes,
+                currentStreak: currentStreak,
+                lastActivityDate: lastActivityDate
             )
         }
     }

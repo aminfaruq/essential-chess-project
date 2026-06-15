@@ -39,7 +39,7 @@ final class UserDefaultsThemeStoreTests: XCTestCase {
     
     func test_retrieve_deliversFoundValuesOnNonEmptyCache() {
         let sut = makeSUT()
-        let settings = ThemeSettings(boardTheme: .green, pieceTheme: "neo")
+        let settings = ThemeSettings(boardTheme: .green, pieceTheme: "default")
         
         let insertionExpectation = expectation(description: "Wait for store insertion")
         sut.insert(settings) { result in

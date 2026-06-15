@@ -11,7 +11,6 @@ import EssentialChessUI
 import EssentialChess
 
 struct SectionDetailView: View {
-    @EnvironmentObject var composer: AppComposer
     let model: SectionUIModel
     
     private var nonExamCategories: [CategoryUIModel] { model.categories.filter { !$0.isExamMode } }
@@ -75,7 +74,7 @@ private struct CategoryCard: View {
 }
 
 private struct ExamCard: View {
-    @EnvironmentObject var composer: AppComposer
+    @EnvironmentObject var viewFactory: ViewFactory
     @State private var showExam = false
     
     let category: CategoryUIModel
@@ -142,11 +141,12 @@ private struct ExamCard: View {
         }
         .disabled(!isUnlocked || isPassed)
         .buttonStyle(.plain)
+        .hoverEffect(.highlight)
         .fullScreenCover(isPresented: $showExam) {
             // Point to the Composer factory to assemble the Exam screen
             // Make sure you create this function in AppComposer later
             // composer.makeExamSessionView(for: category.id, title: category.title)
-            composer.makeExamSessionView(for: category.id, title: category.title)
+            viewFactory.makeExamSessionView(for: category.id, title: category.title)
         }
     }
     
@@ -163,7 +163,7 @@ private struct ExamCard: View {
 }
 
 private struct CooldownBadge: View {
-    @EnvironmentObject var composer: AppComposer
+    @EnvironmentObject var container: DependencyContainer
     let categoryID: String
     
     @State private var remaining: TimeInterval = 0
@@ -189,7 +189,7 @@ private struct CooldownBadge: View {
     
     private func updateRemaining() {
         // Calculate remaining time directly from memory database
-        let progress = composer.progressAdapter.currentProgress
+        let progress = container.progressAdapter.currentProgress
         
         if let failTime = progress.examFailureTimes[categoryID] {
             let cooldownPeriod: TimeInterval = 3 * 3600

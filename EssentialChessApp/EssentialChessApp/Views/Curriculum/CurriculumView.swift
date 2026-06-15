@@ -47,7 +47,7 @@ public struct CurriculumView: View {
             .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    DebugMenuView()
+                    StreakView()
                 }
             }
         }

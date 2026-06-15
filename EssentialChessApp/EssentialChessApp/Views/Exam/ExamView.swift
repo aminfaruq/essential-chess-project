@@ -121,6 +121,7 @@ public struct ExamView: View {
                 Image(systemName: "xmark")
                     .foregroundColor(AppColors.textSecondary).padding(8)
             }
+            .hoverEffect(.highlight)
             Spacer()
             Text("\(examVM.solvedCount + 1) / \(examVM.totalPuzzles)")
                 .font(.system(size: 15, weight: .semibold))
@@ -161,6 +162,7 @@ public struct ExamView: View {
                     .background(AppColors.surface)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
             }
+            .hoverEffect(.highlight)
             Spacer()
         }
         .padding(.horizontal, 20)
@@ -220,6 +222,7 @@ public struct ExamView: View {
                     .background(passed ? AppColors.gold : AppColors.accent)
                     .clipShape(RoundedRectangle(cornerRadius: 14))
             }
+            .hoverEffect(.highlight)
             .padding(.horizontal, 24)
             .padding(.bottom, 48)
         }
@@ -246,6 +249,8 @@ private struct MoveOnOverlay: View {
                         .background(AppColors.accent)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
+                .hoverEffect(.highlight)
+                .keyboardShortcut(.defaultAction)
             }
             .padding(32)
             .background(AppColors.surface)
