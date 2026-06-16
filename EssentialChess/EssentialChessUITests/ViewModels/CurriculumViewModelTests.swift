@@ -63,10 +63,9 @@ final class CurriculumViewModelTests: XCTestCase {
     
     // MARK: - New Core Logic Tests
     
-    func test_load_mapsSequentialProgressionCorrectly() {
+    func test_load_mapsSequentialProgressionCorrectly_forProUser() {
         let (sut, curriculumSubject, mixPoolSubject, progressSubject) = makeSUT()
         
-        // Create a mock curriculum with 2 sequential levels
         let dummyCurriculum = makeSequentialCurriculum()
         let dummyMixPool = makeMixPool()
         
@@ -74,28 +73,48 @@ final class CurriculumViewModelTests: XCTestCase {
         curriculumSubject.send(dummyCurriculum)
         mixPoolSubject.send(dummyMixPool)
         
-        // SCENARIO 1: New user (Not yet passed Level 1 exam)
-        let initialProgress = makeUserProgress(hiddenRating: 150.0, passedExamIDs: [])
+        // SCENARIO 1: Pro user (Not yet passed Level 1 exam)
+        let initialProgress = makeUserProgress(hiddenRating: 150.0, passedExamIDs: [], isPro: true)
         progressSubject.send(initialProgress)
-        
-        guard sut.sections.count == 2 else {
-            XCTFail("Expected exactly 2 sections to be mapped")
-            return
-        }
         
         let section1 = sut.sections[0]
         let section2 = sut.sections[1]
         
-        XCTAssertTrue(section1.isUnlocked, "Section 1 (Index 0) should ALWAYS be unlocked.")
+        XCTAssertTrue(section1.isUnlocked, "Section 1 should ALWAYS be unlocked.")
         XCTAssertFalse(section2.isUnlocked, "Section 2 should be locked because Section 1 Exam is not passed.")
+        XCTAssertFalse(section2.isPremiumLocked, "Section 2 should NOT be premium locked for Pro users.")
         
-        // SCENARIO 2: User passes Level 1 exam
-        // The Level 1 exam ID in the makeSequentialCurriculum() function is "exam_1"
-        let advancedProgress = makeUserProgress(hiddenRating: 150.0, passedExamIDs: ["exam_1"])
+        // SCENARIO 2: Pro user passes Level 1 exam
+        let advancedProgress = makeUserProgress(hiddenRating: 150.0, passedExamIDs: ["exam_1"], isPro: true)
         progressSubject.send(advancedProgress)
         
         let updatedSection2 = sut.sections[1]
         XCTAssertTrue(updatedSection2.isUnlocked, "Section 2 should UNLOCK immediately after passing Section 1 Exam.")
+        XCTAssertFalse(updatedSection2.isPremiumLocked)
+    }
+    
+    func test_load_mapsPremiumLocksCorrectly_forFreeUser() {
+        let (sut, curriculumSubject, mixPoolSubject, progressSubject) = makeSUT()
+        
+        let dummyCurriculum = makeSequentialCurriculum()
+        let dummyMixPool = makeMixPool()
+        
+        sut.load()
+        curriculumSubject.send(dummyCurriculum)
+        mixPoolSubject.send(dummyMixPool)
+        
+        // SCENARIO: Free user passes Level 1 exam
+        let freeAdvancedProgress = makeUserProgress(hiddenRating: 150.0, passedExamIDs: ["exam_1"], isPro: false)
+        progressSubject.send(freeAdvancedProgress)
+        
+        let section1 = sut.sections[0]
+        let section2 = sut.sections[1]
+        
+        XCTAssertTrue(section1.isUnlocked, "Section 1 should ALWAYS be unlocked.")
+        XCTAssertFalse(section1.isPremiumLocked, "Section 1 should NEVER be premium locked.")
+        
+        XCTAssertFalse(section2.isUnlocked, "Section 2 should remain LOCKED for Free users even if Exam is passed.")
+        XCTAssertTrue(section2.isPremiumLocked, "Section 2 should be explicitly Premium Locked for Free users.")
     }
     
     // MARK: - Helpers
@@ -139,13 +158,14 @@ final class CurriculumViewModelTests: XCTestCase {
         )
     }
     
-    private func makeUserProgress(hiddenRating: Double = 1500.0, passedExamIDs: Set<String> = []) -> UserProgress {
+    private func makeUserProgress(hiddenRating: Double = 1500.0, passedExamIDs: Set<String> = [], isPro: Bool = false) -> UserProgress {
         return UserProgress(
             hiddenRating: hiddenRating,
             onboardingComplete: true,
             completedPuzzleIDs: [],
             passedExamIDs: passedExamIDs,
-            examFailureTimes: [:]
+            examFailureTimes: [:],
+            isPro: isPro
         )
     }
     

@@ -17,6 +17,7 @@ public struct SectionUIModel: Identifiable, Equatable {
     public let eloRange: String
     public let progress: Double
     public let isUnlocked: Bool
+    public let isPremiumLocked: Bool
     public let categories: [CategoryUIModel]
 }
 
@@ -122,7 +123,8 @@ public final class CurriculumViewModel: ObservableObject {
     
     private func mapToUIModels(curriculum: Curriculum, progress: UserProgress) -> [SectionUIModel] {
         return curriculum.sections.enumerated().map { index, section in
-            let isUnlocked = isSectionUnlocked(section, at: index, in: curriculum, progress: progress)
+            let isPremiumLocked = !progress.isPro && index > 0
+            let isUnlocked = isPremiumLocked ? false : isSectionUnlocked(section, at: index, in: curriculum, progress: progress)
             let sectionProgress = CurriculumProgressTracker.progress(for: section, progress: progress)
             
             let categories = section.categories.map { category in
@@ -135,6 +137,7 @@ public final class CurriculumViewModel: ObservableObject {
                 eloRange: "ELO \(section.eloRange)",
                 progress: sectionProgress,
                 isUnlocked: isUnlocked, 
+                isPremiumLocked: isPremiumLocked,
                 categories: categories
             )
         }
