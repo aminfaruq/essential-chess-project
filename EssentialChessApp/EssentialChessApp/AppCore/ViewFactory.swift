@@ -84,6 +84,11 @@ public final class ViewFactory: ObservableObject {
                     pool: pool,
                     hiddenRating: progress.hiddenRating,
                     actualRating: progress.actualRating,
+                    checkIsPro: { [weak self] in
+                        self?.container.progressAdapter.currentProgress.isPro ?? false
+                    },
+                    dailyPuzzleMixCount: progress.dailyPuzzleMixCount,
+                    lastPuzzleMixDate: progress.lastPuzzleMixDate,
                     calculateRating: { currentRating, puzzleRating, isCorrect in
                         return RatingCalculator().calculatePlacementRating(
                             current: currentRating,
@@ -100,6 +105,12 @@ public final class ViewFactory: ObservableObject {
                         //MARK: Daily streak
                         self.container.progressAdapter.update { progress in
                             progress.recordActivity()
+                        }
+                    },
+                    updateDailyLimits: { count, date in
+                        self.container.progressAdapter.update { progress in
+                            progress.dailyPuzzleMixCount = count
+                            progress.lastPuzzleMixDate = date
                         }
                     }
                 )

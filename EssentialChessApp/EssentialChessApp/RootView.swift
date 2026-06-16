@@ -27,26 +27,24 @@ public struct RootView: View {
                     onSelectNewbie: {
                         composer.container.progressAdapter.update { progress in
                             composer.navigationVM.resetToCurriculum()
-                            progress = UserProgress(
-                                hiddenRating: 500.0,
-                                onboardingComplete: true,
-                                completedPuzzleIDs: [],
-                                passedExamIDs: [],
-                                examFailureTimes: [:]
-                            )
+                            progress.hiddenRating = 500.0
+                            progress.actualRating = nil
+                            progress.onboardingComplete = true
+                            progress.completedPuzzleIDs = []
+                            progress.passedExamIDs = []
+                            progress.examFailureTimes = [:]
                         }
                     },
                     onSelectExperienced: {
                         composer.viewFactory.fetchPlacementViewModel(
                             onFinishedTest: { finalRating in
                                 composer.container.progressAdapter.update { progress in
-                                    progress = UserProgress(
-                                        hiddenRating: finalRating,
-                                        onboardingComplete: true,
-                                        completedPuzzleIDs: [],
-                                        passedExamIDs: [],
-                                        examFailureTimes: [:]
-                                    )
+                                    progress.hiddenRating = finalRating
+                                    progress.actualRating = nil
+                                    progress.onboardingComplete = true
+                                    progress.completedPuzzleIDs = []
+                                    progress.passedExamIDs = []
+                                    progress.examFailureTimes = [:]
                                 }
                                 composer.navigationVM.resetToCurriculum()
                                 // Close the sheet by changing it back to nil
