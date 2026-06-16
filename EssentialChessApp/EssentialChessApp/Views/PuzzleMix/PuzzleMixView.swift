@@ -21,7 +21,7 @@ public struct PuzzleMixView: View {
                 AppColors.background.ignoresSafeArea()
                 
                 if let vm = viewModel {
-                    PuzzleMixActiveView(vm: vm)
+                    PuzzleMixContainerView(vm: vm)
                 } else {
                     VStack(spacing: 16) {
                         ProgressView()
@@ -31,7 +31,7 @@ public struct PuzzleMixView: View {
                     }
                 }
             }
-            .navigationTitle("Train Tactics")
+            .navigationTitle("Puzzle Mix")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(AppColors.background, for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
@@ -47,6 +47,57 @@ public struct PuzzleMixView: View {
 }
 
 // MARK: - Subviews
+
+private struct PuzzleMixContainerView: View {
+    @ObservedObject var vm: PuzzleMixViewModel
+    @EnvironmentObject var container: DependencyContainer
+    
+    var body: some View {
+        Group {
+            if vm.isDailyLimitReached {
+                VStack(spacing: 20) {
+                    Image(systemName: "clock.fill")
+                        .font(.system(size: 60))
+                        .foregroundColor(AppColors.locked)
+                    Text("Daily Limit Reached")
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundColor(AppColors.textPrimary)
+                    Text("You've completed your 7 free puzzles today. Come back tomorrow or upgrade to Pro to play endlessly.")
+                        .font(.system(size: 16))
+                        .foregroundColor(AppColors.textSecondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 32)
+                    
+                    Button {
+                        vm.showPaywall = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "crown.fill")
+                            Text("Unlock Pro")
+                        }
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 24)
+                        .padding(.vertical, 14)
+                        .background(AppColors.gold)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                    .padding(.top, 8)
+                }
+            } else {
+                PuzzleMixActiveView(vm: vm)
+            }
+        }
+        .sheet(isPresented: $vm.showPaywall) {
+            PaywallView()
+        }
+        .onReceive(container.progressAdapter.publisher()) { progress in
+            if progress.isPro && vm.isDailyLimitReached {
+                vm.resumeAfterPurchase()
+            }
+        }
+    }
+}
 
 private struct PuzzleMixActiveView: View {
     @ObservedObject var vm: PuzzleMixViewModel
