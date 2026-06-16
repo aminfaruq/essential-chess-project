@@ -65,8 +65,20 @@ public struct CurriculumView: View {
 private struct SectionCard: View {
     let model: SectionUIModel
     
+    @State private var navigateToDetail = false
+    @State private var showPaywall = false
+    @State private var showLockedAlert = false
+    
     var body: some View {
-        NavigationLink(destination: SectionDetailView(model: model)) {
+        Button {
+            if model.isPremiumLocked {
+                showPaywall = true
+            } else if !model.isUnlocked {
+                showLockedAlert = true
+            } else {
+                navigateToDetail = true
+            }
+        } label: {
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
@@ -82,6 +94,9 @@ private struct SectionCard: View {
                         Text("\(Int(model.progress * 100))%")
                             .font(.system(size: 14, weight: .semibold, design: .monospaced))
                             .foregroundColor(model.progress >= 1.0 ? AppColors.gold : AppColors.accent)
+                    } else if model.isPremiumLocked {
+                        Image(systemName: "crown.fill")
+                            .foregroundColor(AppColors.gold)
                     } else {
                         Image(systemName: "lock.fill")
                             .foregroundColor(AppColors.locked)
@@ -102,8 +117,18 @@ private struct SectionCard: View {
                     .strokeBorder(model.progress >= 1.0 ? AppColors.gold.opacity(0.4) : Color.clear, lineWidth: 1)
             )
         }
-        .disabled(!model.isUnlocked)
         .buttonStyle(.plain)
+        .background(
+            NavigationLink(destination: SectionDetailView(model: model), isActive: $navigateToDetail) { EmptyView() }.hidden()
+        )
+        .sheet(isPresented: $showPaywall) {
+            PaywallView()
+        }
+        .alert("Section Locked", isPresented: $showLockedAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("Complete the previous exam to unlock this section.")
+        }
     }
 }
 
