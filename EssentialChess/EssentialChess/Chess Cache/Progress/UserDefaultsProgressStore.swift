@@ -50,6 +50,9 @@ public final class UserDefaultsProgressStore: ProgressStore {
         let examFailureTimes: [String: Date]
         let currentStreak: Int
         let lastActivityDate: Date?
+        let isPro: Bool?
+        let dailyPuzzleMixCount: Int?
+        let lastPuzzleMixDate: Date?
         
         init(from model: UserProgress) {
             self.hiddenRating = model.hiddenRating
@@ -60,6 +63,9 @@ public final class UserDefaultsProgressStore: ProgressStore {
             self.examFailureTimes = model.examFailureTimes
             self.currentStreak = model.currentStreak
             self.lastActivityDate = model.lastActivityDate
+            self.isPro = model.isPro
+            self.dailyPuzzleMixCount = model.dailyPuzzleMixCount
+            self.lastPuzzleMixDate = model.lastPuzzleMixDate
         }
         
         func toModel() -> UserProgress {
@@ -71,7 +77,10 @@ public final class UserDefaultsProgressStore: ProgressStore {
                 passedExamIDs: passedExamIDs,
                 examFailureTimes: examFailureTimes,
                 currentStreak: currentStreak,
-                lastActivityDate: lastActivityDate
+                lastActivityDate: lastActivityDate,
+                isPro: isPro ?? false,
+                dailyPuzzleMixCount: dailyPuzzleMixCount ?? 0,
+                lastPuzzleMixDate: lastPuzzleMixDate
             )
         }
     }

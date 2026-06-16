@@ -45,7 +45,10 @@ final class UserDefaultsProgressStoreTests: XCTestCase {
             onboardingComplete: true,
             completedPuzzleIDs: ["p1", "p2"],
             passedExamIDs: ["e1"],
-            examFailureTimes: ["e2": Date()]
+            examFailureTimes: ["e2": Date()],
+            isPro: true,
+            dailyPuzzleMixCount: 5,
+            lastPuzzleMixDate: Date()
         )
         
         let insertionExpectation = expectation(description: "Wait for store insertion")
