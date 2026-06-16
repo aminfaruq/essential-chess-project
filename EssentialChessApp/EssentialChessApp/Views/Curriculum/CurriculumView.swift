@@ -118,9 +118,9 @@ private struct SectionCard: View {
             )
         }
         .buttonStyle(.plain)
-        .background(
-            NavigationLink(destination: SectionDetailView(model: model), isActive: $navigateToDetail) { EmptyView() }.hidden()
-        )
+        .navigationDestination(isPresented: $navigateToDetail) {
+            SectionDetailView(model: model)
+        }
         .sheet(isPresented: $showPaywall) {
             PaywallView()
         }
