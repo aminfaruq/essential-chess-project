@@ -161,14 +161,53 @@ final class PuzzleMixViewModelTests: XCTestCase {
         XCTAssertEqual(sut.currentPuzzle?.id, "1", "Expected to cycle the pool and present the puzzle again")
     }
     
+    // MARK: - Scenario: Freemium Daily Limit
+    
+    func test_loadNextPuzzle_whenDailyLimitReached_showsPaywallAndBlocksPuzzle() {
+        let sut = makeSUT(
+            actualRating: 1200.0,
+            checkIsPro: { false },
+            dailyPuzzleMixCount: 7,
+            lastPuzzleMixDate: Date() // Today
+        )
+        
+        XCTAssertTrue(sut.showPaywall, "Expected paywall to show when limit is reached")
+        XCTAssertTrue(sut.isDailyLimitReached, "Expected isDailyLimitReached to be true")
+        XCTAssertNil(sut.currentPuzzle, "Expected no puzzle to be loaded when limit is reached")
+    }
+    
+    func test_loadNextPuzzle_whenDayHasChanged_resetsLimitAndAllowsProgression() {
+        var updatedCount: Int? = nil
+        let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
+        
+        let sut = makeSUT(
+            actualRating: 1200.0,
+            checkIsPro: { false },
+            dailyPuzzleMixCount: 7, // Reached limit yesterday
+            lastPuzzleMixDate: yesterday,
+            updateDailyLimits: { count, _ in
+                updatedCount = count
+            }
+        )
+        
+        XCTAssertFalse(sut.showPaywall, "Expected paywall not to show because day has changed")
+        XCTAssertFalse(sut.isDailyLimitReached, "Expected isDailyLimitReached to be false")
+        XCTAssertNotNil(sut.currentPuzzle, "Expected a new puzzle to be loaded")
+        XCTAssertEqual(updatedCount, 0, "Expected daily count to be reset to 0 and saved")
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(
         pool: [Puzzle]? = nil,
         hiddenRating: Double = 500.0,
         actualRating: Double? = nil,
+        checkIsPro: @escaping () -> Bool = { false },
+        dailyPuzzleMixCount: Int = 0,
+        lastPuzzleMixDate: Date? = nil,
         calculateRating: @escaping (Double, Double, Bool) -> Double = { rating, _, _ in rating },
         saveActualRating: @escaping (Double) -> Void = { _ in },
+        updateDailyLimits: @escaping (Int, Date) -> Void = { _, _ in },
         file: StaticString = #filePath,
         line: UInt = #line
     ) -> PuzzleMixViewModel {
@@ -179,9 +218,13 @@ final class PuzzleMixViewModelTests: XCTestCase {
             pool: puzzles,
             hiddenRating: hiddenRating,
             actualRating: actualRating,
+            checkIsPro: checkIsPro,
+            dailyPuzzleMixCount: dailyPuzzleMixCount,
+            lastPuzzleMixDate: lastPuzzleMixDate,
             calculateRating: calculateRating,
             saveActualRating: saveActualRating,
-            onPuzzleSolved: {}
+            onPuzzleSolved: {},
+            updateDailyLimits: updateDailyLimits
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
