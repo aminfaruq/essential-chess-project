@@ -13,6 +13,8 @@ public struct SettingsView: View {
     @EnvironmentObject var container: DependencyContainer
     @EnvironmentObject var themeAdapter: ThemeAdapter
     @State private var showingResetAlert = false
+    @State private var showPaywall = false
+    @State private var isPro = false
 
     public init() {}
     
@@ -28,6 +30,23 @@ public struct SettingsView: View {
             ZStack {
                 AppColors.background.ignoresSafeArea()
                 List {
+                    if !isPro {
+                        Section {
+                            Button {
+                                showPaywall = true
+                            } label: {
+                                HStack {
+                                    Image(systemName: "crown.fill")
+                                        .foregroundColor(AppColors.gold)
+                                    Text("Upgrade to Essential Chess Pro")
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(AppColors.gold)
+                                }
+                            }
+                            .hoverEffect(.highlight)
+                        }
+                    }
+                    
                     Section {
                         ForEach(BoardThemeOption.allCases, id: \.self) { option in
                             boardThemeRow(option)
@@ -82,15 +101,29 @@ public struct SettingsView: View {
             } message: {
                 Text("This action cannot be undone.")
             }
-
+            .sheet(isPresented: $showPaywall) {
+                PaywallView()
+            }
+        }
+        .onAppear {
+            self.isPro = container.progressAdapter.currentProgress.isPro
+        }
+        .onReceive(container.progressAdapter.publisher()) { progress in
+            self.isPro = progress.isPro
         }
     }
     
     private func boardThemeRow(_ option: BoardThemeOption) -> some View {
         let isSelected = themeAdapter.currentTheme.boardTheme == option
+        let isPremium = option != .brown // only brown is the default free one
+        
         return Button {
-            themeAdapter.update { current in
-                current = ThemeSettings(boardTheme: option, pieceTheme: current.pieceTheme)
+            if isPremium && !isPro {
+                showPaywall = true
+            } else {
+                themeAdapter.update { current in
+                    current = ThemeSettings(boardTheme: option, pieceTheme: current.pieceTheme)
+                }
             }
         } label: {
             HStack(spacing: 14) {
@@ -103,6 +136,10 @@ public struct SettingsView: View {
                     Image(systemName: "checkmark")
                         .foregroundColor(AppColors.accent)
                         .font(.system(size: 14, weight: .semibold))
+                } else if isPremium && !isPro {
+                    Image(systemName: "crown.fill")
+                        .foregroundColor(AppColors.gold)
+                        .font(.system(size: 14))
                 }
             }
             .padding(.vertical, 4)
@@ -113,9 +150,15 @@ public struct SettingsView: View {
     
     private func pieceThemeRow(_ theme: (id: String, label: String)) -> some View {
         let isSelected = themeAdapter.currentTheme.pieceTheme == theme.id
+        let isPremium = theme.id != "default"
+        
         return Button {
-            themeAdapter.update { current in
-                current = ThemeSettings(boardTheme: current.boardTheme, pieceTheme: theme.id)
+            if isPremium && !isPro {
+                showPaywall = true
+            } else {
+                themeAdapter.update { current in
+                    current = ThemeSettings(boardTheme: current.boardTheme, pieceTheme: theme.id)
+                }
             }
         } label: {
             HStack(spacing: 14) {
@@ -132,6 +175,10 @@ public struct SettingsView: View {
                     Image(systemName: "checkmark")
                         .foregroundColor(AppColors.accent)
                         .font(.system(size: 14, weight: .semibold))
+                } else if isPremium && !isPro {
+                    Image(systemName: "crown.fill")
+                        .foregroundColor(AppColors.gold)
+                        .font(.system(size: 14))
                 }
             }
             .padding(.vertical, 4)
