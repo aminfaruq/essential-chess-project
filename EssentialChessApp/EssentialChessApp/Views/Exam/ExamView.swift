@@ -89,6 +89,7 @@ public struct ExamView: View {
                 ),
                 pieceTheme: themeAdapter.currentTheme.pieceTheme
             )
+            .equatable()
             .padding(.horizontal, 16)
             .aspectRatio(1, contentMode: .fit)
             
