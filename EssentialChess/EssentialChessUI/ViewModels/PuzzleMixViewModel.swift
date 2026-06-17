@@ -92,7 +92,7 @@ public final class PuzzleMixViewModel: ObservableObject, Identifiable {
         }
     }
     
-    public func handleHint() {
+    public func decreaseRating() {
         guard let puzzle = currentPuzzle, !isPuzzleFinished, !hasUsedHint else { return }
         
         hasUsedHint = true

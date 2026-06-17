@@ -92,7 +92,7 @@ final class PuzzleMixViewModelTests: XCTestCase {
     
     // MARK: - Scenario: Uninterrupted endless progression
     
-    func test_handleHint_decreasesRatingAndMarksFailed_butAllowsProgression() {
+    func test_decreaseRating_shouldDecreasesRatingAndMarksFailed_butAllowsProgression() {
         let pool = [makePuzzle(id: "1", rating: 1200)]
         var savedRatings = [Double]()
         
@@ -102,7 +102,7 @@ final class PuzzleMixViewModelTests: XCTestCase {
             savedRatings.append(rating)
         })
         
-        sut.handleHint()
+        sut.decreaseRating()
         
         XCTAssertEqual(sut.actualRating, 1185.0, "Expected actualRating to decrease on hint")
         XCTAssertEqual(savedRatings, [1185.0], "Expected updated rating to be saved immediately")
