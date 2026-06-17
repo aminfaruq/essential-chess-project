@@ -13,6 +13,8 @@ final class MixPoolLoaderCombineTests: XCTestCase {
         let loader = MixPoolLoaderSpy()
         let sut = loader.publisher()
         
+        trackForMemoryLeaks(loader)
+        
         let expectedMixPool = makeMixPool()
         
         var receivedMixPools = [MixPool]()
@@ -42,6 +44,8 @@ final class MixPoolLoaderCombineTests: XCTestCase {
     func test_publisher_deliversErrorOnLoaderFailure() {
         let loader = MixPoolLoaderSpy()
         let sut = loader.publisher()
+        
+        trackForMemoryLeaks(loader)
         
         let expectedError = NSError(domain: "test", code: 0)
         

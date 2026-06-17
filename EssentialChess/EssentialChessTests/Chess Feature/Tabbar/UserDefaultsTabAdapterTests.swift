@@ -10,43 +10,52 @@ import XCTest
 
 final class UserDefaultsTabAdapterTests: XCTestCase {
     
-    private var sut: UserDefaultsTabAdapter!
-    private var testDefaults: UserDefaults!
     private let testSuiteName = "com.essentialchess.test.tabadapter"
     private let storageKey = "selectedAppTab"
 
-    override func setUp() {
-        super.setUp()
-        // Create an isolated UserDefaults suite for testing to avoid polluting real app data
-        testDefaults = UserDefaults(suiteName: testSuiteName)
-        testDefaults.removePersistentDomain(forName: testSuiteName)
-        
-        sut = UserDefaultsTabAdapter(defaults: testDefaults)
-    }
-
     override func tearDown() {
-        // Clean up the isolated suite after each test
-        testDefaults.removePersistentDomain(forName: testSuiteName)
-        sut = nil
-        testDefaults = nil
         super.tearDown()
+        // Clean up any remaining data just to be safe
+        UserDefaults().removePersistentDomain(forName: testSuiteName)
     }
 
     func test_savedTab_deliversCurriculumByDefaultWhenStorageIsEmpty() {
+        let (sut, _) = makeSUT()
+        
         XCTAssertEqual(sut.savedTab, .curriculum, "Expected default tab to be .curriculum when no data is saved.")
     }
 
     func test_savedTab_deliversCurriculumWhenStorageHasInvalidData() {
+        let (sut, testDefaults) = makeSUT()
         testDefaults.set("invalid_tab_string", forKey: storageKey)
         
         XCTAssertEqual(sut.savedTab, .curriculum, "Expected default tab to be .curriculum when storage contains an unmapped string.")
     }
 
     func test_savedTab_deliversSavedTabSuccessfully() {
+        let (sut, _) = makeSUT()
+        
         sut.savedTab = .puzzleMix
         XCTAssertEqual(sut.savedTab, .puzzleMix, "Expected to retrieve .puzzleMix immediately after saving it.")
         
         sut.savedTab = .settings
         XCTAssertEqual(sut.savedTab, .settings, "Expected to retrieve .settings immediately after saving it.")
+    }
+    
+    // MARK: - Helpers
+    
+    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: UserDefaultsTabAdapter, testDefaults: UserDefaults) {
+        let testDefaults = UserDefaults(suiteName: testSuiteName)!
+        testDefaults.removePersistentDomain(forName: testSuiteName) // Clean slate
+        
+        let sut = UserDefaultsTabAdapter(defaults: testDefaults)
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        
+        addTeardownBlock { [weak testDefaults] in
+            testDefaults?.removePersistentDomain(forName: "com.essentialchess.test.tabadapter")
+        }
+        
+        return (sut, testDefaults)
     }
 }
