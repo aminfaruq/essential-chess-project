@@ -89,6 +89,7 @@ public final class ViewFactory: ObservableObject {
                     },
                     dailyPuzzleMixCount: progress.dailyPuzzleMixCount,
                     lastPuzzleMixDate: progress.lastPuzzleMixDate,
+                    hasSeenHintWarning: UserDefaults.standard.bool(forKey: "hasSeenHintWarning"),
                     calculateRating: { currentRating, puzzleRating, isCorrect in
                         return RatingCalculator().calculatePlacementRating(
                             current: currentRating,
@@ -100,6 +101,9 @@ public final class ViewFactory: ObservableObject {
                         self.container.progressAdapter.update { progress in
                             progress.actualRating = newRating
                         }
+                    },
+                    saveHasSeenHintWarning: { hasSeen in
+                        UserDefaults.standard.set(hasSeen, forKey: "hasSeenHintWarning")
                     },
                     onPuzzleSolved: {
                         //MARK: Daily streak

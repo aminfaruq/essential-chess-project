@@ -20,6 +20,7 @@ public final class PuzzleMixViewModel: ObservableObject, Identifiable {
     @Published public private(set) var isPuzzleFinished: Bool = false
     @Published public private(set) var hasUsedHint: Bool = false
     @Published public private(set) var ratingChange: Double? = nil
+    @Published public private(set) var hasSeenHintWarning: Bool
     @Published public var showPaywall: Bool = false
     @Published public var isDailyLimitReached: Bool = false
     
@@ -32,6 +33,7 @@ public final class PuzzleMixViewModel: ObservableObject, Identifiable {
     private let pool: [Puzzle]
     private let calculateRating: (Double, Double, Bool) -> Double
     private let saveActualRating: (Double) -> Void
+    private let saveHasSeenHintWarning: (Bool) -> Void
     private let onPuzzleSolved: () -> Void
     private let updateDailyLimits: (Int, Date) -> Void
     
@@ -45,8 +47,10 @@ public final class PuzzleMixViewModel: ObservableObject, Identifiable {
         checkIsPro: @escaping () -> Bool,
         dailyPuzzleMixCount: Int,
         lastPuzzleMixDate: Date?,
+        hasSeenHintWarning: Bool,
         calculateRating: @escaping (Double, Double, Bool) -> Double,
         saveActualRating: @escaping (Double) -> Void,
+        saveHasSeenHintWarning: @escaping (Bool) -> Void,
         onPuzzleSolved: @escaping () -> Void,
         updateDailyLimits: @escaping (Int, Date) -> Void
     ) {
@@ -54,8 +58,10 @@ public final class PuzzleMixViewModel: ObservableObject, Identifiable {
         self.checkIsPro = checkIsPro
         self.dailyPuzzleMixCount = dailyPuzzleMixCount
         self.lastPuzzleMixDate = lastPuzzleMixDate
+        self.hasSeenHintWarning = hasSeenHintWarning
         self.calculateRating = calculateRating
         self.saveActualRating = saveActualRating
+        self.saveHasSeenHintWarning = saveHasSeenHintWarning
         self.onPuzzleSolved = onPuzzleSolved
         self.updateDailyLimits = updateDailyLimits
 
@@ -106,6 +112,11 @@ public final class PuzzleMixViewModel: ObservableObject, Identifiable {
         saveActualRating(newRating)
         
         recordActivity()
+    }
+    
+    public func markHintWarningAsSeen() {
+        hasSeenHintWarning = true
+        saveHasSeenHintWarning(true)
     }
     
     public func onNextTapped() {

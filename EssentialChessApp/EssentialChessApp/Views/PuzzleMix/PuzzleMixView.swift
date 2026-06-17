@@ -104,6 +104,9 @@ private struct PuzzleMixActiveView: View {
     @EnvironmentObject var themeAdapter: ThemeAdapter
     @StateObject private var boardController = ChessBoardController()
     
+    @State private var showHintWarning: Bool = false
+    @State private var pendingAction: (() -> Void)? = nil
+    
     var body: some View {
         if let puzzle = vm.currentPuzzle {
             VStack(spacing: 0) {
@@ -152,8 +155,10 @@ private struct PuzzleMixActiveView: View {
             Text(headerText)
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundColor(headerColor)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
                 .animation(.easeInOut(duration: 0.3), value: headerText)
-            Spacer()
+            Spacer(minLength: 8)
             if vm.isPuzzleFinished, let change = vm.ratingChange {
                 let oldRating = vm.actualRating - change
                 let isPositive = change >= 0
@@ -163,21 +168,28 @@ private struct PuzzleMixActiveView: View {
                     Text("~\(Int(oldRating))")
                         .font(.system(size: 14, weight: .semibold, design: .monospaced))
                         .foregroundColor(AppColors.gold)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
                     
                     Text(isPositive ? "+\(changeInt)" : "\(changeInt)")
                         .font(.system(size: 11, weight: .light, design: .monospaced))
                         .foregroundColor(isPositive ? AppColors.correct : AppColors.incorrect)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
                 }
                 .padding(8)
             } else {
                 Text("~\(Int(vm.actualRating))")
                     .font(.system(size: 14, weight: .semibold, design: .monospaced))
                     .foregroundColor(AppColors.gold)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
                     .padding(8)
             }
         }
         .padding(.horizontal, 20)
         .padding(.top, 8)
+        .frame(height: 44)
     }
     
     private func boardArea(puzzle: Puzzle) -> some View {
@@ -236,14 +248,17 @@ private struct PuzzleMixActiveView: View {
             }
         }
         .padding(.horizontal, 20)
+        .frame(height: 50)
     }
     
     private var controls: some View {
         HStack(spacing: 12) {
             if !vm.hasUsedHint {
                 Button {
-                    vm.decreaseRating()
-                    boardController.showHint()
+                    executeWithWarning {
+                        vm.decreaseRating()
+                        boardController.showHint()
+                    }
                 } label: {
                     Label("Hint", systemImage: "lightbulb")
                             .font(.system(size: 14))
@@ -257,8 +272,10 @@ private struct PuzzleMixActiveView: View {
             }
            
             Button {
-                vm.decreaseRating()
-                boardController.showSolution()
+                executeWithWarning {
+                    vm.decreaseRating()
+                    boardController.showSolution()
+                }
             } label: {
                 Label("Solution", systemImage: "key.horizontal")
                         .font(.system(size: 14))
@@ -290,5 +307,27 @@ private struct PuzzleMixActiveView: View {
         }
         .padding(.horizontal, 20)
         .padding(.bottom, 32)
+        .frame(height: 80)
+        .alert("Rating Penalty", isPresented: $showHintWarning) {
+            Button("Cancel", role: .cancel) {
+                pendingAction = nil
+            }
+            Button("Proceed", role: .destructive) {
+                vm.markHintWarningAsSeen()
+                pendingAction?()
+                pendingAction = nil
+            }
+        } message: {
+            Text("Using a hint or seeing the solution will count this puzzle as incorrect and decrease your rating. Do you want to proceed?")
+        }
+    }
+    
+    private func executeWithWarning(action: @escaping () -> Void) {
+        if vm.hasSeenHintWarning {
+            action()
+        } else {
+            pendingAction = action
+            showHintWarning = true
+        }
     }
 }

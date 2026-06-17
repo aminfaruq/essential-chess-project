@@ -205,8 +205,10 @@ final class PuzzleMixViewModelTests: XCTestCase {
         checkIsPro: @escaping () -> Bool = { false },
         dailyPuzzleMixCount: Int = 0,
         lastPuzzleMixDate: Date? = nil,
+        hasSeenHintWarning: Bool = false,
         calculateRating: @escaping (Double, Double, Bool) -> Double = { rating, _, _ in rating },
         saveActualRating: @escaping (Double) -> Void = { _ in },
+        saveHasSeenHintWarning: @escaping (Bool) -> Void = { _ in },
         updateDailyLimits: @escaping (Int, Date) -> Void = { _, _ in },
         file: StaticString = #filePath,
         line: UInt = #line
@@ -221,8 +223,10 @@ final class PuzzleMixViewModelTests: XCTestCase {
             checkIsPro: checkIsPro,
             dailyPuzzleMixCount: dailyPuzzleMixCount,
             lastPuzzleMixDate: lastPuzzleMixDate,
+            hasSeenHintWarning: hasSeenHintWarning,
             calculateRating: calculateRating,
             saveActualRating: saveActualRating,
+            saveHasSeenHintWarning: saveHasSeenHintWarning,
             onPuzzleSolved: {},
             updateDailyLimits: updateDailyLimits
         )
