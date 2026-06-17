@@ -21,11 +21,15 @@ public class ChessBoardController: ObservableObject {
     public func showHint() {
         boardView?.showHint()
     }
+    
+    public func showSolution() {
+        boardView?.showSolution()
+    }
 }
 
 // MARK: - UIViewRepresentable Bridge
 
-public struct ChessBoardBridge: UIViewRepresentable {
+public struct ChessBoardBridge: UIViewRepresentable, Equatable {
     public let puzzle: Puzzle
     public let controller: ChessBoardController
     public var onCompleted: () -> Void
@@ -101,5 +105,12 @@ public struct ChessBoardBridge: UIViewRepresentable {
         view.setBoardTheme(light: UIColor(boardThemeLight), dark: UIColor(boardThemeDark))
         view.setHighlightColor(UIColor(AppColors.hint), alpha: 0.45)
         view.setPieceTheme(pieceTheme)
+    }
+    
+    public static func == (lhs: ChessBoardBridge, rhs: ChessBoardBridge) -> Bool {
+        return lhs.puzzle.id == rhs.puzzle.id &&
+               lhs.boardThemeLight == rhs.boardThemeLight &&
+               lhs.boardThemeDark == rhs.boardThemeDark &&
+               lhs.pieceTheme == rhs.pieceTheme
     }
 }

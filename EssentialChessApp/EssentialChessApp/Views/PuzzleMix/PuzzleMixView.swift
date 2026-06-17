@@ -207,6 +207,7 @@ private struct PuzzleMixActiveView: View {
             ),
             pieceTheme: themeAdapter.currentTheme.pieceTheme
         )
+        .equatable()
         .padding(.horizontal, 16)
         .aspectRatio(1, contentMode: .fit)
         //        .onChange(of: vm.showCorrectMove) { _, newValue in
@@ -239,11 +240,27 @@ private struct PuzzleMixActiveView: View {
     
     private var controls: some View {
         HStack(spacing: 12) {
+            if !vm.hasUsedHint {
+                Button {
+                    vm.decreaseRating()
+                    boardController.showHint()
+                } label: {
+                    Label("Hint", systemImage: "lightbulb")
+                            .font(.system(size: 14))
+                            .foregroundStyle(.gray)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 12)
+                            .background(AppColors.surface)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                }
+                .hoverEffect(.highlight)
+            }
+           
             Button {
-                vm.handleHint()
-                boardController.showHint()
+                vm.decreaseRating()
+                boardController.showSolution()
             } label: {
-                Label("Hint", systemImage: "lightbulb")
+                Label("Solution", systemImage: "key.horizontal")
                         .font(.system(size: 14))
                         .foregroundStyle(.gray)
                         .padding(.horizontal, 16)
@@ -252,7 +269,6 @@ private struct PuzzleMixActiveView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 10))
             }
             .hoverEffect(.highlight)
-            
             
             Spacer()
             

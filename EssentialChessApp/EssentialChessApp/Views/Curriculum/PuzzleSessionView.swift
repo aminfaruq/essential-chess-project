@@ -108,6 +108,7 @@ public struct PuzzleSessionView: View {
             ),
             pieceTheme: themeAdapter.currentTheme.pieceTheme
         )
+        .equatable()
         .padding(.horizontal, 16)
         .aspectRatio(1, contentMode: .fit)
     }
@@ -124,6 +125,19 @@ public struct PuzzleSessionView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 10))
             }
             .hoverEffect(.highlight)
+            
+            if !boardVM.isSolved {
+                Button { boardController.showSolution() } label: {
+                    Label("Solution", systemImage: "key.horizontal")
+                        .font(.system(size: 14))
+                        .foregroundColor(AppColors.textSecondary)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
+                        .background(AppColors.surface)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                }
+                .hoverEffect(.highlight)
+            }
             
             Button { showSequenceList = true } label: {
                 Label("Puzzles", systemImage: "list.number")
