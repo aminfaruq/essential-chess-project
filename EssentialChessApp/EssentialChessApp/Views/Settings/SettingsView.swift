@@ -10,12 +10,13 @@ import EssentialChessUI
 import EssentialChess
 
 public struct SettingsView: View {
-    @EnvironmentObject var container: DependencyContainer
+    @EnvironmentObject var composer: AppComposer
     @EnvironmentObject var themeAdapter: ThemeAdapter
     @State private var showingResetAlert = false
     @State private var showPaywall = false
     @State private var isPro = false
-
+    @State private var isDailyReminderEnabled = false
+    
     public init() {}
     
     private let pieceThemes: [(id: String, label: String)] = [
@@ -68,6 +69,25 @@ public struct SettingsView: View {
                     }
                     
                     Section {
+                        Toggle("Daily Practice Reminder", isOn: Binding(
+                            get: { self.isDailyReminderEnabled },
+                            set: { newValue in
+                                self.isDailyReminderEnabled = newValue
+                                composer.settingsVM.setDailyReminder(enabled: newValue)
+                            }
+                        ))
+                        .tint(AppColors.accent)
+                        .font(.system(size: 16))
+                    } header: {
+                        Text("Notifications")
+                            .foregroundColor(AppColors.textSecondary)
+                            .font(.system(size: 12, weight: .semibold))
+                    } footer: {
+                        Text("Get reminded every day at 8:00 AM to complete your puzzles and keep your streak alive.")
+                            .foregroundColor(AppColors.textSecondary.opacity(0.8))
+                    }
+                    
+                    Section {
                         Button(role: .destructive) {
                             showingResetAlert = true
                         } label: {
@@ -106,10 +126,14 @@ public struct SettingsView: View {
             }
         }
         .onAppear {
-            self.isPro = container.progressAdapter.currentProgress.isPro
+            self.isPro = composer.container.progressAdapter.currentProgress.isPro
+            self.isDailyReminderEnabled = composer.settingsVM.isDailyReminderEnabled
         }
-        .onReceive(container.progressAdapter.publisher()) { progress in
+        .onReceive(composer.container.progressAdapter.publisher()) { progress in
             self.isPro = progress.isPro
+        }
+        .onReceive(composer.settingsVM.$isDailyReminderEnabled) { enabled in
+            self.isDailyReminderEnabled = enabled
         }
     }
     
@@ -188,7 +212,7 @@ public struct SettingsView: View {
     }
     
     private func resetProgress() {
-        container.progressAdapter.update { progress in
+        composer.container.progressAdapter.update { progress in
             progress.completedPuzzleIDs.removeAll()
             progress.passedExamIDs.removeAll()
             progress.examFailureTimes.removeAll()

@@ -17,6 +17,7 @@ public final class AppComposer: ObservableObject {
     public let curriculumVM: CurriculumViewModel
     public let navigationVM: MainNavigationViewModel
     public let streakVM: StreakViewModel
+    public let settingsVM: SettingsViewModel
     
     /// Core Components
     public let container: DependencyContainer
@@ -52,6 +53,11 @@ public final class AppComposer: ObservableObject {
         
         let tabAdapter = UserDefaultsTabAdapter()
         self.navigationVM = MainNavigationViewModel(tabStorage: tabAdapter)
+        
+        self.settingsVM = SettingsViewModel(
+            notificationStorage: container.notificationStorage,
+            notificationScheduler: container.notificationScheduler
+        )
     }
     
     public func start() {

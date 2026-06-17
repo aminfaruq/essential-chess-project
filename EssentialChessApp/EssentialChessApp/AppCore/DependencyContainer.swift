@@ -15,6 +15,9 @@ public final class DependencyContainer: ObservableObject {
     public let progressAdapter: ProgressAdapter
     public let themeAdapter: ThemeAdapter
     
+    public let notificationStorage: NotificationStoragePort
+    public let notificationScheduler: NotificationScheduler
+    
     public let curriculumLoader: FileCurriculumLoader?
     public let mixPoolLoader: FileMixPoolLoader?
     
@@ -24,6 +27,9 @@ public final class DependencyContainer: ObservableObject {
         
         let progressStore = UserDefaultsProgressStore()
         self.progressAdapter = ProgressAdapter(store: progressStore)
+        
+        self.notificationStorage = UserDefaultsNotificationStorage()
+        self.notificationScheduler = UserNotificationsAdapter()
         
         let reader = LocalFileReader()
         

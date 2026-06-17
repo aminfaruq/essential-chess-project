@@ -57,5 +57,8 @@ public struct MainTabView: View {
                 UITabBar.appearance().scrollEdgeAppearance = appearance
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("DeepLinkToPuzzleMix"))) { _ in
+            navigationViewModel.selectedTab = .puzzleMix
+        }
     }
 }
