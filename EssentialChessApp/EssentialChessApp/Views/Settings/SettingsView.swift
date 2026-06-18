@@ -68,6 +68,16 @@ public struct SettingsView: View {
                             .font(.system(size: 12, weight: .semibold))
                     }
                     
+                    #if DEBUG
+                    Section {
+                        DebugMenuView()
+                    } header: {
+                        Text("Debug Menu")
+                            .foregroundColor(AppColors.textSecondary)
+                            .font(.system(size: 12, weight: .semibold))
+                    }
+                    #endif
+                    
                     Section {
                         Toggle("Daily Practice Reminder", isOn: Binding(
                             get: { self.isDailyReminderEnabled },
