@@ -21,6 +21,8 @@ public final class DependencyContainer: ObservableObject {
     public let curriculumLoader: FileCurriculumLoader?
     public let mixPoolLoader: FileMixPoolLoader?
     
+    public let languageAdapter: LanguageAdapter
+    
     public init() {
         let themeStore = UserDefaultsThemeStore()
         self.themeAdapter = ThemeAdapter(store: themeStore)
@@ -44,5 +46,8 @@ public final class DependencyContainer: ObservableObject {
         } else {
             self.mixPoolLoader = nil
         }
+        
+        let languageStorage = UserDefaultsLanguageStorage()
+        self.languageAdapter = LanguageAdapter(store: languageStorage)
     }
 }

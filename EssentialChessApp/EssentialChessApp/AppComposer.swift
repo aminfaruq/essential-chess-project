@@ -75,6 +75,7 @@ public final class AppComposer: ObservableObject {
         }
         
         container.themeAdapter.load { }
+        container.languageAdapter.load()
     }
 }
 

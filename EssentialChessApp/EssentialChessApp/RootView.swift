@@ -11,6 +11,7 @@ import EssentialChessUI
 
 public struct RootView: View {
     @EnvironmentObject var composer: AppComposer
+    @EnvironmentObject var languageAdapter: LanguageAdapter
     
     @State private var onboardingComplete: Bool = false
     
@@ -61,6 +62,7 @@ public struct RootView: View {
                 MainTabView(navigationViewModel: composer.navigationVM)
             }
         }
+        .environment(\.locale, Locale(identifier: languageAdapter.currentLanguage))
         .background(AppColors.background.ignoresSafeArea())
         .onReceive(composer.container.progressAdapter.publisher()) { progress in
             self.onboardingComplete = progress.onboardingComplete

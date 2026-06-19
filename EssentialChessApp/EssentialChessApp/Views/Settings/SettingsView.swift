@@ -12,6 +12,7 @@ import EssentialChess
 public struct SettingsView: View {
     @EnvironmentObject var composer: AppComposer
     @EnvironmentObject var themeAdapter: ThemeAdapter
+    @EnvironmentObject var languageAdapter: LanguageAdapter
     @State private var showingResetAlert = false
     @State private var showPaywall = false
     @State private var isPro = false
@@ -77,6 +78,22 @@ public struct SettingsView: View {
                             .font(.system(size: 12, weight: .semibold))
                     }
                     #endif
+                    
+                    Section {
+                        Picker("Language", selection: Binding(
+                            get: { languageAdapter.currentLanguage },
+                            set: { newValue in languageAdapter.update(languageCode: newValue) }
+                        )) {
+                            Text("English").tag("en")
+                            Text("Bahasa Indonesia").tag("id")
+                        }
+                        .tint(AppColors.accent)
+                        .font(.system(size: 16))
+                    } header: {
+                        Text("Language")
+                            .foregroundColor(AppColors.textSecondary)
+                            .font(.system(size: 12, weight: .semibold))
+                    }
                     
                     Section {
                         Toggle("Daily Practice Reminder", isOn: Binding(
@@ -162,7 +179,7 @@ public struct SettingsView: View {
         } label: {
             HStack(spacing: 14) {
                 BoardThemePreviewChip(option: option)
-                Text(option.rawValue)
+                Text(LocalizedStringKey(option.rawValue))
                     .foregroundColor(AppColors.textPrimary)
                     .font(.system(size: 16))
                 Spacer()

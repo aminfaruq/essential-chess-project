@@ -128,7 +128,7 @@ private struct PuzzleMixActiveView: View {
         }
     }
     
-    private var headerText: String {
+    private var headerText: LocalizedStringKey {
         if vm.isPuzzleFinished {
             if vm.showCorrectMove || vm.hasUsedHint {
                 return "Get it right next time!"
@@ -220,7 +220,7 @@ private struct PuzzleMixActiveView: View {
             pieceTheme: themeAdapter.currentTheme.pieceTheme
         )
         .equatable()
-        .padding(.horizontal, 16)
+        //.padding(.horizontal, 16)
         .aspectRatio(1, contentMode: .fit)
         //        .onChange(of: vm.showCorrectMove) { _, newValue in
         //            if newValue {
@@ -241,7 +241,8 @@ private struct PuzzleMixActiveView: View {
                         .scaledToFit()
                         .frame(width: 42, height: 42)
                     
-                    Text("\(boardController.userColorName) to Move")
+                    let key = "\(boardController.userColorName) to Move"
+                    Text(LocalizedStringKey(key))
                         .font(.system(size: 16, weight: .light))
                         .foregroundColor(AppColors.textPrimary)
                 }

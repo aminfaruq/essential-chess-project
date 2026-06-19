@@ -82,10 +82,10 @@ private struct SectionCard: View {
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(model.title)
+                        Text(LocalizedStringKey(model.title))
                             .font(.system(size: 17, weight: .semibold))
                             .foregroundColor(model.isUnlocked ? AppColors.textPrimary : AppColors.locked)
-                        Text(model.eloRange)
+                        Text(LocalizedStringKey(model.eloRange))
                             .font(.system(size: 13))
                             .foregroundColor(model.isUnlocked ? AppColors.textSecondary : AppColors.locked.opacity(0.7))
                     }

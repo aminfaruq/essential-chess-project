@@ -6,9 +6,12 @@
 //
 
 import SwiftUI
+import EssentialChess
 import EssentialChessUI
 
 public struct OnboardingView: View {
+    @EnvironmentObject var languageAdapter: LanguageAdapter
+    
     private let onSelectNewbie: () -> Void
     private let onSelectExperienced: () -> Void
     
@@ -22,6 +25,27 @@ public struct OnboardingView: View {
             AppColors.background.ignoresSafeArea()
             
             VStack(spacing: 0) {
+                HStack {
+                    Spacer()
+                    Menu {
+                        Button("English") { languageAdapter.update(languageCode: "en") }
+                        Button("Bahasa Indonesia") { languageAdapter.update(languageCode: "id") }
+                    } label: {
+                        HStack(spacing: 6) {
+                            Image(systemName: "globe")
+                            Text(languageAdapter.currentLanguage == "id" ? "ID" : "EN")
+                                .font(.system(size: 14, weight: .bold))
+                        }
+                        .foregroundColor(AppColors.textSecondary)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 8)
+                        .background(AppColors.surface)
+                        .clipShape(Capsule())
+                    }
+                }
+                .padding(.horizontal, 24)
+                .padding(.top, 16)
+                
                 Spacer()
                 
                 // Logo Area

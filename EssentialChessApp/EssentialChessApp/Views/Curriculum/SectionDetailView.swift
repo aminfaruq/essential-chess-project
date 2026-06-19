@@ -39,7 +39,7 @@ struct SectionDetailView: View {
                 .padding(.bottom, 32)
             }
         }
-        .navigationTitle(model.title)
+        .navigationTitle(LocalizedStringKey(model.title))
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(AppColors.background, for: .navigationBar)
         .toolbarColorScheme(.dark, for: .navigationBar)
@@ -53,7 +53,7 @@ private struct CategoryCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
-                Text(model.title)
+                Text(LocalizedStringKey(model.title))
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(AppColors.textPrimary)
                 Spacer()
@@ -104,10 +104,11 @@ private struct ExamCard: View {
                         .font(.system(size: 20))
                     
                     VStack(alignment: .leading, spacing: 3) {
-                        Text(category.title)
+                        Text(LocalizedStringKey(category.title))
                             .font(.system(size: 16, weight: .bold))
                             .foregroundColor(isPassed ? AppColors.gold : (isUnlocked ? AppColors.textPrimary : AppColors.locked))
-                        Text(subtitleText)
+                        
+                        Text(LocalizedStringKey(subtitleText))
                             .font(.system(size: 12))
                             .foregroundColor(AppColors.textSecondary)
                     }
