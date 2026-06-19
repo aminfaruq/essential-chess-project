@@ -7,13 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		83011DE92FE2F54E00EBFE00 /* NativeChessBoard in Frameworks */ = {isa = PBXBuildFile; productRef = 83011DE82FE2F54E00EBFE00 /* NativeChessBoard */; };
+		83011FCF2FE4000900EBFE00 /* NativeChessBoard in Frameworks */ = {isa = PBXBuildFile; productRef = 83011FCE2FE4000900EBFE00 /* NativeChessBoard */; };
 		830B9F4C2FDD8D39005FF768 /* NativeChessBoard in Frameworks */ = {isa = PBXBuildFile; productRef = 830B9F4B2FDD8D39005FF768 /* NativeChessBoard */; };
 		830BA0D62FDDE564005FF768 /* NativeChessBoard in Frameworks */ = {isa = PBXBuildFile; productRef = 830BA0D52FDDE564005FF768 /* NativeChessBoard */; };
-		830BA0D92FDDE587005FF768 /* NativeChessBoard in Frameworks */ = {isa = PBXBuildFile; productRef = 830BA0D82FDDE587005FF768 /* NativeChessBoard */; };
 		8381964E2FDA7306009E88CF /* EssentialChess.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8381964D2FDA7306009E88CF /* EssentialChess.framework */; };
 		8381964F2FDA7306009E88CF /* EssentialChess.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8381964D2FDA7306009E88CF /* EssentialChess.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		838196522FDA7310009E88CF /* EssentialChessUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 838196512FDA7310009E88CF /* EssentialChessUI.framework */; };
-		838196532FDA7310009E88CF /* EssentialChessUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 838196512FDA7310009E88CF /* EssentialChessUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		83C5DC952FE54E9B003132E1 /* EssentialChessUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 838196512FDA7310009E88CF /* EssentialChessUI.framework */; };
+		83C5DC962FE54E9B003132E1 /* EssentialChessUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 838196512FDA7310009E88CF /* EssentialChessUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,7 +41,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				838196532FDA7310009E88CF /* EssentialChessUI.framework in Embed Frameworks */,
+				83C5DC962FE54E9B003132E1 /* EssentialChessUI.framework in Embed Frameworks */,
 				8381964F2FDA7306009E88CF /* EssentialChess.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -93,10 +94,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				8381964E2FDA7306009E88CF /* EssentialChess.framework in Frameworks */,
-				830BA0D92FDDE587005FF768 /* NativeChessBoard in Frameworks */,
+				83011FCF2FE4000900EBFE00 /* NativeChessBoard in Frameworks */,
+				83C5DC952FE54E9B003132E1 /* EssentialChessUI.framework in Frameworks */,
+				83011DE92FE2F54E00EBFE00 /* NativeChessBoard in Frameworks */,
 				830BA0D62FDDE564005FF768 /* NativeChessBoard in Frameworks */,
 				830B9F4C2FDD8D39005FF768 /* NativeChessBoard in Frameworks */,
-				838196522FDA7310009E88CF /* EssentialChessUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -170,7 +172,8 @@
 			packageProductDependencies = (
 				830B9F4B2FDD8D39005FF768 /* NativeChessBoard */,
 				830BA0D52FDDE564005FF768 /* NativeChessBoard */,
-				830BA0D82FDDE587005FF768 /* NativeChessBoard */,
+				83011DE82FE2F54E00EBFE00 /* NativeChessBoard */,
+				83011FCE2FE4000900EBFE00 /* NativeChessBoard */,
 			);
 			productName = EssentialChessApp;
 			productReference = 832B0D032FD919F00009FCFE /* EssentialChessApp.app */;
@@ -251,11 +254,12 @@
 			knownRegions = (
 				en,
 				Base,
+				id,
 			);
 			mainGroup = 832B0CFA2FD919F00009FCFE;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				830BA0D72FDDE587005FF768 /* XCRemoteSwiftPackageReference "NativeChessBoard" */,
+				83011FCD2FE4000900EBFE00 /* XCRemoteSwiftPackageReference "NativeChessBoard" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 832B0D042FD919F00009FCFE /* Products */;
@@ -331,7 +335,65 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		832B0D2D2FD919F20009FCFE /* Debug */ = {
+		83011FC22FE3D92F00EBFE00 /* Staging */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = WZB5R9B92Y;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Staging;
+		};
+		83011FC32FE3D92F00EBFE00 /* Staging */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -353,9 +415,90 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.aminfaruq.EssentialChessApp.beta;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = STAGING;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Staging;
+		};
+		83011FC42FE3D92F00EBFE00 /* Staging */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WZB5R9B92Y;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.aminfaruq.EssentialChessAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EssentialChessApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/EssentialChessApp";
+			};
+			name = Staging;
+		};
+		83011FC52FE3D92F00EBFE00 /* Staging */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WZB5R9B92Y;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.aminfaruq.EssentialChessAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = EssentialChessApp;
+			};
+			name = Staging;
+		};
+		832B0D2D2FD919F20009FCFE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WZB5R9B92Y;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = EssentialChessApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Essential Chess";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.aminfaruq.EssentialChessApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
@@ -388,7 +531,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.aminfaruq.EssentialChessApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -461,6 +604,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -518,6 +662,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -616,6 +761,7 @@
 			buildConfigurations = (
 				832B0D2F2FD919F20009FCFE /* Debug */,
 				832B0D302FD919F20009FCFE /* Release */,
+				83011FC22FE3D92F00EBFE00 /* Staging */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -625,6 +771,7 @@
 			buildConfigurations = (
 				832B0D2D2FD919F20009FCFE /* Debug */,
 				832B0D2E2FD919F20009FCFE /* Release */,
+				83011FC32FE3D92F00EBFE00 /* Staging */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -634,6 +781,7 @@
 			buildConfigurations = (
 				832B0D322FD919F20009FCFE /* Debug */,
 				832B0D332FD919F20009FCFE /* Release */,
+				83011FC42FE3D92F00EBFE00 /* Staging */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -643,6 +791,7 @@
 			buildConfigurations = (
 				832B0D352FD919F20009FCFE /* Debug */,
 				832B0D362FD919F20009FCFE /* Release */,
+				83011FC52FE3D92F00EBFE00 /* Staging */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -650,28 +799,32 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		830BA0D72FDDE587005FF768 /* XCRemoteSwiftPackageReference "NativeChessBoard" */ = {
+		83011FCD2FE4000900EBFE00 /* XCRemoteSwiftPackageReference "NativeChessBoard" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/aminfaruq/NativeChessBoard.git";
 			requirement = {
-				branch = master;
+				branch = develop;
 				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		83011DE82FE2F54E00EBFE00 /* NativeChessBoard */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NativeChessBoard;
+		};
+		83011FCE2FE4000900EBFE00 /* NativeChessBoard */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 83011FCD2FE4000900EBFE00 /* XCRemoteSwiftPackageReference "NativeChessBoard" */;
+			productName = NativeChessBoard;
+		};
 		830B9F4B2FDD8D39005FF768 /* NativeChessBoard */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = NativeChessBoard;
 		};
 		830BA0D52FDDE564005FF768 /* NativeChessBoard */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = NativeChessBoard;
-		};
-		830BA0D82FDDE587005FF768 /* NativeChessBoard */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 830BA0D72FDDE587005FF768 /* XCRemoteSwiftPackageReference "NativeChessBoard" */;
 			productName = NativeChessBoard;
 		};
 /* End XCSwiftPackageProductDependency section */

@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		832B0AF12FD7D04E0009FCFE /* EssentialChess.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 832B0AE72FD7D04E0009FCFE /* EssentialChess.framework */; };
 		83FD3FC32FDA686500CA0675 /* EssentialChess.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 832B0AE72FD7D04E0009FCFE /* EssentialChess.framework */; };
-		83FD3FC42FDA686500CA0675 /* EssentialChess.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 832B0AE72FD7D04E0009FCFE /* EssentialChess.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		83FD3FCD2FDA68C900CA0675 /* EssentialChessUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83FD3FAD2FDA685300CA0675 /* EssentialChessUI.framework */; };
 /* End PBXBuildFile section */
 
@@ -36,20 +35,6 @@
 			remoteInfo = EssentialChess;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		83FD3FC72FDA686500CA0675 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				83FD3FC42FDA686500CA0675 /* EssentialChess.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		832B0AE72FD7D04E0009FCFE /* EssentialChess.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialChess.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -237,7 +222,6 @@
 				83FD3FA92FDA685300CA0675 /* Sources */,
 				83FD3FAA2FDA685300CA0675 /* Frameworks */,
 				83FD3FAB2FDA685300CA0675 /* Resources */,
-				83FD3FC72FDA686500CA0675 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
