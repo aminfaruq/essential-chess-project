@@ -95,6 +95,7 @@ public final class PuzzleMixViewModel: ObservableObject, Identifiable {
         } else {
             isPuzzleFinished = true
             showCorrectMove = true
+            recordActivity()
         }
     }
     

@@ -90,6 +90,40 @@ final class PuzzleMixViewModelTests: XCTestCase {
         XCTAssertTrue(sut.showCorrectMove, "Expected to reveal the correct move")
     }
     
+    func test_handlePuzzleCompletion_correctMove_incrementsDailyLimit() {
+        var updatedCount: Int? = nil
+        let sut = makeSUT(
+            actualRating: 1200.0,
+            checkIsPro: { false },
+            dailyPuzzleMixCount: 3,
+            lastPuzzleMixDate: Date(),
+            updateDailyLimits: { count, _ in
+                updatedCount = count
+            }
+        )
+        
+        sut.handlePuzzleCompletion(isCorrect: true)
+        
+        XCTAssertEqual(updatedCount, 4, "Expected daily count to increment on correct move")
+    }
+    
+    func test_handlePuzzleCompletion_incorrectMove_incrementsDailyLimit() {
+        var updatedCount: Int? = nil
+        let sut = makeSUT(
+            actualRating: 1200.0,
+            checkIsPro: { false },
+            dailyPuzzleMixCount: 3,
+            lastPuzzleMixDate: Date(),
+            updateDailyLimits: { count, _ in
+                updatedCount = count
+            }
+        )
+        
+        sut.handlePuzzleCompletion(isCorrect: false)
+        
+        XCTAssertEqual(updatedCount, 4, "Expected daily count to increment even on incorrect move")
+    }
+    
     // MARK: - Scenario: Uninterrupted endless progression
     
     func test_decreaseRating_shouldDecreasesRatingAndMarksFailed_butAllowsProgression() {
