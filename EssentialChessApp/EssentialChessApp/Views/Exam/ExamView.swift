@@ -90,7 +90,7 @@ public struct ExamView: View {
                 pieceTheme: themeAdapter.currentTheme.pieceTheme
             )
             .equatable()
-            .padding(.horizontal, 16)
+            //.padding(.horizontal, 16)
             .aspectRatio(1, contentMode: .fit)
             
             playerTurnInfo
@@ -182,7 +182,8 @@ public struct ExamView: View {
                         .scaledToFit()
                         .frame(width: 42, height: 42)
                     
-                    Text("\(boardController.userColorName) to Move")
+                    let key = "\(boardController.userColorName) to Move"
+                    Text(LocalizedStringKey(key))
                         .font(.system(size: 16, weight: .light))
                         .foregroundColor(AppColors.textPrimary)
                 }

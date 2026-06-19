@@ -51,7 +51,7 @@ public struct PuzzleSessionView: View {
                     .foregroundColor(AppColors.textSecondary)
             }
         }
-        .navigationTitle(categoryTitle)
+        .navigationTitle(LocalizedStringKey(categoryTitle))
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(AppColors.background, for: .navigationBar)
         .toolbarColorScheme(.dark, for: .navigationBar)
@@ -109,7 +109,7 @@ public struct PuzzleSessionView: View {
             pieceTheme: themeAdapter.currentTheme.pieceTheme
         )
         .equatable()
-        .padding(.horizontal, 16)
+        //.padding(.horizontal, 16)
         .aspectRatio(1, contentMode: .fit)
     }
     
@@ -117,7 +117,7 @@ public struct PuzzleSessionView: View {
         HStack(spacing: 12) {
             Button { boardController.showHint() } label: {
                 Label("Hint", systemImage: "lightbulb")
-                    .font(.system(size: 14))
+                    .font(.system(size: 12))
                     .foregroundColor(AppColors.textSecondary)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 12)
@@ -129,7 +129,7 @@ public struct PuzzleSessionView: View {
             if !boardVM.isSolved {
                 Button { boardController.showSolution() } label: {
                     Label("Solution", systemImage: "key.horizontal")
-                        .font(.system(size: 14))
+                        .font(.system(size: 12))
                         .foregroundColor(AppColors.textSecondary)
                         .padding(.horizontal, 16)
                         .padding(.vertical, 12)
@@ -141,7 +141,7 @@ public struct PuzzleSessionView: View {
             
             Button { showSequenceList = true } label: {
                 Label("Puzzles", systemImage: "list.number")
-                    .font(.system(size: 14))
+                    .font(.system(size: 12))
                     .foregroundColor(AppColors.textSecondary)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 12)
@@ -155,9 +155,9 @@ public struct PuzzleSessionView: View {
             if boardVM.isSolved {
                 Button { boardVM.triggerNext() } label: {
                     Label("Next", systemImage: "arrow.right")
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.system(size: 12, weight: .semibold))
                         .foregroundColor(.black)
-                        .padding(.horizontal, 24)
+                        .padding(.horizontal, 18)
                         .padding(.vertical, 12)
                         .background(AppColors.accent)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -183,7 +183,9 @@ public struct PuzzleSessionView: View {
                         .scaledToFit()
                         .frame(width: 42, height: 42)
                     
-                    Text("\(boardController.userColorName) to Move")
+                    
+                    let key = "\(boardController.userColorName) to Move"
+                    Text(LocalizedStringKey(key))
                         .font(.system(size: 16, weight: .light))
                         .foregroundColor(AppColors.textPrimary)
                 }

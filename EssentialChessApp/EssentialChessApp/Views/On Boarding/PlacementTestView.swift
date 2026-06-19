@@ -61,7 +61,7 @@ public struct PlacementTestView: View {
                         pieceTheme: themeAdapter.currentTheme.pieceTheme
                     )
                     .equatable()
-                    .padding(.horizontal, 16)
+                    //.padding(.horizontal, 16)
                     .aspectRatio(1, contentMode: .fit)
                     
                     Spacer(minLength: 12)
@@ -122,7 +122,8 @@ public struct PlacementTestView: View {
                 let pieceImageName = "\(themeAdapter.currentTheme.pieceTheme)_\(colorPrefix)k"
                 
                 HStack(spacing: 12) {
-                    Text("\(boardController.userColorName) to Move")
+                    let key = "\(boardController.userColorName) to Move"
+                    Text(LocalizedStringKey(key))
                         .font(.system(size: 22, weight: .light))
                         .foregroundColor(AppColors.textPrimary)
                     
