@@ -122,6 +122,16 @@
         }
       }
     },
+    "Achievements" : {
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pencapaian"
+          }
+        }
+      }
+    },
     "Advanced Combinations" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -379,6 +389,9 @@
           }
         }
       }
+    },
+    "Coming Soon" : {
+
     },
     "Complete all themes to unlock" : {
       "extractionState" : "manual",
@@ -973,6 +986,9 @@
         }
       }
     },
+    "Play Modes" : {
+
+    },
     "Preparing your diagnostic test..." : {
       "localizations" : {
         "id" : {
@@ -992,6 +1008,9 @@
           }
         }
       }
+    },
+    "Puzzle" : {
+
     },
     "Puzzle %lld" : {
       "localizations" : {
@@ -1038,6 +1057,12 @@
           }
         }
       }
+    },
+    "Puzzle Storm" : {
+
+    },
+    "Puzzle Streak" : {
+
     },
     "Puzzles" : {
       "localizations" : {
