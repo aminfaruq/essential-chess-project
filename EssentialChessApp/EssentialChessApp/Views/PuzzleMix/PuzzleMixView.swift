@@ -16,26 +16,24 @@ public struct PuzzleMixView: View {
     public init() {}
     
     public var body: some View {
-        NavigationStack {
-            ZStack {
-                AppColors.background.ignoresSafeArea()
-                
-                if let vm = viewModel {
-                    PuzzleMixContainerView(vm: vm)
-                } else {
-                    VStack(spacing: 16) {
-                        ProgressView()
-                            .tint(AppColors.accent)
-                        Text("Loading Puzzles...")
-                            .foregroundColor(AppColors.textSecondary)
-                    }
+        ZStack {
+            AppColors.background.ignoresSafeArea()
+            
+            if let vm = viewModel {
+                PuzzleMixContainerView(vm: vm)
+            } else {
+                VStack(spacing: 16) {
+                    ProgressView()
+                        .tint(AppColors.accent)
+                    Text("Loading Puzzles...")
+                        .foregroundColor(AppColors.textSecondary)
                 }
             }
-            .navigationTitle("Puzzle Mix")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(AppColors.background, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
         }
+        .navigationTitle("Puzzle Mix")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(AppColors.background, for: .navigationBar)
+        .toolbarColorScheme(.dark, for: .navigationBar)
         .onAppear {
             if viewModel == nil {
                 composer.viewFactory.fetchPuzzleMixViewModel { fetchedVM in
