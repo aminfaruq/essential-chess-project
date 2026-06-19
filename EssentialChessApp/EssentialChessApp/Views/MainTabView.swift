@@ -33,9 +33,9 @@ public struct MainTabView: View {
                 }
                 .tag(AppTab.curriculum)
             
-            PuzzleMixView()
+            PuzzleDashboardView()
                 .tabItem {
-                    Label("Puzzle Mix", systemImage: "puzzlepiece.extension.fill")
+                    Label("Puzzle", systemImage: "puzzlepiece.extension.fill")
                 }
                 .tag(AppTab.puzzleMix)
             
