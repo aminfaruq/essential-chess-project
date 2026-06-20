@@ -68,7 +68,7 @@ public struct PuzzleDashboardView: View {
                 // Max Streak
                 achievementCard(
                     title: "Best Streak",
-                    value: "\(currentProg.highestPuzzleStreak)",
+                    value: currentProg.highestPuzzleStreak == 0 ? "\(currentProg.activePuzzleStreak)" : "\(currentProg.highestPuzzleStreak)",
                     icon: "flame.fill",
                     color: .orange
                 )
