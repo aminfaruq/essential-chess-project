@@ -87,13 +87,19 @@ public struct PuzzleDashboardView: View {
     
     private func achievementCard(title: String, value: String, icon: String, color: Color) -> some View {
         VStack(spacing: 12) {
-            Image(systemName: icon)
-                .font(.system(size: 24))
-                .foregroundColor(color)
+            ZStack {
+                Circle()
+                    .fill(color.opacity(0.12))
+                    .frame(width: 44, height: 44)
+                
+                Image(systemName: icon)
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundColor(color)
+            }
             
             VStack(spacing: 4) {
                 Text(value)
-                    .font(.system(size: 20, weight: .bold, design: .monospaced))
+                    .font(.system(size: 20, weight: .bold, design: .rounded))
                     .foregroundColor(AppColors.textPrimary)
                 
                 Text(title)
@@ -103,11 +109,9 @@ public struct PuzzleDashboardView: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 20)
+        .padding(.vertical, 16)
         .background(AppColors.surface)
         .cornerRadius(16)
-        // Add subtle shadow for premium feel
-        .shadow(color: Color.black.opacity(0.15), radius: 8, x: 0, y: 4)
     }
     
     private var menuSection: some View {
@@ -124,7 +128,8 @@ public struct PuzzleDashboardView: View {
                         title: "Puzzle Mix",
                         subtitle: "A mix of tactical themes to improve your overall vision.",
                         icon: "puzzlepiece.extension.fill",
-                        color: AppColors.accent
+                        color: AppColors.accent,
+                        isNew: false
                     )
                 }
                 
@@ -133,7 +138,8 @@ public struct PuzzleDashboardView: View {
                         title: "Puzzle Streak",
                         subtitle: "Solve as many puzzles as you can without making a mistake.",
                         icon: "flame.fill",
-                        color: .orange
+                        color: .orange,
+                        isNew: false
                     )
                 }
                 
@@ -142,7 +148,8 @@ public struct PuzzleDashboardView: View {
                         title: "Puzzle Storm",
                         subtitle: "Race against the clock to solve as many puzzles as possible.",
                         icon: "bolt.fill",
-                        color: .yellow
+                        color: .yellow,
+                        isNew: false
                     )
                 }
             }
@@ -150,38 +157,50 @@ public struct PuzzleDashboardView: View {
         }
     }
     
-    private func menuCard(title: String, subtitle: String, icon: String, color: Color) -> some View {
+    private func menuCard(title: String, subtitle: String, icon: String, color: Color, isNew: Bool) -> some View {
         HStack(spacing: 16) {
             ZStack {
-                Circle()
-                    .fill(color.opacity(0.15))
-                    .frame(width: 56, height: 56)
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(color.opacity(0.12))
+                    .frame(width: 48, height: 48)
                 
                 Image(systemName: icon)
-                    .font(.system(size: 24))
+                    .font(.system(size: 22, weight: .semibold))
                     .foregroundColor(color)
             }
             
-            VStack(alignment: .leading, spacing: 6) {
-                Text(title)
-                    .font(.system(size: 18, weight: .bold))
-                    .foregroundColor(AppColors.textPrimary)
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(spacing: 8) {
+                    Text(title)
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundColor(AppColors.textPrimary)
+                    
+                    if isNew {
+                        Text("NEW")
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundColor(color)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(color.opacity(0.15))
+                            .clipShape(Capsule())
+                    }
+                }
                 
                 Text(subtitle)
-                    .font(.system(size: 13))
+                    .font(.system(size: 13, weight: .regular))
                     .foregroundColor(AppColors.textSecondary)
                     .multilineTextAlignment(.leading)
+                    .lineSpacing(2)
             }
             
             Spacer(minLength: 8)
             
             Image(systemName: "chevron.right")
-                .font(.system(size: 14, weight: .bold))
-                .foregroundColor(AppColors.textSecondary.opacity(0.5))
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundColor(AppColors.textSecondary.opacity(0.4))
         }
         .padding(16)
         .background(AppColors.surface)
         .cornerRadius(16)
-        .shadow(color: Color.black.opacity(0.15), radius: 8, x: 0, y: 4)
     }
 }
