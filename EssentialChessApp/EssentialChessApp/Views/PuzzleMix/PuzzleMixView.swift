@@ -86,9 +86,9 @@ private struct PuzzleMixContainerView: View {
                 PuzzleMixActiveView(vm: vm)
             }
         }
-        .sheet(isPresented: $vm.showPaywall) {
-            PaywallView()
-        }
+        //        .sheet(isPresented: $vm.showPaywall) {
+        //            PaywallView()
+        //        }
         .onReceive(container.progressAdapter.publisher()) { progress in
             if progress.isPro && vm.isDailyLimitReached {
                 vm.resumeAfterPurchase()
