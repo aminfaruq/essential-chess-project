@@ -93,7 +93,7 @@ public struct PlacementTestView: View {
                 Text("Placement Test")
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundColor(AppColors.textPrimary)
-                Text("Puzzle \(viewModel.currentPuzzleIndex + 1) of \(viewModel.puzzles.count)")
+                Text("Puzzle \(viewModel.currentPuzzleIndex + 1) of \(viewModel.totalPuzzles)")
                     .font(.system(size: 12))
                     .foregroundColor(AppColors.textSecondary)
             }
@@ -173,3 +173,4 @@ public struct PlacementTestView: View {
         }
     }
 }
+

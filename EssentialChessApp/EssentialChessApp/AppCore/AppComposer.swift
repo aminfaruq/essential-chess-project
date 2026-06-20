@@ -69,8 +69,9 @@ public final class AppComposer: ObservableObject {
         
         container.progressAdapter.load { [weak self] in
             DispatchQueue.main.async {
-                self?.isReady = true
-                self?.curriculumVM.load()
+                guard let self = self else { return }
+                self.isReady = true
+                self.curriculumVM.load()
             }
         }
         

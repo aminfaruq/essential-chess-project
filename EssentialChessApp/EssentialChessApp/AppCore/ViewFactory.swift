@@ -31,25 +31,29 @@ public final class ViewFactory: ObservableObject {
     ) {
         guard let loader = container.mixPoolLoader else { return }
         
-        loader.load { result in
+        loader.load {  [weak self] result in
             DispatchQueue.main.async {
-                let placementPuzzles: [Puzzle]
+                guard self != nil else { return }
+                
+                let allPuzzles: [Puzzle]
                 
                 switch result {
                 case .success(let mixPool):
-                    let allPuzzles = mixPool.difficultyTiers.flatMap { $0.puzzles }
-                    placementPuzzles = Array(allPuzzles.shuffled().prefix(15))
+                    allPuzzles = mixPool.difficultyTiers.flatMap { $0.puzzles }
                 case .failure(_):
-                    placementPuzzles = [] // Fallback to empty if reading fails
+                    allPuzzles = [] // Fallback to empty if reading fails
                 }
                 
                 let viewModel = OnboardingViewModel(
-                    puzzles: placementPuzzles,
+                    pool: allPuzzles,
+                    totalPuzzles: 15,
                     initialRating: 1000.0,
-                    calculateRating: { currentRating, _, isCorrect in
-                        // Real ELO calculation logic can be placed here
-                        let gain = isCorrect ? 32.0 : -32.0
-                        return max(100.0, currentRating + gain)
+                    calculateRating: { currentRating, puzzleRating, isCorrect in
+                        return RatingCalculator().calculatePlacementRating(
+                            current: currentRating,
+                            puzzleRating: puzzleRating,
+                            isCorrect: isCorrect
+                        )
                     },
                     onComplete: onFinishedTest
                 )
@@ -91,7 +95,7 @@ public final class ViewFactory: ObservableObject {
                     lastPuzzleMixDate: progress.lastPuzzleMixDate,
                     hasSeenHintWarning: UserDefaults.standard.bool(forKey: "hasSeenHintWarning"),
                     calculateRating: { currentRating, puzzleRating, isCorrect in
-                        return RatingCalculator().calculatePlacementRating(
+                        return RatingCalculator().calculateRegularRating(
                             current: currentRating,
                             puzzleRating: puzzleRating,
                             isCorrect: isCorrect
@@ -115,6 +119,69 @@ public final class ViewFactory: ObservableObject {
                         self.container.progressAdapter.update { progress in
                             progress.dailyPuzzleMixCount = count
                             progress.lastPuzzleMixDate = date
+                        }
+                    }
+                )
+                
+                onReady(viewModel)
+            }
+        }
+    }
+    
+    // MARK: - Puzzle Streak Factory
+    
+    public func fetchPuzzleStreakViewModel(
+        onReady: @escaping (PuzzleStreakViewModel) -> Void
+    ) {
+        guard let loader = container.mixPoolLoader else { return }
+        
+        loader.load { [weak self] result in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                
+                let pool: [Puzzle]
+                switch result {
+                case .success(let mixPool):
+                    pool = mixPool.difficultyTiers.flatMap { $0.puzzles }
+                case .failure(_):
+                    pool = []
+                }
+                
+                let progress = self.container.progressAdapter.currentProgress
+                
+                let viewModel = PuzzleStreakViewModel(
+                    pool: pool,
+                    checkIsPro: { [weak self] in
+                        self?.container.progressAdapter.currentProgress.isPro ?? false
+                    },
+                    dailyPuzzleStreakCount: progress.dailyPuzzleStreakCount,
+                    lastPuzzleStreakDate: progress.lastPuzzleStreakDate,
+                    activeStreak: progress.activePuzzleStreak,
+                    activeUsedIDs: progress.activePuzzleStreakUsedIDs,
+                    highestStreak: progress.highestPuzzleStreak,
+                    onStreakUpdated: { newStreak, usedIDs in
+                        self.container.progressAdapter.update { progress in
+                            progress.activePuzzleStreak = newStreak
+                            progress.activePuzzleStreakUsedIDs = usedIDs
+                        }
+                    },
+                    onSessionFinished: { finalStreak in
+                        self.container.progressAdapter.update { progress in
+                            if finalStreak > progress.highestPuzzleStreak {
+                                progress.highestPuzzleStreak = finalStreak
+                            }
+                        }
+                    },
+                    updateDailyLimits: { count, date in
+                        self.container.progressAdapter.update { progress in
+                            progress.dailyPuzzleStreakCount = count
+                            progress.lastPuzzleStreakDate = date
+                        }
+                    },
+                    onPuzzleSolved: {
+                        //MARK: Daily streak
+                        self.container.progressAdapter.update { progress in
+                            progress.recordActivity()
                         }
                     }
                 )
