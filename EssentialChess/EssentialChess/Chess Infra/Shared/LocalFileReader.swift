@@ -12,7 +12,8 @@ public final class LocalFileReader: FileReaderLoader {
     public init() {}
     
     public func get(from url: URL, completion: @escaping (FileReaderLoader.Result) -> Void) {
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue.global(qos: .userInitiated).async {  [weak self] in
+            guard self != nil else { return }
             do {
                 let data = try Data(contentsOf: url)
                 completion(.success(data))

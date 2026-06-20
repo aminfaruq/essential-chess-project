@@ -103,6 +103,7 @@ public final class CurriculumViewModel: ObservableObject {
         
         // FIX 1: Match the Failure types using setFailureType
         Publishers.CombineLatest(dataZip, progressPublisher().setFailureType(to: Error.self))
+            //.receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { [weak self] completion in
                     self?.isLoading = false

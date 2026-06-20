@@ -17,8 +17,7 @@ public final class LanguageAdapter: ObservableObject {
     }
     
     public func load() {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
+        DispatchQueue.main.async {
             self.currentLanguage = self.store.languageCode
         }
     }
@@ -26,8 +25,7 @@ public final class LanguageAdapter: ObservableObject {
     public func update(languageCode: String) {
         guard currentLanguage != languageCode else { return }
         
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
+        DispatchQueue.main.async {
             self.store.languageCode = languageCode
             self.currentLanguage = languageCode
         }

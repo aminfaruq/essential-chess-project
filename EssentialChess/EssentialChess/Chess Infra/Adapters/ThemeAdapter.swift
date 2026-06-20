@@ -30,9 +30,11 @@ public final class ThemeAdapter: ObservableObject {
     public func load(completion: @escaping () -> Void) {
         store.retrieve { [weak self] result in
             DispatchQueue.main.async {
+                guard let self = self else { return }
+
                 if let settings = (try? result.get()) ?? nil {
-                    self?.subject.send(settings)
-                    self?.currentTheme = settings
+                    self.subject.send(settings)
+                    self.currentTheme = settings
                 }
                 completion()
             }
