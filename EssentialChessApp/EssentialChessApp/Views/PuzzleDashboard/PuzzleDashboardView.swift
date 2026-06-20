@@ -60,7 +60,7 @@ public struct PuzzleDashboardView: View {
                 // Actual Rating
                 achievementCard(
                     title: "Rating",
-                    value: currentProg.actualRating != nil ? "\(Int(currentProg.actualRating!))" : "Unrated",
+                    value: currentProg.actualRating != nil ? "\(Int(currentProg.actualRating!))" : String(localized: "Unrated"),
                     icon: "star.fill",
                     color: AppColors.gold
                 )
@@ -85,7 +85,7 @@ public struct PuzzleDashboardView: View {
         }
     }
     
-    private func achievementCard(title: String, value: String, icon: String, color: Color) -> some View {
+    private func achievementCard(title: LocalizedStringKey, value: String, icon: String, color: Color) -> some View {
         VStack(spacing: 12) {
             ZStack {
                 Circle()
@@ -157,7 +157,7 @@ public struct PuzzleDashboardView: View {
         }
     }
     
-    private func menuCard(title: String, subtitle: String, icon: String, color: Color, isNew: Bool) -> some View {
+    private func menuCard(title: LocalizedStringKey, subtitle: LocalizedStringKey, icon: String, color: Color, isNew: Bool) -> some View {
         HStack(spacing: 16) {
             ZStack {
                 RoundedRectangle(cornerRadius: 12)

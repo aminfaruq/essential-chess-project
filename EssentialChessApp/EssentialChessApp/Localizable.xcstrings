@@ -1,1465 +1,1688 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "%@ to Move" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ Melangkah"
+  "sourceLanguage": "en",
+  "strings": {
+    "%@ to Move": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ Melangkah"
           }
         }
       }
     },
-    "%lld" : {
-
-    },
-    "%lld / %lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld / %2$lld"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld / %2$lld"
+    "%lld": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld"
           }
         }
       }
     },
-    "%lld/%lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld/%2$lld"
+    "%lld / %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$lld / %2$lld"
           }
         },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld/%2$lld"
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld / %2$lld"
           }
         }
       }
     },
-    "%lld%%" : {
-
-    },
-    "+%lld" : {
-
-    },
-    "~%lld" : {
-
-    },
-    "⏳ Trigger 3-Hour Cooldown" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "⏳ Picu Waktu Tunggu 3 Jam"
-          }
-        }
-      }
-    },
-    "♟" : {
-
-    },
-    "✓" : {
-
-    },
-    "✗" : {
-
-    },
-    "🏆" : {
-
-    },
-    "🏆 Pass First Exam (Unlock Next Level)" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "🏆 Lulus Ujian Pertama (Buka Level Berikutnya)"
-          }
-        }
-      }
-    },
-    "💔" : {
-
-    },
-    "💣 Reset All Progress" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "💣 Atur Ulang Semua Kemajuan"
-          }
-        }
-      }
-    },
-    "🚀 Unlock First Exam (Solve 100%)" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "🚀 Buka Ujian Pertama (Selesaikan 100%)"
-          }
-        }
-      }
-    },
-    "3 lives · 10 random puzzles" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "3 nyawa · 10 teka-teki acak"
-          }
-        }
-      }
-    },
-    "Achievements" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pencapaian"
-          }
-        }
-      }
-    },
-    "Advanced Combinations" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kombinasi Lanjutan"
-          }
-        }
-      }
-    },
-    "Advanced Pawn" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pion Maju"
-          }
-        }
-      }
-    },
-    "Advanced Tactics" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Taktik Lanjutan"
-          }
-        }
-      }
-    },
-    "Anastasia's Mate" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Skakmat Anastasia"
-          }
-        }
-      }
-    },
-    "App Data" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Data Aplikasi"
-          }
-        }
-      }
-    },
-    "Arabian Mate" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Skakmat Arab"
-          }
-        }
-      }
-    },
-    "Are you sure you want to reset all your progress?" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apakah Anda yakin ingin mengatur ulang semua kemajuan Anda?"
-          }
-        }
-      }
-    },
-    "Assessment Complete" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Penilaian Selesai"
-          }
-        }
-      }
-    },
-    "Available in %@" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tersedia dalam %@"
-          }
-        }
-      }
-    },
-    "Back Rank Mate" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Skakmat Baris Belakang"
-          }
-        }
-      }
-    },
-    "Back to Curriculum" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kembali ke Kurikulum"
-          }
-        }
-      }
-    },
-    "Back to Themes" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kembali ke Tema"
-          }
-        }
-      }
-    },
-    "Bahasa Indonesia" : {
-
-    },
-    "Basic Pawn Endgame" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Permainan Akhir Pion Dasar"
-          }
-        }
-      }
-    },
-    "Basic Rook Ending" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Permainan Akhir Benteng Dasar"
-          }
-        }
-      }
-    },
-    "Beginner Foundation" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fondasi Pemula"
-          }
-        }
-      }
-    },
-    "Black" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hitam"
-          }
-        }
-      }
-    },
-    "Black to Move" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hitam Melangkah"
-          }
-        }
-      }
-    },
-    "Blue" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Biru"
-          }
-        }
-      }
-    },
-    "Board Theme" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tema Papan"
-          }
-        }
-      }
-    },
-    "Brown" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cokelat"
-          }
-        }
-      }
-    },
-    "Cancel" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Batal"
-          }
-        }
-      }
-    },
-    "Checkmates" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Skakmat"
-          }
-        }
-      }
-    },
-    "Chess Academy" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Akademi Catur"
-          }
-        }
-      }
-    },
-    "Clearance" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pembukaan Ruang"
-          }
-        }
-      }
-    },
-    "Coming Soon" : {
-
-    },
-    "Complete all themes to unlock" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Selesaikan semua tema untuk membuka"
-          }
-        }
-      }
-    },
-    "Complete previous section to unlock" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Selesaikan bagian sebelumnya untuk membuka"
-          }
-        }
-      }
-    },
-    "Complete the previous exam to unlock this section." : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Selesaikan ujian sebelumnya untuk membuka bagian ini."
-          }
-        }
-      }
-    },
-    "Continue" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lanjutkan"
-          }
-        }
-      }
-    },
-    "Curriculum" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kurikulum"
-          }
-        }
-      }
-    },
-    "Daily Limit Reached" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Batas Harian Tercapai"
-          }
-        }
-      }
-    },
-    "Daily Practice Reminder" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pengingat Latihan Harian"
-          }
-        }
-      }
-    },
-    "Debug Menu" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Menu Debug"
-          }
-        }
-      }
-    },
-    "Decoy" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pancingan"
-          }
-        }
-      }
-    },
-    "Defensive Rook" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Benteng Bertahan"
-          }
-        }
-      }
-    },
-    "Deflection" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pengalihan"
-          }
-        }
-      }
-    },
-    "Discovered Attack" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Serangan Tersembunyi"
-          }
-        }
-      }
-    },
-    "Done" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Selesai"
-          }
-        }
-      }
-    },
-    "Double Check" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Skak Ganda"
-          }
-        }
-      }
-    },
-    "EN" : {
-
-    },
-    "English" : {
-
-    },
-    "Essential Chess" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Essential Chess"
-          }
-        }
-      }
-    },
-    "Exam Failed" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ujian Gagal"
-          }
-        }
-      }
-    },
-    "Exam Passed!" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ujian Lulus!"
-          }
-        }
-      }
-    },
-    "Excellent Move!" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Langkah yang Sangat Bagus!"
-          }
-        }
-      }
-    },
-    "Find the best move" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Temukan langkah terbaik"
-          }
-        }
-      }
-    },
-    "Fork" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Garpu"
-          }
-        }
-      }
-    },
-    "Fundamental Tactics" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Taktik Dasar"
-          }
-        }
-      }
-    },
-    "Get it right next time!" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Coba lagi dengan benar di kesempatan berikutnya!"
-          }
-        }
-      }
-    },
-    "Get reminded every day at 8:00 AM to complete your puzzles and keep your streak alive." : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dapatkan pengingat setiap hari pukul 08:00 untuk menyelesaikan teka-teki Anda dan menjaga rentetan kemenangan Anda."
-          }
-        }
-      }
-    },
-    "Green" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hijau"
-          }
-        }
-      }
-    },
-    "Hint" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Petunjuk"
-          }
-        }
-      }
-    },
-    "Hint (−1 ♥)" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Petunjuk (−1 ♥)"
-          }
-        }
-      }
-    },
-    "I have experience" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Saya sudah berpengalaman"
-          }
-        }
-      }
-    },
-    "I'm new to chess" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Saya baru dalam catur"
-          }
-        }
-      }
-    },
-    "ID" : {
-
-    },
-    "Incorrect Move" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Langkah Salah"
-          }
-        }
-      }
-    },
-    "Interference" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gangguan"
-          }
-        }
-      }
-    },
-    "Intermediate Tactics" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Taktik Menengah"
-          }
-        }
-      }
-    },
-    "Language" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bahasa"
-          }
-        }
-      }
-    },
-    "Loading chess board..." : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Memuat papan catur..."
-          }
-        }
-      }
-    },
-    "Loading Puzzles..." : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Memuat Teka-teki..."
-          }
-        }
-      }
-    },
-    "Master tactics faster with unlimited puzzles, full curriculum access, and premium themes." : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kuasai taktik lebih cepat dengan teka-teki tak terbatas, akses kurikulum penuh, dan tema premium."
-          }
-        }
-      }
-    },
-    "Master tactics. Unlock your potential." : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kuasai taktik. Buka potensi Anda."
-          }
-        }
-      }
-    },
-    "Mastery Level" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Level Master"
-          }
-        }
-      }
-    },
-    "Mate in 1" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Skakmat Dalam 1 langkah"
-          }
-        }
-      }
-    },
-    "Mate in 2" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Skakmat Dalam 2 langkah"
-          }
-        }
-      }
-    },
-    "Mate in 3+" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Skakmat 3 langkah"
-          }
-        }
-      }
-    },
-    "Mix Puzzle Exam" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ujian Teka-Teki Campuran"
-          }
-        }
-      }
-    },
-    "Monochrome" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Monokrom"
-          }
-        }
-      }
-    },
-    "NEW" : {
-
-    },
-    "Next" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lanjut"
-          }
-        }
-      }
-    },
-    "Next Puzzle" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Teka-teki Selanjutnya"
-          }
-        }
-      }
-    },
-    "No" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tidak"
-          }
-        }
-      }
-    },
-    "No puzzles available." : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tidak ada teka-teki."
-          }
-        }
-      }
-    },
-    "Notifications" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Notifikasi"
-          }
-        }
-      }
-    },
-    "OK" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OK"
-          }
-        }
-      }
-    },
-    "On Cooldown" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sedang Mengisi Ulang"
-          }
-        }
-      }
-    },
-    "Passed — section unlocked!" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lulus — sesi terbuka!"
-          }
-        }
-      }
-    },
-    "Passed Pawn" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pion Bebas"
-          }
-        }
-      }
-    },
-    "Pawn Endgames" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Permainan Akhir Pion"
-          }
-        }
-      }
-    },
-    "Pawn Promotion" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Promosi Pion"
-          }
-        }
-      }
-    },
-    "Piece Style" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tema Bidak"
-          }
-        }
-      }
-    },
-    "Pin" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pakuan"
-          }
-        }
-      }
-    },
-    "Placement Test" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tes Penempatan"
-          }
-        }
-      }
-    },
-    "Play Modes" : {
-
-    },
-    "Preparing your diagnostic test..." : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mempersiapkan tes diagnostik Anda..."
-          }
-        }
-      }
-    },
-    "Proceed" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lanjutkan"
-          }
-        }
-      }
-    },
-    "Puzzle" : {
-
-    },
-    "Puzzle %lld" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Teka-teki %lld"
-          }
-        }
-      }
-    },
-    "Puzzle %lld of %lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Puzzle %1$lld of %2$lld"
+    "%lld/%lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$lld/%2$lld"
           }
         },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Teka-teki %1$lld dari %2$lld"
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld/%2$lld"
           }
         }
       }
     },
-    "Puzzle Mix" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Campuran Teka-teki"
+    "%lld%%": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld%%"
           }
         }
       }
     },
-    "Puzzle Sequence" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Urutan Teka-teki"
+    "+%lld": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%lld"
           }
         }
       }
     },
-    "Puzzle Storm" : {
-
-    },
-    "Puzzle Streak" : {
-
-    },
-    "Puzzles" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Teka-teki"
+    "~%lld": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "~%lld"
           }
         }
       }
     },
-    "Quiet Move" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Langkah Tenang"
+    "⏳ Trigger 3-Hour Cooldown": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⏳ Picu Waktu Tunggu 3 Jam"
           }
         }
       }
     },
-    "Rating Penalty" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Penalti Peringkat"
+    "♟": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "♟"
           }
         }
       }
     },
-    "Reset All Progress" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Atur Ulang Semua Kemajuan"
+    "✓": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "✓"
           }
         }
       }
     },
-    "Restore Purchases" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pulihkan Pembelian"
+    "✗": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "✗"
           }
         }
       }
     },
-    "Rook & Passed Pawn" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Benteng & Pion Bebas"
+    "🏆": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🏆"
           }
         }
       }
     },
-    "Rook Endgames" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Permainan Akhir Benteng"
+    "🏆 Pass First Exam (Unlock Next Level)": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🏆 Lulus Ujian Pertama (Buka Level Berikutnya)"
           }
         }
       }
     },
-    "Rook Tactics" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Taktik Benteng"
+    "💔": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "💔"
           }
         }
       }
     },
-    "Sacrifice Mastery" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Penguasaan Pengorbanan"
+    "💣 Reset All Progress": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "💣 Atur Ulang Semua Kemajuan"
           }
         }
       }
     },
-    "Section Locked" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bagian Terkunci"
+    "🚀 Unlock First Exam (Solve 100%)": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🚀 Buka Ujian Pertama (Selesaikan 100%)"
           }
         }
       }
     },
-    "Settings" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pengaturan"
+    "3 lives · 10 random puzzles": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3 nyawa · 10 teka-teki acak"
           }
         }
       }
     },
-    "Show Hint (Free)" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tampilkan Petunjuk (Gratis)"
+    "Achievements": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pencapaian"
           }
         }
       }
     },
-    "Skewer" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tusukan"
+    "Advanced Combinations": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kombinasi Lanjutan"
           }
         }
       }
     },
-    "Smothered Mate" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Skakmat Tercekik"
+    "Advanced Pawn": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pion Maju"
           }
         }
       }
     },
-    "Solution" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Solusi"
+    "Advanced Tactics": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Taktik Lanjutan"
           }
         }
       }
     },
-    "Start from the very beginning" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mulai dari awal"
+    "Anastasia's Mate": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skakmat Anastasia"
           }
         }
       }
     },
-    "Start Learning" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mulai Belajar"
+    "App Data": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Data Aplikasi"
           }
         }
       }
     },
-    "Take a 15-puzzle placement test" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ikuti tes penempatan 15 teka-teki"
+    "Arabian Mate": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skakmat Arab"
           }
         }
       }
     },
-    "Terms & Privacy" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ketentuan & Privasi"
+    "Are you sure you want to reset all your progress?": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apakah Anda yakin ingin mengatur ulang semua kemajuan Anda?"
           }
         }
       }
     },
-    "The correct move has been highlighted." : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Langkah yang benar telah disorot."
+    "Assessment Complete": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Penilaian Selesai"
           }
         }
       }
     },
-    "Theme Complete!" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tema Selesai!"
+    "Available in %@": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tersedia dalam %@"
           }
         }
       }
     },
-    "This action cannot be undone." : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tindakan ini tidak dapat dibatalkan."
+    "Back Rank Mate": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skakmat Baris Belakang"
           }
         }
       }
     },
-    "Trapped Piece" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Perwira Terjebak"
+    "Back to Curriculum": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kembali ke Kurikulum"
           }
         }
       }
     },
-    "Underpromotion" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Promosi Selain Ratu"
+    "Back to Themes": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kembali ke Tema"
           }
         }
       }
     },
-    "Unlock Essential Chess Pro" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buka Essential Chess Pro"
+    "Bahasa Indonesia": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bahasa Indonesia"
           }
         }
       }
     },
-    "Unlock Pro" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buka Pro"
+    "Basic Pawn Endgame": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Permainan Akhir Pion Dasar"
           }
         }
       }
     },
-    "Upgrade to Essential Chess Pro" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tingkatkan ke Essential Chess Pro"
+    "Basic Rook Ending": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Permainan Akhir Benteng Dasar"
           }
         }
       }
     },
-    "Using a hint or seeing the solution will count this puzzle as incorrect and decrease your rating. Do you want to proceed?" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Menggunakan petunjuk atau melihat solusi akan menghitung teka-teki ini sebagai salah dan menurunkan peringkat Anda. Apakah Anda ingin melanjutkan?"
+    "Beginner Foundation": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fondasi Pemula"
           }
         }
       }
     },
-    "Where do you start?" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dari mana Anda memulai?"
+    "Best": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terbaik"
           }
         }
       }
     },
-    "White" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Putih"
+    "Black": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hitam"
           }
         }
       }
     },
-    "White to Move" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Putih Melangkah"
+    "Black to Move": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hitam Melangkah"
           }
         }
       }
     },
-    "X-Ray Attack" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Serangan X-Ray"
+    "Blue": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Biru"
           }
         }
       }
     },
-    "Yes, Reset" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ya, Atur Ulang"
+    "Board Theme": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tema Papan"
           }
         }
       }
     },
-    "You've completed your 7 free puzzles today. Come back tomorrow or upgrade to Pro to play endlessly." : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Anda telah menyelesaikan 7 teka-teki gratis hari ini. Kembali besok atau tingkatkan ke Pro untuk bermain tanpa batas."
+    "Brown": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cokelat"
           }
         }
       }
     },
-    "You've run out of lives. Come back in 4 hours." : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Anda kehabisan nyawa. Kembali dalam 4 jam."
+    "Cancel": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Batal"
           }
         }
       }
     },
-    "You've unlocked the next section." : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Anda telah membuka bagian berikutnya."
+    "Checkmates": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skakmat"
           }
         }
       }
     },
-    "Your estimated rating" : {
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Perkiraan peringkat Anda"
+    "Chess Academy": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Akademi Catur"
           }
         }
       }
     },
-    "Zwischenzug" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Langkah Antara"
+    "Clearance": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pembukaan Ruang"
+          }
+        }
+      }
+    },
+    "Coming Soon": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Segera Hadir"
+          }
+        }
+      }
+    },
+    "Complete all themes to unlock": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Selesaikan semua tema untuk membuka"
+          }
+        }
+      }
+    },
+    "Complete previous section to unlock": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Selesaikan bagian sebelumnya untuk membuka"
+          }
+        }
+      }
+    },
+    "Complete the previous exam to unlock this section.": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Selesaikan ujian sebelumnya untuk membuka bagian ini."
+          }
+        }
+      }
+    },
+    "Continue": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lanjutkan"
+          }
+        }
+      }
+    },
+    "Curriculum": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kurikulum"
+          }
+        }
+      }
+    },
+    "Daily Limit Reached": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Batas Harian Tercapai"
+          }
+        }
+      }
+    },
+    "Daily Practice Reminder": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pengingat Latihan Harian"
+          }
+        }
+      }
+    },
+    "Debug Menu": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Menu Debug"
+          }
+        }
+      }
+    },
+    "Decoy": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pancingan"
+          }
+        }
+      }
+    },
+    "Defensive Rook": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Benteng Bertahan"
+          }
+        }
+      }
+    },
+    "Deflection": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pengalihan"
+          }
+        }
+      }
+    },
+    "Discovered Attack": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Serangan Tersembunyi"
+          }
+        }
+      }
+    },
+    "Done": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Selesai"
+          }
+        }
+      }
+    },
+    "Double Check": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skak Ganda"
+          }
+        }
+      }
+    },
+    "EN": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "EN"
+          }
+        }
+      }
+    },
+    "English": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bahasa Inggris"
+          }
+        }
+      }
+    },
+    "Essential Chess": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Essential Chess"
+          }
+        }
+      }
+    },
+    "Exam Failed": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ujian Gagal"
+          }
+        }
+      }
+    },
+    "Exam Passed!": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ujian Lulus!"
+          }
+        }
+      }
+    },
+    "Excellent Move!": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Langkah yang Sangat Bagus!"
+          }
+        }
+      }
+    },
+    "Find the best move": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Temukan langkah terbaik"
+          }
+        }
+      }
+    },
+    "Fork": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Garpu"
+          }
+        }
+      }
+    },
+    "Fundamental Tactics": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Taktik Dasar"
+          }
+        }
+      }
+    },
+    "Get it right next time!": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Coba lagi dengan benar di kesempatan berikutnya!"
+          }
+        }
+      }
+    },
+    "Get reminded every day at 8:00 AM to complete your puzzles and keep your streak alive.": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dapatkan pengingat setiap hari pukul 08:00 untuk menyelesaikan teka-teki Anda dan menjaga rentetan kemenangan Anda."
+          }
+        }
+      }
+    },
+    "Green": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hijau"
+          }
+        }
+      }
+    },
+    "Hint": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Petunjuk"
+          }
+        }
+      }
+    },
+    "Hint (−1 ♥)": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Petunjuk (−1 ♥)"
+          }
+        }
+      }
+    },
+    "I have experience": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saya sudah berpengalaman"
+          }
+        }
+      }
+    },
+    "I'm new to chess": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saya baru dalam catur"
+          }
+        }
+      }
+    },
+    "ID": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ID"
+          }
+        }
+      }
+    },
+    "Incorrect Move": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Langkah Salah"
+          }
+        }
+      }
+    },
+    "Interference": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gangguan"
+          }
+        }
+      }
+    },
+    "Intermediate Tactics": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Taktik Menengah"
+          }
+        }
+      }
+    },
+    "Language": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bahasa"
+          }
+        }
+      }
+    },
+    "Loading chess board...": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Memuat papan catur..."
+          }
+        }
+      }
+    },
+    "Loading Puzzles...": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Memuat Teka-teki..."
+          }
+        }
+      }
+    },
+    "Loading Streak...": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Memuat Rentetan..."
+          }
+        }
+      }
+    },
+    "Master tactics faster with unlimited puzzles, full curriculum access, and premium themes.": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kuasai taktik lebih cepat dengan teka-teki tak terbatas, akses kurikulum penuh, dan tema premium."
+          }
+        }
+      }
+    },
+    "Master tactics. Unlock your potential.": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kuasai taktik. Buka potensi Anda."
+          }
+        }
+      }
+    },
+    "Mastery Level": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Level Master"
+          }
+        }
+      }
+    },
+    "Mate in 1": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skakmat Dalam 1 langkah"
+          }
+        }
+      }
+    },
+    "Mate in 2": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skakmat Dalam 2 langkah"
+          }
+        }
+      }
+    },
+    "Mate in 3+": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skakmat 3 langkah"
+          }
+        }
+      }
+    },
+    "Mix Puzzle Exam": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ujian Teka-Teki Campuran"
+          }
+        }
+      }
+    },
+    "Monochrome": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Monokrom"
+          }
+        }
+      }
+    },
+    "NEW": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "BARU"
+          }
+        }
+      }
+    },
+    "New Record!": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rekor Baru"
+          }
+        }
+      }
+    },
+    "Next": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lanjut"
+          }
+        }
+      }
+    },
+    "Next Puzzle": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teka-teki Selanjutnya"
+          }
+        }
+      }
+    },
+    "No": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tidak"
+          }
+        }
+      }
+    },
+    "No puzzles available.": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tidak ada teka-teki."
+          }
+        }
+      }
+    },
+    "Notifications": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifikasi"
+          }
+        }
+      }
+    },
+    "OK": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        }
+      }
+    },
+    "On Cooldown": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sedang Mengisi Ulang"
+          }
+        }
+      }
+    },
+    "Passed — section unlocked!": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lulus — sesi terbuka!"
+          }
+        }
+      }
+    },
+    "Passed Pawn": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pion Bebas"
+          }
+        }
+      }
+    },
+    "Pawn Endgames": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Permainan Akhir Pion"
+          }
+        }
+      }
+    },
+    "Pawn Promotion": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Promosi Pion"
+          }
+        }
+      }
+    },
+    "Piece Style": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tema Bidak"
+          }
+        }
+      }
+    },
+    "Pin": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pakuan"
+          }
+        }
+      }
+    },
+    "Placement Test": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tes Penempatan"
+          }
+        }
+      }
+    },
+    "Play Again": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Main Lagi"
+          }
+        }
+      }
+    },
+    "Play Modes": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mode Bermain"
+          }
+        }
+      }
+    },
+    "Preparing your diagnostic test...": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mempersiapkan tes diagnostik Anda..."
+          }
+        }
+      }
+    },
+    "Proceed": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lanjutkan"
+          }
+        }
+      }
+    },
+    "Puzzle": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teka-teki"
+          }
+        }
+      }
+    },
+    "Puzzle %lld": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teka-teki %lld"
+          }
+        }
+      }
+    },
+    "Puzzle %lld of %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Puzzle %1$lld of %2$lld"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teka-teki %1$lld dari %2$lld"
+          }
+        }
+      }
+    },
+    "Puzzle Mix": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Campuran Teka-teki"
+          }
+        }
+      }
+    },
+    "Puzzle Sequence": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Urutan Teka-teki"
+          }
+        }
+      }
+    },
+    "Puzzle Storm": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Puzzle Storm"
+          }
+        }
+      }
+    },
+    "Puzzle Streak": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Puzzle Streak"
+          }
+        }
+      }
+    },
+    "Puzzles": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teka-teki"
+          }
+        }
+      }
+    },
+    "Quiet Move": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Langkah Tenang"
+          }
+        }
+      }
+    },
+    "Rating Penalty": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Penalti Peringkat"
+          }
+        }
+      }
+    },
+    "Reset All Progress": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Atur Ulang Semua Kemajuan"
+          }
+        }
+      }
+    },
+    "Restore Purchases": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pulihkan Pembelian"
+          }
+        }
+      }
+    },
+    "Rook & Passed Pawn": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Benteng & Pion Bebas"
+          }
+        }
+      }
+    },
+    "Rook Endgames": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Permainan Akhir Benteng"
+          }
+        }
+      }
+    },
+    "Rook Tactics": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Taktik Benteng"
+          }
+        }
+      }
+    },
+    "Sacrifice Mastery": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Penguasaan Pengorbanan"
+          }
+        }
+      }
+    },
+    "Score": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skor"
+          }
+        }
+      }
+    },
+    "Section Locked": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bagian Terkunci"
+          }
+        }
+      }
+    },
+    "Session ended. Final Streak: %lld": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sesi berakhir. Rentetan Akhir: %lld"
+          }
+        }
+      }
+    },
+    "Settings": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pengaturan"
+          }
+        }
+      }
+    },
+    "Show Hint (Free)": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tampilkan Petunjuk (Gratis)"
+          }
+        }
+      }
+    },
+    "Skewer": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tusukan"
+          }
+        }
+      }
+    },
+    "Smothered Mate": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skakmat Tercekik"
+          }
+        }
+      }
+    },
+    "Solution": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Solusi"
+          }
+        }
+      }
+    },
+    "Start from the very beginning": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mulai dari awal"
+          }
+        }
+      }
+    },
+    "Start Learning": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mulai Belajar"
+          }
+        }
+      }
+    },
+    "Streak Ended": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Streak Berakhir"
+          }
+        }
+      }
+    },
+    "Streak Ended!": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rentetan Berakhir!"
+          }
+        }
+      }
+    },
+    "Take a 15-puzzle placement test": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ikuti tes penempatan 15 teka-teki"
+          }
+        }
+      }
+    },
+    "Terms & Privacy": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ketentuan & Privasi"
+          }
+        }
+      }
+    },
+    "The correct move has been highlighted.": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Langkah yang benar telah disorot."
+          }
+        }
+      }
+    },
+    "Theme Complete!": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tema Selesai!"
+          }
+        }
+      }
+    },
+    "This action cannot be undone.": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tindakan ini tidak dapat dibatalkan."
+          }
+        }
+      }
+    },
+    "Trapped Piece": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Perwira Terjebak"
+          }
+        }
+      }
+    },
+    "Underpromotion": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Promosi Selain Ratu"
+          }
+        }
+      }
+    },
+    "Unlock Essential Chess Pro": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buka Essential Chess Pro"
+          }
+        }
+      }
+    },
+    "Unlock Pro": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buka Pro"
+          }
+        }
+      }
+    },
+    "Upgrade to Essential Chess Pro": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tingkatkan ke Essential Chess Pro"
+          }
+        }
+      }
+    },
+    "Using a hint or seeing the solution will count this puzzle as incorrect and decrease your rating. Do you want to proceed?": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Menggunakan petunjuk atau melihat solusi akan menghitung teka-teki ini sebagai salah dan menurunkan peringkat Anda. Apakah Anda ingin melanjutkan?"
+          }
+        }
+      }
+    },
+    "Where do you start?": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dari mana Anda memulai?"
+          }
+        }
+      }
+    },
+    "White": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Putih"
+          }
+        }
+      }
+    },
+    "White to Move": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Putih Melangkah"
+          }
+        }
+      }
+    },
+    "X-Ray Attack": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Serangan X-Ray"
+          }
+        }
+      }
+    },
+    "Yes, Reset": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ya, Atur Ulang"
+          }
+        }
+      }
+    },
+    "You've completed your 7 free puzzles today. Come back tomorrow or upgrade to Pro to play endlessly.": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anda telah menyelesaikan 7 teka-teki gratis hari ini. Kembali besok atau tingkatkan ke Pro untuk bermain tanpa batas."
+          }
+        }
+      }
+    },
+    "You've run out of lives. Come back in 4 hours.": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anda kehabisan nyawa. Kembali dalam 4 jam."
+          }
+        }
+      }
+    },
+    "You've unlocked the next section.": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anda telah membuka bagian berikutnya."
+          }
+        }
+      }
+    },
+    "You've used your free Puzzle Streak today. Come back tomorrow or upgrade to Pro to play endlessly.": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anda telah menggunakan Puzzle Streak gratis Anda hari ini. Kembali besok atau tingkatkan ke Pro untuk bermain tanpa batas."
+          }
+        }
+      }
+    },
+    "Your estimated rating": {
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Perkiraan peringkat Anda"
+          }
+        }
+      }
+    },
+    "Zwischenzug": {
+      "extractionState": "manual",
+      "localizations": {
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Langkah Antara"
           }
         }
       }
     }
   },
-  "version" : "1.1"
+  "version": "1.1"
 }

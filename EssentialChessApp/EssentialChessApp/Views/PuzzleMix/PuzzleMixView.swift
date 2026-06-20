@@ -315,6 +315,7 @@ private struct PuzzleMixActiveView: View {
                     Label("Next", systemImage: "arrow.right")
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(.black)
+                        .fixedSize(horizontal: true, vertical: false)
                         .padding(.horizontal, 24)
                         .padding(.vertical, 12)
                         .background(AppColors.accent)
