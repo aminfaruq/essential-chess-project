@@ -86,11 +86,13 @@ final class SettingsViewModelTests: XCTestCase {
         let storage = NotificationStoragePortSpy()
         storage.isDailyReminderEnabled = initialReminderState
         let scheduler = NotificationSchedulerSpy()
-        let sut = SettingsViewModel(notificationStorage: storage, notificationScheduler: scheduler)
+        let boardSettingsStorage = BoardSettingsStoragePortSpy()
+        let sut = SettingsViewModel(notificationStorage: storage, notificationScheduler: scheduler, boardSettingsStorage: boardSettingsStorage)
         
         trackForMemoryLeaks(sut)
         trackForMemoryLeaks(storage)
         trackForMemoryLeaks(scheduler)
+        trackForMemoryLeaks(boardSettingsStorage)
         
         return (sut, storage, scheduler)
     }
@@ -100,6 +102,11 @@ final class SettingsViewModelTests: XCTestCase {
 
 class NotificationStoragePortSpy: NotificationStoragePort {
     var isDailyReminderEnabled: Bool = false
+}
+
+class BoardSettingsStoragePortSpy: BoardSettingsStoragePort {
+    var isHapticEnabled: Bool = true
+    var isSoundEnabled: Bool = true
 }
 
 class NotificationSchedulerSpy: NotificationScheduler {

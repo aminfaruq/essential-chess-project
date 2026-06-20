@@ -17,6 +17,8 @@ public struct SettingsView: View {
     @State private var showPaywall = false
     @State private var isPro = false
     @State private var isDailyReminderEnabled = false
+    @State private var isHapticEnabled = true
+    @State private var isSoundEnabled = true
     
     public init() {}
     
@@ -96,6 +98,32 @@ public struct SettingsView: View {
                     }
                     
                     Section {
+                        Toggle("Haptic Feedback", isOn: Binding(
+                            get: { self.isHapticEnabled },
+                            set: { newValue in
+                                self.isHapticEnabled = newValue
+                                composer.settingsVM.setHaptic(enabled: newValue)
+                            }
+                        ))
+                        .tint(AppColors.accent)
+                        .font(.system(size: 16))
+                        
+                        Toggle("Sound Effects", isOn: Binding(
+                            get: { self.isSoundEnabled },
+                            set: { newValue in
+                                self.isSoundEnabled = newValue
+                                composer.settingsVM.setSound(enabled: newValue)
+                            }
+                        ))
+                        .tint(AppColors.accent)
+                        .font(.system(size: 16))
+                    } header: {
+                        Text("Game Experience")
+                            .foregroundColor(AppColors.textSecondary)
+                            .font(.system(size: 12, weight: .semibold))
+                    }
+                    
+                    Section {
                         Toggle("Daily Practice Reminder", isOn: Binding(
                             get: { self.isDailyReminderEnabled },
                             set: { newValue in
@@ -155,12 +183,20 @@ public struct SettingsView: View {
         .onAppear {
             self.isPro = composer.container.progressAdapter.currentProgress.isPro
             self.isDailyReminderEnabled = composer.settingsVM.isDailyReminderEnabled
+            self.isHapticEnabled = composer.settingsVM.isHapticEnabled
+            self.isSoundEnabled = composer.settingsVM.isSoundEnabled
         }
         .onReceive(composer.container.progressAdapter.publisher()) { progress in
             self.isPro = progress.isPro
         }
         .onReceive(composer.settingsVM.$isDailyReminderEnabled) { enabled in
             self.isDailyReminderEnabled = enabled
+        }
+        .onReceive(composer.settingsVM.$isHapticEnabled) { enabled in
+            self.isHapticEnabled = enabled
+        }
+        .onReceive(composer.settingsVM.$isSoundEnabled) { enabled in
+            self.isSoundEnabled = enabled
         }
     }
     
