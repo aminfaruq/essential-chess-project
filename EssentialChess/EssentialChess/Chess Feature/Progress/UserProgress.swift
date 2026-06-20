@@ -23,6 +23,10 @@ public struct UserProgress: Equatable {
     public var isPro: Bool
     public var dailyPuzzleMixCount: Int
     public var lastPuzzleMixDate: Date?
+    public var dailyPuzzleStreakCount: Int
+    public var lastPuzzleStreakDate: Date?
+    public var activePuzzleStreak: Int
+    public var activePuzzleStreakUsedIDs: Set<String>
     
     // NEW: Puzzle Mode Records
     public var highestPuzzleStreak: Int
@@ -40,6 +44,10 @@ public struct UserProgress: Equatable {
         isPro: Bool = false,
         dailyPuzzleMixCount: Int = 0,
         lastPuzzleMixDate: Date? = nil,
+        dailyPuzzleStreakCount: Int = 0,
+        lastPuzzleStreakDate: Date? = nil,
+        activePuzzleStreak: Int = 0,
+        activePuzzleStreakUsedIDs: Set<String> = [],
         highestPuzzleStreak: Int = 0,
         highestPuzzleStorm: Int = 0
     ) {
@@ -54,6 +62,10 @@ public struct UserProgress: Equatable {
         self.isPro = isPro
         self.dailyPuzzleMixCount = dailyPuzzleMixCount
         self.lastPuzzleMixDate = lastPuzzleMixDate
+        self.dailyPuzzleStreakCount = dailyPuzzleStreakCount
+        self.lastPuzzleStreakDate = lastPuzzleStreakDate
+        self.activePuzzleStreak = activePuzzleStreak
+        self.activePuzzleStreakUsedIDs = activePuzzleStreakUsedIDs
         self.highestPuzzleStreak = highestPuzzleStreak
         self.highestPuzzleStorm = highestPuzzleStorm
     }

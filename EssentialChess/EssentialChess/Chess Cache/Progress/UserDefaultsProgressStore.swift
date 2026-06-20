@@ -53,6 +53,10 @@ public final class UserDefaultsProgressStore: ProgressStore {
         let isPro: Bool?
         let dailyPuzzleMixCount: Int?
         let lastPuzzleMixDate: Date?
+        let dailyPuzzleStreakCount: Int?
+        let lastPuzzleStreakDate: Date?
+        let activePuzzleStreak: Int?
+        let activePuzzleStreakUsedIDs: Set<String>?
         let highestPuzzleStreak: Int?
         let highestPuzzleStorm: Int?
         
@@ -68,6 +72,10 @@ public final class UserDefaultsProgressStore: ProgressStore {
             self.isPro = model.isPro
             self.dailyPuzzleMixCount = model.dailyPuzzleMixCount
             self.lastPuzzleMixDate = model.lastPuzzleMixDate
+            self.dailyPuzzleStreakCount = model.dailyPuzzleStreakCount
+            self.lastPuzzleStreakDate = model.lastPuzzleStreakDate
+            self.activePuzzleStreak = model.activePuzzleStreak
+            self.activePuzzleStreakUsedIDs = model.activePuzzleStreakUsedIDs
             self.highestPuzzleStreak = model.highestPuzzleStreak
             self.highestPuzzleStorm = model.highestPuzzleStorm
         }
@@ -85,6 +93,10 @@ public final class UserDefaultsProgressStore: ProgressStore {
                 isPro: isPro ?? false,
                 dailyPuzzleMixCount: dailyPuzzleMixCount ?? 0,
                 lastPuzzleMixDate: lastPuzzleMixDate,
+                dailyPuzzleStreakCount: dailyPuzzleStreakCount ?? 0,
+                lastPuzzleStreakDate: lastPuzzleStreakDate,
+                activePuzzleStreak: activePuzzleStreak ?? 0,
+                activePuzzleStreakUsedIDs: activePuzzleStreakUsedIDs ?? [],
                 highestPuzzleStreak: highestPuzzleStreak ?? 0,
                 highestPuzzleStorm: highestPuzzleStorm ?? 0
             )
