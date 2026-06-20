@@ -123,6 +123,23 @@ public final class PuzzleStreakViewModel: ObservableObject, Identifiable {
         }
     }
     
+    public func refreshDailyLimit() {
+        if checkDailyLimit() {
+            if !isDailyLimitReached {
+                isDailyLimitReached = true
+                showPaywall = true
+            }
+        } else {
+            if isDailyLimitReached {
+                isDailyLimitReached = false
+                showPaywall = false
+                if currentPuzzle == nil {
+                    loadNextPuzzle()
+                }
+            }
+        }
+    }
+    
     private func checkDailyLimit() -> Bool {
         if !checkIsPro() {
             let calendar = Calendar.current

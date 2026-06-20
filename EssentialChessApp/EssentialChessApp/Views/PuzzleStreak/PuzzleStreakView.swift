@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import UIKit
 import EssentialChess
 import EssentialChessUI
 
@@ -73,7 +74,7 @@ private struct PuzzleStreakContainerView: View {
                     
                     Button {
                         // In a real app, this would trigger the actual Paywall purchase flow
-                        print("Unlock Pro tapped")
+                        vm.showPaywall = true
                     } label: {
                         HStack {
                             Image(systemName: "crown.fill")
@@ -92,10 +93,19 @@ private struct PuzzleStreakContainerView: View {
                 PuzzleStreakActiveView(vm: vm)
             }
         }
+        .sheet(isPresented: $vm.showPaywall) {
+            PaywallView()
+        }
         .onReceive(container.progressAdapter.publisher()) { progress in
             if progress.isPro && (vm.isDailyLimitReached || vm.showPaywall) {
                 vm.resumeAfterPurchase()
             }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+            vm.refreshDailyLimit()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
+            vm.refreshDailyLimit()
         }
     }
 }

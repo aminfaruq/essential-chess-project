@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 import EssentialChess
 import EssentialChessUI
 
@@ -86,13 +87,19 @@ private struct PuzzleMixContainerView: View {
                 PuzzleMixActiveView(vm: vm)
             }
         }
-        //        .sheet(isPresented: $vm.showPaywall) {
-        //            PaywallView()
-        //        }
+        .sheet(isPresented: $vm.showPaywall) {
+            PaywallView()
+        }
         .onReceive(container.progressAdapter.publisher()) { progress in
             if progress.isPro && vm.isDailyLimitReached {
                 vm.resumeAfterPurchase()
             }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+            vm.refreshDailyLimit()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
+            vm.refreshDailyLimit()
         }
     }
 }
