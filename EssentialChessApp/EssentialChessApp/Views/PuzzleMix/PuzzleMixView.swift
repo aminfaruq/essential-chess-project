@@ -109,6 +109,26 @@ private struct PuzzleMixActiveView: View {
         if let puzzle = vm.currentPuzzle {
             VStack(spacing: 0) {
                 header
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 6) {
+                        ForEach(puzzle.tags, id: \.self) { theme in
+                            Text(theme.replacingOccurrences(of: "_", with: " ").capitalized)
+                                .font(.system(size: 10, weight: .bold))
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(AppColors.accent.opacity(0.8))
+                                .cornerRadius(4)
+                        }
+                    }
+                }
+                .opacity(vm.isPuzzleFinished ? 1 : 0)
+                .animation(.easeInOut(duration: 0.3), value: vm.isPuzzleFinished)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 4)
+                .frame(height: 20)
+                
                 Spacer(minLength: 8)
                 
                 boardArea(puzzle: puzzle)
