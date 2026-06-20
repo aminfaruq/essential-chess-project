@@ -15,6 +15,8 @@ public final class DependencyContainer: ObservableObject {
     public let progressAdapter: ProgressAdapter
     public let themeAdapter: ThemeAdapter
     
+    private var cancellables = Set<AnyCancellable>()
+    
     public let notificationStorage: NotificationStoragePort
     public let notificationScheduler: NotificationScheduler
     public let boardSettingsStorage: BoardSettingsStoragePort
@@ -28,7 +30,7 @@ public final class DependencyContainer: ObservableObject {
         let themeStore = UserDefaultsThemeStore()
         self.themeAdapter = ThemeAdapter(store: themeStore)
         
-        let progressStore = UserDefaultsProgressStore()
+        let progressStore = UbiquitousProgressStore()
         self.progressAdapter = ProgressAdapter(store: progressStore)
         
         self.notificationStorage = UserDefaultsNotificationStorage()
@@ -51,5 +53,16 @@ public final class DependencyContainer: ObservableObject {
         
         let languageStorage = UserDefaultsLanguageStorage()
         self.languageAdapter = LanguageAdapter(store: languageStorage)
+        
+        setupUbiquitousSync()
+    }
+    
+    private func setupUbiquitousSync() {
+        NotificationCenter.default.publisher(for: NSUbiquitousKeyValueStore.didChangeExternallyNotification)
+            .sink { [weak self] _ in
+                // Real-time synchronization when other devices update the store
+                self?.progressAdapter.load { }
+            }
+            .store(in: &cancellables)
     }
 }
