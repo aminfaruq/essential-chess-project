@@ -103,6 +103,7 @@ private struct PuzzleStreakContainerView: View {
 private struct PuzzleStreakActiveView: View {
     @ObservedObject var vm: PuzzleStreakViewModel
     @EnvironmentObject var themeAdapter: ThemeAdapter
+    @EnvironmentObject var composer: AppComposer
     @StateObject private var boardController = ChessBoardController()
     
     var body: some View {
@@ -193,7 +194,9 @@ private struct PuzzleStreakActiveView: View {
                 blue: themeAdapter.currentTheme.boardTheme.darkSquareColor.blue,
                 opacity: themeAdapter.currentTheme.boardTheme.darkSquareColor.alpha
             ),
-            pieceTheme: themeAdapter.currentTheme.pieceTheme
+            pieceTheme: themeAdapter.currentTheme.pieceTheme,
+            isHapticEnabled: composer.settingsVM.isHapticEnabled,
+            isSoundEnabled: composer.settingsVM.isSoundEnabled
         )
         .equatable()
         .aspectRatio(1, contentMode: .fit)

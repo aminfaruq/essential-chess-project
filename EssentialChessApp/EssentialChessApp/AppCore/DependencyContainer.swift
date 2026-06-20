@@ -17,6 +17,7 @@ public final class DependencyContainer: ObservableObject {
     
     public let notificationStorage: NotificationStoragePort
     public let notificationScheduler: NotificationScheduler
+    public let boardSettingsStorage: BoardSettingsStoragePort
     
     public let curriculumLoader: FileCurriculumLoader?
     public let mixPoolLoader: FileMixPoolLoader?
@@ -32,6 +33,7 @@ public final class DependencyContainer: ObservableObject {
         
         self.notificationStorage = UserDefaultsNotificationStorage()
         self.notificationScheduler = UserNotificationsAdapter()
+        self.boardSettingsStorage = UserDefaultsBoardSettingsStorage()
         
         let reader = LocalFileReader()
         

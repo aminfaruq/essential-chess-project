@@ -100,6 +100,7 @@ private struct PuzzleMixContainerView: View {
 private struct PuzzleMixActiveView: View {
     @ObservedObject var vm: PuzzleMixViewModel
     @EnvironmentObject var themeAdapter: ThemeAdapter
+    @EnvironmentObject var composer: AppComposer
     @StateObject private var boardController = ChessBoardController()
     
     @State private var showHintWarning: Bool = false
@@ -235,7 +236,9 @@ private struct PuzzleMixActiveView: View {
                 blue: themeAdapter.currentTheme.boardTheme.darkSquareColor.blue,
                 opacity: themeAdapter.currentTheme.boardTheme.darkSquareColor.alpha
             ),
-            pieceTheme: themeAdapter.currentTheme.pieceTheme
+            pieceTheme: themeAdapter.currentTheme.pieceTheme,
+            isHapticEnabled: composer.settingsVM.isHapticEnabled,
+            isSoundEnabled: composer.settingsVM.isSoundEnabled
         )
         .equatable()
         //.padding(.horizontal, 16)

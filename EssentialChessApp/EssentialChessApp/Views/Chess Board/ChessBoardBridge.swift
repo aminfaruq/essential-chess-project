@@ -25,6 +25,14 @@ public class ChessBoardController: ObservableObject {
     public func showSolution() {
         boardView?.showSolution()
     }
+    
+    public func enableHaptic(_ state: Bool) {
+        boardView?.setHapticEnabled(state)
+    }
+    
+    public func enableSound(_ state: Bool) {
+        boardView?.setSoundEnabled(state)
+    }
 }
 
 // MARK: - UIViewRepresentable Bridge
@@ -39,6 +47,8 @@ public struct ChessBoardBridge: UIViewRepresentable, Equatable {
     public var boardThemeLight: Color
     public var boardThemeDark: Color
     public var pieceTheme: String
+    public var isHapticEnabled: Bool
+    public var isSoundEnabled: Bool
     
     public init(
         puzzle: Puzzle,
@@ -48,7 +58,9 @@ public struct ChessBoardBridge: UIViewRepresentable, Equatable {
         onReady: @escaping (String) -> Void,
         boardThemeLight: Color = AppColors.boardLight,
         boardThemeDark: Color = AppColors.boardDark,
-        pieceTheme: String = "default"
+        pieceTheme: String = "default",
+        isHapticEnabled: Bool = true,
+        isSoundEnabled: Bool = true
     ) {
         self.puzzle = puzzle
         self.controller = controller
@@ -58,6 +70,8 @@ public struct ChessBoardBridge: UIViewRepresentable, Equatable {
         self.boardThemeLight = boardThemeLight
         self.boardThemeDark = boardThemeDark
         self.pieceTheme = pieceTheme
+        self.isHapticEnabled = isHapticEnabled
+        self.isSoundEnabled = isSoundEnabled
     }
     
     public func makeCoordinator() -> Coordinator { Coordinator() }
@@ -105,12 +119,16 @@ public struct ChessBoardBridge: UIViewRepresentable, Equatable {
         view.setBoardTheme(light: UIColor(boardThemeLight), dark: UIColor(boardThemeDark))
         view.setHighlightColor(UIColor(AppColors.hint), alpha: 0.45)
         view.setPieceTheme(pieceTheme)
+        view.setHapticEnabled(isHapticEnabled)
+        view.setSoundEnabled(isSoundEnabled)
     }
     
     public static func == (lhs: ChessBoardBridge, rhs: ChessBoardBridge) -> Bool {
         return lhs.puzzle.id == rhs.puzzle.id &&
                lhs.boardThemeLight == rhs.boardThemeLight &&
                lhs.boardThemeDark == rhs.boardThemeDark &&
-               lhs.pieceTheme == rhs.pieceTheme
+               lhs.pieceTheme == rhs.pieceTheme &&
+               lhs.isHapticEnabled == rhs.isHapticEnabled &&
+               lhs.isSoundEnabled == rhs.isSoundEnabled
     }
 }

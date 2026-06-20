@@ -56,7 +56,8 @@ public final class AppComposer: ObservableObject {
         
         self.settingsVM = SettingsViewModel(
             notificationStorage: container.notificationStorage,
-            notificationScheduler: container.notificationScheduler
+            notificationScheduler: container.notificationScheduler,
+            boardSettingsStorage: container.boardSettingsStorage
         )
     }
     

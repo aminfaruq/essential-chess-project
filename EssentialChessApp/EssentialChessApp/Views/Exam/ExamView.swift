@@ -12,6 +12,7 @@ import EssentialChessUI
 public struct ExamView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var themeAdapter: ThemeAdapter
+    @EnvironmentObject var composer: AppComposer
     
     let categoryTitle: String
     
@@ -87,7 +88,9 @@ public struct ExamView: View {
                     blue: themeAdapter.currentTheme.boardTheme.darkSquareColor.blue,
                     opacity: themeAdapter.currentTheme.boardTheme.darkSquareColor.alpha
                 ),
-                pieceTheme: themeAdapter.currentTheme.pieceTheme
+                pieceTheme: themeAdapter.currentTheme.pieceTheme,
+                isHapticEnabled: composer.settingsVM.isHapticEnabled,
+                isSoundEnabled: composer.settingsVM.isSoundEnabled
             )
             .equatable()
             //.padding(.horizontal, 16)
