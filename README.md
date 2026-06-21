@@ -2,7 +2,9 @@
   <img src="EssentialChessApp/essential_chess_demo.gif" width="250" alt="Essential Chess Demo">
 </p>
 
-# ♟️ Essential Chess: A Progressive Tactics Trainer
+# ♟️ Essential Chess
+
+A structured, offline-first chess tactics trainer for iOS and macOS Catalyst.
 
 ![Swift](https://img.shields.io/badge/Swift-5.9+-orange?style=flat-square&logo=swift)
 ![iOS](https://img.shields.io/badge/iOS-16.0+-black?style=flat-square&logo=apple)
@@ -10,190 +12,364 @@
 ![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture%20%7C%20MVVM-blue?style=flat-square)
 ![Framework](https://img.shields.io/badge/Framework-SwiftUI%20%7C%20Combine-blueviolet?style=flat-square)
 
-An offline-first, deeply gamified educational chess application designed to guide players through a structured, mastery-based tactical curriculum. This application eschews the overwhelming "firehose" of random puzzles found in traditional chess apps in favor of a linear, highly rewarding learning path.
+Essential Chess replaces the typical random-puzzle approach with a mastery-based Elo curriculum. Users progress through structured sections, pass high-stakes exams to advance, and train in endless adaptive modes — all running entirely offline from bundled JSON data.
 
-Built with **Clean Architecture** and **MVVM**, this project demonstrates a strict separation of concerns—isolating pure domain logic from SwiftUI views and infrastructure. The app leverages **Combine** for reactive state management, highly decoupled ViewModels, and Behavior-Driven Development (BDD) specifications to handle complex progression logic, dynamic Elo rating calculations, and sudden-death exam mechanics.
+> **Status:** Pre-release. Paywall is implemented as a UI shell (purchase sets `isPro = true` locally); RevenueCat integration is pending. Puzzle Storm mode has a placeholder view.
 
 ---
 
-## ✨ Key Technical Highlights
+## Engineering Highlights
 
-- **Clean Architecture:** Complete decoupling of the Domain layer, Presentation layer (SwiftUI/Dumb Views), and Data/Infrastructure layer (Adapters).
-- **Reactive MVVM:** Pure ViewModels that manage state via Combine without importing UI frameworks or directly coupling to databases.
-- **Offline-First:** The entire chess curriculum and puzzle engine run locally, driven by a robust JSON data architecture.
-- **Behavior-Driven (BDD):** Core progression algorithms, the "99% Rule," rating calculations, and sequence navigations are backed by strict BDD testing scenarios using `XCTest`.
-- **Catalyst Ready:** Fully optimized for iPadOS and macOS Catalyst with integrated `.hoverEffect(.highlight)` states and `.keyboardShortcut(.defaultAction)` integrations for seamless keyboard play.
+- **Three-target modular architecture** — `EssentialChess` (pure domain), `EssentialChessUI` (framework-free ViewModels), `EssentialChessApp` (SwiftUI composition root). Domain and presentation targets have zero UIKit/SwiftUI imports.
+- **All ViewModels tested for memory leaks** — every `makeSUT()` factory in test suites calls `trackForMemoryLeaks()` via `addTeardownBlock` to catch retain cycles automatically.
+- **Elo rating engine** — standard expected-score formula with separate K-factors for placement (K=100) and regular play (K=32), floor-clamped at 100.
+- **iCloud sync with local fallback** — `UbiquitousProgressStore` reads from `NSUbiquitousKeyValueStore`, auto-migrates existing `UserDefaults` data on first launch, and listens for `didChangeExternallyNotification` for cross-device sync.
+- **Native UIKit chess board** via `NativeChessBoard` package, bridged into SwiftUI through `UIViewRepresentable` with `Equatable` conformance to prevent unnecessary redraws.
 
 ---
 
 ## Table of Contents
 
-* [1. Product Features & The Gamification Loop](#1-product-features--the-gamification-loop)
-* [2. JSON Data Architecture (Single Source of Truth)](#2-json-data-architecture-single-source-of-truth)
-* [3. Onboarding & Placement Test Flow](#3-onboarding--placement-test-flow)
-* [4. Exam Gameplay & Endless Puzzle Mix](#4-exam-gameplay--endless-puzzle-mix)
-* [5. Behavior-Driven Development (BDD) Specifications](#5-behavior-driven-development-bdd-specifications)
-* [6. Core Swift Implementation (Clean Architecture)](#6-core-swift-implementation-clean-architecture)
+1. [App Features](#1-app-features)
+2. [Architecture](#2-architecture)
+3. [Testing](#3-testing)
+4. [Known Limitations & Roadmap](#4-known-limitations--roadmap)
 
 ---
 
-## 1. Product Features & The Gamification Loop
+## 1. App Features
 
-The core philosophy is to provide a linear, gamified learning path with strict mastery checkpoints.
+### Curriculum (3-Layer Hierarchy)
 
-### The 3-Layer UI Hierarchy
-* **Layer 1 (Section by Elo):** The main curriculum screen divided by rating brackets (e.g., 500-800, 800-1200). Higher sections are locked by default and strictly require passing the previous section's exam.
-* **Layer 2 (Theme List):** Inside an unlocked section, users see specific tactical themes (e.g., Checkmates, Fundamental Tactics). Users can play these themes in any order. At the bottom of this list lies the Mix Puzzle Exam.
-* **Layer 3 (Puzzle Board):** The actual interactive chess board where users solve specific tactical puzzles.
+| Layer | What the user sees |
+|---|---|
+| **Section** | Elo rating brackets (e.g., 500–800, 800–1200). Locked by default; unlocked when `hiddenRating >= eloFloor` or the previous section's exam is passed. Sections beyond the first are gated behind the Pro paywall for free users. |
+| **Category / Theme** | Tactical themes within a section (e.g., "Checkmates", "Fundamental Tactics"), each containing sub-themes with individual progress bars. |
+| **Puzzle Board** | Interactive board powered by the `NativeChessBoard` UIKit package. Supports FEN-based puzzle loading, move validation, hints, haptic feedback, and sound effects. |
 
-### The 99% Mastery Gate Rule
-* Each Section and Sub-Theme has a visual progress bar.
-* Completing puzzles inside standard themes updates the progress bar proportionally.
-* Once all standard themes in a Section are 100% completed, the Section's overall progress bar strictly halts at **99%**.
-* The remaining 1% (which acts as the trigger to unlock the next Elo Section) can only be achieved by passing the high-stakes **Mix Puzzle Exam**.
+### The 99% Rule
 
-### Aesthetics & Customization
-* **Board Themes:** Choose from Brown, Green, and Blue board designs.
-* **Piece Styles:** Swap between Standard, Alpha, and Fantasy piece sets directly from the settings with dynamic visual previews.
-* **Adaptive UI:** Beautiful Dark Mode support and tailored visual highlighting (e.g., `+15` rating gains in green, `-30` hint penalties in red).
+Section progress is computed by `CurriculumProgressTracker.progress(for:progress:)`. When all non-exam puzzles in a section are completed, progress caps at exactly `0.99` via `min(0.99, completedRatio)`. The final 1% requires passing the section's Mix Puzzle Exam. This is enforced in code and verified by `test_progressForSection_capsAt99PercentIfExamNotPassed`.
+
+### Mix Puzzle Exam
+
+Each section has one exam category (`isExamMode = true`). The exam engine (`ExamViewModel`) works as follows:
+
+- **Bank:** Up to 10 puzzles randomly selected from the exam's pool (`Array(examPuzzles.shuffled().prefix(10))`).
+- **3-lives sudden death:** Incorrect moves and hints each call `loseLife()`. At 0 lives → `phase = .failed`, `onFailed()` callback fires. Passing all puzzles → `phase = .passed`, `onPassed()` fires.
+- **3-hour cooldown:** On failure, `examFailureTimes[categoryID] = Date()` is persisted. `canStartExam()` checks `currentDate.timeIntervalSince(failTime) >= 10800`.
+
+### Puzzle Mix (Endless Adaptive Mode)
+
+`PuzzleMixViewModel` provides an endless stream of puzzles matched to the user's `actualRating`:
+
+- **Puzzle selection:** Filters the bundled pool for puzzles within ±150 of `actualRating`. Falls back to the closest-rated unused puzzle, then cycles the entire pool if exhausted.
+- **Rating initialization:** On first open, `actualRating` is initialized from `hiddenRating` and persisted immediately.
+- **Rating updates:** Uses `RatingCalculator.calculateRegularRating()` (K=32 Elo formula). Using a hint triggers `decreaseRating()`, which scores as an incorrect solve.
+- **Daily limit:** Free users are capped at 7 puzzles per day. Tracked via `dailyPuzzleMixCount` and `lastPuzzleMixDate` on `UserProgress`, reset on day change.
+
+### Puzzle Streak (Survival Mode)
+
+`PuzzleStreakViewModel` implements a survival mode where one mistake ends the run:
+
+- **Scaling difficulty:** Target rating starts at 500 and increases by 50 per correct solve (`500 + (currentStreak * 50)`), with a ±100 tolerance window.
+- **Session persistence:** Active streak count and used puzzle IDs are persisted to `UserProgress` after each puzzle, enabling resume across app launches.
+- **Records:** `highestPuzzleStreak` is tracked and updated on session end if the current run exceeds it.
+- **Daily limit:** Free users get 1 streak session per day.
+
+### Onboarding & Placement Test
+
+`OnboardingViewModel` handles two paths:
+
+- **Beginner:** Sets `hiddenRating = 500`, marks `onboardingComplete = true`, unlocks only the first section.
+- **Experienced:** 15-puzzle adaptive assessment starting at rating 1000. Uses `RatingCalculator.calculatePlacementRating()` (K=100) for faster calibration. Final rating unlocks all sections up to that Elo bracket.
+
+### Daily Streak
+
+`UserProgress.recordActivity()` implements consecutive-day tracking:
+
+- First activity ever → streak = 1.
+- Same day → no change to streak count.
+- Next consecutive day → streak + 1.
+- Gap of 2+ days → streak resets to 1.
+
+`StreakViewModel` subscribes to the progress publisher and exposes `streakCount` and `isStreakActiveToday` for the UI flame indicator.
+
+### Settings & Customization
+
+Managed by `SettingsViewModel` through protocol-based storage ports:
+
+| Setting | Storage | Details |
+|---|---|---|
+| Board theme | `ThemeStore` (UserDefaults) | Brown (free), Green, Blue, Monochrome (Pro). Pure `RGBAColor` values defined in domain layer, not coupled to UIKit/SwiftUI color types. |
+| Piece style | `ThemeStore` (UserDefaults) | Standard (free), Alpha, Fantasy (Pro). |
+| Haptic feedback | `BoardSettingsStoragePort` | Toggle, passed through to `NativeChessBoardView.setHapticEnabled()`. |
+| Sound effects | `BoardSettingsStoragePort` | Toggle, passed through to `NativeChessBoardView.setSoundEnabled()`. |
+| Daily reminder | `NotificationStoragePort` + `NotificationScheduler` | Schedules a `UNCalendarNotificationTrigger` at 08:00 daily. Tapping the notification deep-links to the Puzzle tab via `NotificationCenter`. |
+| Language | `LanguageStoragePort` | English and Bahasa Indonesia. Applied via `.environment(\.locale)`. |
+| Reset progress | Direct `ProgressAdapter.update` | Clears puzzle IDs, exam IDs, failure times, and sets `onboardingComplete = false`. |
+
+### Freemium Model
+
+`isPro` flag on `UserProgress` gates: curriculum sections beyond section 1, non-default themes and piece styles, unlimited Puzzle Mix (>7/day), and unlimited Puzzle Streak (>1 session/day). The Paywall UI is implemented; actual StoreKit/RevenueCat integration is pending (currently sets `isPro = true` in-memory).
 
 ---
 
-## 2. JSON Data Architecture (Single Source of Truth)
+## 2. Architecture
 
-To ensure maximum offline performance and simplicity, the entire curriculum is bundled into a single JSON file (`curriculum_final.json`). The data is structured hierarchically to perfectly match the UI layers.
+### Module Structure
 
-### Clean Architecture: Domain vs. Presentation Models
+```
+EssentialChess/                     ← Xcode project with 4 targets
+├── EssentialChess/                 ← Domain + Infrastructure framework
+│   ├── Chess Feature/              ← Pure domain models, protocols, business logic
+│   │   ├── Curriculum/             ← Curriculum, EloSection, Category, SubTheme, Puzzle
+│   │   ├── Progress/               ← UserProgress, CurriculumProgressTracker, ProgressStore protocol
+│   │   ├── Rating Calculator/      ← RatingCalculator (Elo formula)
+│   │   ├── Mix Pool/               ← MixPool, MixPoolLoader protocol
+│   │   ├── Theme/                  ← ThemeSettings, BoardThemeOption, ThemeStore protocol
+│   │   ├── Settings/               ← BoardSettingsStoragePort protocol
+│   │   ├── Notifications/          ← NotificationScheduler, NotificationStoragePort protocols
+│   │   ├── Language/               ← LanguageStoragePort protocol
+│   │   └── Tabbar/                 ← AppTab enum, TabStoragePort protocol
+│   ├── Chess Cache/                ← Persistence implementations
+│   │   ├── Progress/               ← UserDefaultsProgressStore, UbiquitousProgressStore, KeyValueStore
+│   │   └── Theme/                  ← UserDefaultsThemeStore
+│   └── Chess Infra/                ← Adapters, mappers, loaders
+│       ├── Adapters/               ← ProgressAdapter, ThemeAdapter, LanguageAdapter, etc.
+│       ├── Curriculum/             ← FileCurriculumLoader, CurriculumMapper (private DTOs)
+│       ├── Mix Pool/               ← FileMixPoolLoader, MixPoolMapper
+│       ├── Shared/                 ← LocalFileReader, FileReaderLoader protocol
+│       └── Tabbar/                 ← UserDefaultsTabAdapter
+├── EssentialChessUI/               ← Presentation framework (ViewModels only)
+│   └── ViewModels/                 ← 10 ViewModels, all import Foundation + Combine only
+├── EssentialChessTests/            ← Domain + Infrastructure tests
+└── EssentialChessUITests/          ← ViewModel tests
 
-The application employs Clean Architecture, separating pure domain data models from the reactive UI models.
-
-```swift
-// MARK: - 1. Pure Domain Models (Decoded from JSON)
-public struct Curriculum: Codable {
-    public let sections: [EloSection]
-}
-
-// MARK: - 2. Persistent State Model (User Defaults / Database)
-public struct UserProgress: Codable {
-    public var hiddenRating: Double
-    public var actualRating: Double?
-    public var completedPuzzleIDs: Set<String>
-    public var passedExamIDs: Set<String>
-    public var examFailureTimes: [String: Date]
-}
-
-// MARK: - 3. Presentation UI Models (Dumb Models for SwiftUI)
-public struct SectionUIModel: Identifiable, Equatable {
-    public let id: String
-    public let title: String
-    public let progress: Double
-    public let isUnlocked: Bool
-}
+EssentialChessApp/                  ← iOS app target (composition root)
+├── AppCore/                        ← AppComposer, DependencyContainer, ViewFactory, RootView
+├── Views/                          ← SwiftUI views (Curriculum, Exam, PuzzleMix, etc.)
+└── EssentialChessAppTests/         ← Integration tests
 ```
 
+### Dependency Direction
+
+```
+EssentialChessApp → EssentialChessUI → EssentialChess
+                  → NativeChessBoard (UIKit chess board package)
+```
+
+The domain layer (`Chess Feature/`) defines protocols (`ProgressStore`, `ThemeStore`, `CurriculumLoader`, `NotificationScheduler`, etc.). Infrastructure implementations conform to these protocols. ViewModels depend only on domain types and Combine — they never import SwiftUI or UIKit.
+
+### Dependency Injection
+
+Dependencies flow through `DependencyContainer` → `AppComposer` → `ViewFactory`.
+
+- `DependencyContainer` instantiates all infrastructure (stores, adapters, loaders) and owns their lifecycle.
+- `AppComposer` creates the long-lived ViewModels (`CurriculumViewModel`, `StreakViewModel`, `SettingsViewModel`, `MainNavigationViewModel`) and wires them to adapter publishers.
+- `ViewFactory` creates screen-specific ViewModels on demand (exam sessions, puzzle mix, puzzle streak, onboarding) using closure-based callback injection to avoid coupling ViewModels to the persistence layer.
+
+ViewModels receive side-effect closures (e.g., `saveActualRating: (Double) -> Void`, `onPuzzleSolved: () -> Void`) rather than direct adapter references. This keeps them unit-testable with simple mock closures.
+
+### Persistence
+
+| Data | Storage | Mechanism |
+|---|---|---|
+| User progress | `NSUbiquitousKeyValueStore` (primary), `UserDefaults` (fallback) | JSON-encoded `ProgressCacheDTO` with backward-compatible optional fields. Auto-migration from UserDefaults on first iCloud read. |
+| Theme settings | `UserDefaults` | JSON-encoded `ThemeSettings` via `UserDefaultsThemeStore`. |
+| Board settings | `UserDefaults` | Direct key-value via `UserDefaultsBoardSettingsStorage`. |
+| Tab state | `UserDefaults` | Persisted via `UserDefaultsTabAdapter` so the app reopens on the last-used tab. |
+| Notification prefs | `UserDefaults` | `isDailyReminderEnabled` flag via `UserDefaultsNotificationStorage`. |
+
+Both `ProgressStore` implementations use a shared `KeyValueStore` protocol that both `UserDefaults` and `NSUbiquitousKeyValueStore` conform to via extensions — allowing the `MockKeyValueStore` in tests to substitute either.
+
+### Data Loading
+
+The curriculum (~844KB) and mix pool (~8MB) are bundled JSON files, loaded via `FileCurriculumLoader` and `FileMixPoolLoader` respectively. Each uses a `FileReaderLoader` protocol (implemented by `LocalFileReader`) and a private `Mapper` class that keeps `Decodable` DTOs with `snake_case` keys encapsulated — domain models are never `Codable`.
+
+Loaders expose a callback-based API (`CurriculumLoader` protocol) and are bridged to Combine publishers via `Deferred { Future { } }` extensions for use in `CurriculumViewModel`.
+
 ---
 
-## 3. Onboarding & Placement Test Flow
+## 3. Testing
 
-### The Absolute Beginner Route
-* If the user selects "I am new to chess", the placement test is skipped. The system assigns a base HiddenRating of 500, and only the first curriculum section is unlocked.
+### Test Targets & Coverage
 
-### The Experienced Route (Placement Test)
-* If the user selects "I have some experience", they undergo a 15-puzzle assessment.
-* **NO LIVES, NO COOLDOWN:** This is an assessment, not a punishment.
-* **Dynamic Calibration:** The user starts at a provisional rating of 1000. Correct solves increase the rating and difficulty; incorrect solves decrease the rating and difficulty while showing the correct move.
-* **Final Placement:** After 15 puzzles, the system permanently unlocks all Curriculum Sections up to that rating bracket.
+The project has 3 test targets with 26 test files covering domain logic, infrastructure, and ViewModels:
 
----
+**`EssentialChessTests`** — Domain & Infrastructure (12 test files):
 
-## 4. Exam Gameplay & Endless Puzzle Mix
+| Area | File | What it covers |
+|---|---|---|
+| Progress | `CurriculumProgressTrackerTests` | Section unlock logic, sub-theme/category/section progress calculation, 99% cap rule, exam unlock gate, 3-hour cooldown enforcement |
+| Progress | `UserProgressUpdaterTests` | Immutable progress mutations (complete onboarding, mark puzzle, pass/fail exam, reset) |
+| Progress | `UserProgressDailyStreakTests` | Streak increment on consecutive day, no-change on same day, reset on missed day, first-time initialization |
+| Rating | `RatingCalculatorTests` | Placement K=100 and regular K=32 calculations, minimum rating floor (100), bracket assignment |
+| Curriculum | `FileCurriculumLoaderTests` | JSON loading, mapper validation, error handling for invalid data |
+| Mix Pool | `FileMixPoolLoaderTests` | JSON loading, difficulty tier mapping, error handling |
+| Cache | `UserDefaultsProgressStoreTests` | Round-trip encode/decode of `UserProgress` through `ProgressCacheDTO` |
+| Cache | `UbiquitousProgressStoreTests` | iCloud store read/write, UserDefaults→iCloud migration, backward-compatible optional field decoding |
+| Cache | `UserDefaultsThemeStoreTests` | Theme settings persistence |
+| Cache | `LocalFileReaderTests` | File reading from disk |
+| Adapters | `ProgressAdapterTests`, `ThemeAdapterTests`, `LanguageAdapterTests` | Adapter state management, publisher emissions |
+| Adapters | `CurriculumLoaderCombineTests`, `MixPoolLoaderCombineTests` | Combine publisher bridge from callback-based loaders |
 
-### The Mix Puzzle Exam Mechanics
-The Mix Puzzle acts as the final exam for each Elo section.
-* **Bank Randomization:** Randomly selects 10 puzzles from a hidden pool.
-* **3-Lives Sudden Death:** The user is granted exactly 3 lives per exam attempt. Incorrect moves or tapping the "Hint" button deducts 1 life.
-* **3-Hour Cooldown Penalty:** If the user loses all 3 lives, the exam is marked as "Failed", displaying a strict 3-hour countdown timer based on local device time to prevent brute-forcing.
+**`EssentialChessUITests`** — ViewModel Logic (10 test files):
 
-### Train Tactics (Endless Puzzle Mix)
-* **Infinite Replayability:** An endless stream of puzzles dynamically fetched based on the user's current `actualRating`.
-* **Standard ELO Integration:** Uses the standard chess K-factor formula to compute rating changes instantly after each move.
-* **Instant Visual Feedback:** Smooth micro-animations show rating deltas (e.g., a green `+15` on a successful solve or a red `-30` penalty for using a hint). 
+| ViewModel | Key scenarios tested |
+|---|---|
+| `ExamViewModelTests` | Initial state, correct/incorrect handling, hint costs life, 3-life depletion triggers `onFailed`, all-solved triggers `onPassed` |
+| `PuzzleMixViewModelTests` | `actualRating` initialization from `hiddenRating`, ±150 range filtering, rating increase/decrease on solve, hint-as-failure, daily limit at 7, day-change reset, pool cycling on exhaustion, paywall trigger |
+| `PuzzleStreakViewModelTests` | Streak increment, failure ends session, daily limit at 1, new-record detection |
+| `OnboardingViewModelTests` | 15-puzzle assessment flow, rating calibration, completion callback |
+| `CurriculumViewModelTests` | Section/category mapping, premium lock logic, exam state mapping |
+| `PuzzleBoardViewModelTests` | Linear puzzle progression, frontier-based navigation, theme completion detection |
+| `SettingsViewModelTests` | Haptic/sound toggle persistence, notification scheduling, permission handling |
+| `StreakViewModelTests` | Publisher-driven streak count updates, "active today" detection |
+| `MainNavigationViewModelTests` | Tab persistence, auto-save on change |
+| `PuzzleViewModelTests` | Solve/wrong state management, hint delegation |
 
----
+**`EssentialChessAppTests`** — Composition root integration tests.
 
-## 5. Behavior-Driven Development (BDD) Specifications
+All ViewModel tests use a shared `trackForMemoryLeaks()` helper in `addTeardownBlock` to catch retain cycles.
 
-Core algorithms are completely backed by Gherkin-style BDD tests.
+### BDD-Style Specifications
+
+Core algorithms are expressed as Given/When/Then scenarios. Each scenario below has a corresponding `XCTest`:
+
+#### Curriculum Progress & Exam Gating
 
 ```gherkin
-Feature: Mix Puzzle Exam Gameplay, Lives, and Cooldown
+Feature: Section Progress and the 99% Rule
 
-Scenario: Depleting lives triggers a 3-hour cooldown
-  Given the user is taking the exam with 1 life remaining
-  When the user makes a mistake or uses a hint
-  Then the lives counter drops to 0
-  And the exam session immediately terminates
-  And the system records the current timestamp as the failure time
-  And the Mix Puzzle Exam button is locked with a 3-hour countdown timer
+  Scenario: Progress caps at 99% when all puzzles complete but exam not passed
+    Given a section with 2 non-exam puzzles
+    When the user completes both puzzles
+    Then section progress equals 0.99
 
-Scenario: Passing the exam synchronizes the progression
-  Given the user correctly solves the 10th puzzle with at least 1 life remaining
-  Then the Section's progress bar updates from 99% to 100%
-  And the next sequential Elo Section becomes unlocked
+  Scenario: Progress reaches 100% after exam is passed
+    Given a section with a passed exam ID in the user's progress
+    Then section progress equals 1.0
+
+  Scenario: Exam unlocks only when all non-exam puzzles are completed
+    Given 2 puzzles in non-exam categories
+    When only 1 is completed
+    Then isExamUnlocked returns false
+    When both are completed
+    Then isExamUnlocked returns true
 ```
 
-```gherkin
-Feature: Endless Puzzle Mix Gameplay and Dynamic Rating
+#### Exam Gameplay
 
-Scenario: Initializing actual rating for the first time
-  Given the user has a "hiddenRating" (e.g., 1350) from the placement test
-  And the user's "actualRating" is currently null
-  When the user opens the Puzzle Mix mode for the first time
-  Then the system must initialize the "actualRating" to equal the "hiddenRating"
+```gherkin
+Feature: Mix Puzzle Exam — 3-Lives Sudden Death
+
+  Scenario: Depleting lives triggers failure callback
+    Given an active exam with 3 lives
+    When the user makes 3 incorrect moves
+    Then phase transitions to .failed
+    And onFailed is called exactly once
+
+  Scenario: Completing all puzzles triggers pass callback
+    Given an exam with 1 puzzle
+    When the user answers correctly
+    Then phase transitions to .passed
+    And onPassed is called exactly once
+
+  Scenario: Using a hint costs a life
+    Given an active exam with 3 lives
+    When the user taps Hint
+    Then remaining lives decreases to 2
+```
+
+#### Exam Cooldown
+
+```gherkin
+Feature: 3-Hour Exam Cooldown
+
+  Scenario: Cannot retake exam within cooldown window
+    Given an exam failed at time T
+    When current time is T + 2 hours
+    Then canStartExam returns false
+
+  Scenario: Can retake exam after cooldown expires
+    Given an exam failed at time T
+    When current time is T + 3 hours
+    Then canStartExam returns true
+```
+
+#### Puzzle Mix — Rating & Limits
+
+```gherkin
+Feature: Endless Puzzle Mix
+
+  Scenario: First-time rating initialization
+    Given hiddenRating is 1350 and actualRating is nil
+    When PuzzleMixViewModel is initialized
+    Then actualRating equals 1350
+    And the rating is saved immediately
+
+  Scenario: Correct solve increases rating
+    Given actualRating is 1200 and puzzle rating is 1200
+    When the user solves correctly
+    Then actualRating increases (K=32 Elo)
+    And the updated rating is persisted
+
+  Scenario: Hint usage penalizes rating
+    Given an active puzzle
+    When the user taps Hint
+    Then actualRating decreases as if the solve were incorrect
+    And hasUsedHint is set to true
+
+  Scenario: Daily limit blocks free users after 7 puzzles
+    Given a non-Pro user with 7 puzzles solved today
+    When the next puzzle is requested
+    Then showPaywall is true
+    And no puzzle is loaded
+```
+
+#### Daily Streak
+
+```gherkin
+Feature: Daily Activity Streak
+
+  Scenario: First-time play sets streak to 1
+    Given no previous activity
+    When the user completes a puzzle
+    Then currentStreak equals 1
+
+  Scenario: Playing on the next consecutive day increments streak
+    Given last activity was yesterday and streak is 3
+    When the user plays today
+    Then currentStreak equals 4
+
+  Scenario: Missing a day resets streak
+    Given last activity was 2 days ago and streak is 5
+    When the user plays today
+    Then currentStreak resets to 1
 ```
 
 ---
 
-## 6. Core Swift Implementation (Clean Architecture)
+## 4. Known Limitations & Roadmap
 
-State and side effects are managed through pure `ViewModels` and delegated to infrastructure via callback functions in the `AppComposer`.
+| Item | Status |
+|---|---|
+| **In-app purchases** | UI and gating logic implemented. RevenueCat SDK integration is planned but not yet connected — `purchasePro()` currently sets `isPro = true` directly. `EnvironmentConfig` has placeholder API keys for staging/production. |
+| **Puzzle Storm** | Placeholder "Coming Soon" view. `highestPuzzleStorm` field exists on `UserProgress` but no gameplay logic is implemented yet. |
+| **Piece movement validation** | Delegated entirely to the `NativeChessBoard` package. The app layer handles puzzle completion/failure callbacks but does not implement its own move legality engine. |
+| **Localization** | English and Bahasa Indonesia. String catalog (`Localizable.xcstrings`) is present. |
+| **Accessibility** | Not explicitly implemented beyond standard SwiftUI defaults. |
+| **Error handling** | Loader failures fall back to empty arrays (the app still launches). ProgressStore decode failures propagate as errors but are not surfaced to the user. |
 
-### 6.1 Exam Gameplay Engine (`ExamViewModel`)
-Handles 3-lives sudden death without coupling to UI layers.
+---
 
-```swift
-public final class ExamViewModel: ObservableObject {
-    public enum ExamPhase { case active, passed, failed }
+## Screenshots & Demo
 
-    @Published public private(set) var remainingLives: Int = 3
-    @Published public private(set) var solvedCount: Int = 0
-    @Published public private(set) var phase: ExamPhase = .active
+> \[TODO: Add App Store screenshots and demo video after release\]
 
-    public func handleIncorrect() {
-        guard phase == .active else { return }
-        remainingLives -= 1
-        if remainingLives <= 0 {
-            phase = .failed
-            onFailed()
-        }
-    }
-}
-```
+---
 
-### 6.2 Theme Customization Engine (`ThemeManager`)
-Handles UI customization preferences safely using AppStorage.
+## License
 
-```swift
-public class ThemeManager: ObservableObject {
-    @AppStorage("selected_board_theme") private var savedBoardThemeString: String = BoardThemeOption.brown.rawValue
-    @AppStorage("selected_piece_theme") private var savedPieceThemeString: String = "default"
-
-    @Published public var currentBoardTheme: BoardThemeOption {
-        didSet { savedBoardThemeString = currentBoardTheme.rawValue }
-    }
-
-    @Published public var currentPieceTheme: String {
-        didSet { savedPieceThemeString = currentPieceTheme }
-    }
-}
-```
+See [LICENSE](LICENSE) for details.
