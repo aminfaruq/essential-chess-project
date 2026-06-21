@@ -8,10 +8,10 @@
 import Foundation
 
 public final class UserDefaultsProgressStore: ProgressStore {
-    private let store: UserDefaults
+    private let store: KeyValueStore
     private let cacheKey = "user_progress_cache"
     
-    public init(store: UserDefaults = .standard) {
+    public init(store: KeyValueStore = UserDefaults.standard) {
         self.store = store
     }
     

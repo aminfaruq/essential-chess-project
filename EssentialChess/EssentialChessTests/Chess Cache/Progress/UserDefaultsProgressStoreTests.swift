@@ -2,26 +2,14 @@
 //  UserDefaultsProgressStoreTests.swift
 //  EssentialChess
 //
-//  Created by Amin faruq on 10/06/26.
-//
 
 import XCTest
 import EssentialChess
 
 final class UserDefaultsProgressStoreTests: XCTestCase {
     
-    override func setUp() {
-        super.setUp()
-        setupEmptyStoreState()
-    }
-    
-    override func tearDown() {
-        super.tearDown()
-        undoStoreSideEffects()
-    }
-
     func test_retrieve_deliversEmptyOnEmptyCache() {
-        let sut = makeSUT()
+        let (sut, _) = makeSUT()
         
         let expectation = expectation(description: "Wait for store retrieval")
         sut.retrieve { result in
@@ -33,29 +21,48 @@ final class UserDefaultsProgressStoreTests: XCTestCase {
             }
             expectation.fulfill()
         }
-        
         wait(for: [expectation], timeout: 1.0)
     }
     
-    func test_retrieve_deliversFoundValuesOnNonEmptyCache() {
-        let sut = makeSUT()
-        let progress = UserProgress(
-            hiddenRating: 1200.0,
-            actualRating: 1215.0,
-            onboardingComplete: true,
-            completedPuzzleIDs: ["p1", "p2"],
-            passedExamIDs: ["e1"],
-            examFailureTimes: ["e2": Date()],
-            isPro: true,
-            dailyPuzzleMixCount: 5,
-            lastPuzzleMixDate: Date()
-        )
+    func test_retrieve_deliversFailureOnInvalidCacheData() {
+        let (sut, store) = makeSUT()
+        store.store["user_progress_cache"] = Data("invalid json".utf8)
         
-        let insertionExpectation = expectation(description: "Wait for store insertion")
+        let expectation = expectation(description: "Wait for store retrieval")
+        sut.retrieve { result in
+            switch result {
+            case .failure:
+                break // Expected decoding failure
+            default:
+                XCTFail("Expected decoding failure, got \(result) instead")
+            }
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 1.0)
+    }
+    
+    func test_insert_deliversSuccessOnValidInsertion() {
+        let (sut, store) = makeSUT()
+        let progress = makeProgress()
+        
+        let expectation = expectation(description: "Wait for store insertion")
         sut.insert(progress) { result in
             if case let .failure(error) = result {
                 XCTFail("Expected successful insertion, got \(error) instead")
             }
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 1.0)
+        
+        XCTAssertNotNil(store.store["user_progress_cache"])
+    }
+    
+    func test_retrieve_deliversFoundValuesOnValidCache() {
+        let (sut, _) = makeSUT()
+        let progress = makeProgress()
+        
+        let insertionExpectation = expectation(description: "Wait for store insertion")
+        sut.insert(progress) { _ in
             insertionExpectation.fulfill()
         }
         wait(for: [insertionExpectation], timeout: 1.0)
@@ -70,26 +77,29 @@ final class UserDefaultsProgressStoreTests: XCTestCase {
             }
             retrievalExpectation.fulfill()
         }
-        
         wait(for: [retrievalExpectation], timeout: 1.0)
     }
     
     // MARK: - Helpers
     
-    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> ProgressStore {
-        let testDefaults = UserDefaults(suiteName: testSuiteName)!
-        let sut = UserDefaultsProgressStore(store: testDefaults)
+    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ProgressStore, store: MockKeyValueStore) {
+        let store = MockKeyValueStore()
+        let sut = UserDefaultsProgressStore(store: store)
         trackForMemoryLeaks(sut, file: file, line: line)
-        return sut
+        return (sut, store)
     }
     
-    private let testSuiteName = "testUserDefaultsStore"
-    
-    private func setupEmptyStoreState() {
-        UserDefaults().removePersistentDomain(forName: testSuiteName)
-    }
-    
-    private func undoStoreSideEffects() {
-        UserDefaults().removePersistentDomain(forName: testSuiteName)
+    private func makeProgress() -> UserProgress {
+        return UserProgress(
+            hiddenRating: 1200.0,
+            actualRating: 1215.0,
+            onboardingComplete: true,
+            completedPuzzleIDs: ["p1", "p2"],
+            passedExamIDs: ["e1"],
+            examFailureTimes: ["e2": Date()],
+            isPro: true,
+            dailyPuzzleMixCount: 5,
+            lastPuzzleMixDate: Date()
+        )
     }
 }

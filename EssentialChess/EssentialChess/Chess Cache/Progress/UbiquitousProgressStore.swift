@@ -6,11 +6,11 @@
 import Foundation
 
 public final class UbiquitousProgressStore: ProgressStore {
-    private let store: NSUbiquitousKeyValueStore
-    private let localStore: UserDefaults
+    private let store: KeyValueStore
+    private let localStore: KeyValueStore
     private let cacheKey = "user_progress_cache"
     
-    public init(store: NSUbiquitousKeyValueStore = .default, localStore: UserDefaults = .standard) {
+    public init(store: KeyValueStore = NSUbiquitousKeyValueStore.default, localStore: KeyValueStore = UserDefaults.standard) {
         self.store = store
         self.localStore = localStore
     }

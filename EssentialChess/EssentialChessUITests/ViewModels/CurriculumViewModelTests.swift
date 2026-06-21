@@ -39,6 +39,8 @@ final class CurriculumViewModelTests: XCTestCase {
         mixPoolSubject.send(completion: .finished)
         progressSubject.send(completion: .finished)
         
+        flushMainQueue()
+        
         // 3. Verify the outcome
         XCTAssertEqual(sut.sections.count, expectedCurriculum.sections.count)
         XCTAssertFalse(sut.isLoading, "Expected loading state to be false after completion")
@@ -55,6 +57,8 @@ final class CurriculumViewModelTests: XCTestCase {
         curriculumSubject.send(completion: .failure(anyError))
         mixPoolSubject.send(completion: .finished)
         progressSubject.send(completion: .finished)
+        
+        flushMainQueue()
         
         XCTAssertTrue(sut.sections.isEmpty)
         XCTAssertFalse(sut.isLoading)
@@ -77,6 +81,8 @@ final class CurriculumViewModelTests: XCTestCase {
         let initialProgress = makeUserProgress(hiddenRating: 150.0, passedExamIDs: [], isPro: true)
         progressSubject.send(initialProgress)
         
+        flushMainQueue()
+        
         let section1 = sut.sections[0]
         let section2 = sut.sections[1]
         
@@ -87,6 +93,8 @@ final class CurriculumViewModelTests: XCTestCase {
         // SCENARIO 2: Pro user passes Level 1 exam
         let advancedProgress = makeUserProgress(hiddenRating: 150.0, passedExamIDs: ["exam_1"], isPro: true)
         progressSubject.send(advancedProgress)
+        
+        flushMainQueue()
         
         let updatedSection2 = sut.sections[1]
         XCTAssertTrue(updatedSection2.isUnlocked, "Section 2 should UNLOCK immediately after passing Section 1 Exam.")
@@ -107,6 +115,8 @@ final class CurriculumViewModelTests: XCTestCase {
         let freeAdvancedProgress = makeUserProgress(hiddenRating: 150.0, passedExamIDs: ["exam_1"], isPro: false)
         progressSubject.send(freeAdvancedProgress)
         
+        flushMainQueue()
+        
         let section1 = sut.sections[0]
         let section2 = sut.sections[1]
         
@@ -118,6 +128,14 @@ final class CurriculumViewModelTests: XCTestCase {
     }
     
     // MARK: - Helpers
+    
+    private func flushMainQueue() {
+        let exp = expectation(description: "Wait for main queue")
+        DispatchQueue.main.async {
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1.0)
+    }
     
     private func makeSUT(
         file: StaticString = #filePath,

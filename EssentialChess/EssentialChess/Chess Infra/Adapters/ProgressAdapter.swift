@@ -30,17 +30,27 @@ public final class ProgressAdapter {
     
     public func load(completion: @escaping () -> Void) {
         store.retrieve { [weak self] result in
-            if let progress = (try? result.get()) ?? nil {
-                self?.subject.send(progress)
+            DispatchQueue.main.async {
+                if let progress = (try? result.get()) ?? nil {
+                    self?.subject.send(progress)
+                }
+                completion()
             }
-            completion()
         }
     }
     
     public func update(_ modifier: (inout UserProgress) -> Void) {
         var current = subject.value
         modifier(&current)
-        subject.send(current)
+        
+        // Publish on the main thread to satisfy Combine/SwiftUI requirements
+        if Thread.isMainThread {
+            subject.send(current)
+        } else {
+            DispatchQueue.main.async { [subject] in
+                subject.send(current)
+            }
+        }
         
         // Save to UserDefaults in the background
         store.insert(current) { _ in }
