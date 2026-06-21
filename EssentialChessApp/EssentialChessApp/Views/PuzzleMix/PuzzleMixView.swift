@@ -35,6 +35,7 @@ public struct PuzzleMixView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(AppColors.background, for: .navigationBar)
         .toolbarColorScheme(.dark, for: .navigationBar)
+        .toolbar(.hidden, for: .tabBar)
         .onAppear {
             if viewModel == nil {
                 composer.viewFactory.fetchPuzzleMixViewModel { fetchedVM in
@@ -309,6 +310,7 @@ private struct PuzzleMixActiveView: View {
                 Label("Solution", systemImage: "key.horizontal")
                         .font(.system(size: 14))
                         .foregroundStyle(.gray)
+                        .fixedSize(horizontal: true, vertical: false)
                         .padding(.horizontal, 16)
                         .padding(.vertical, 12)
                         .background(AppColors.surface)

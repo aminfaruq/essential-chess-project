@@ -33,6 +33,7 @@ public struct PuzzleStreakView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(AppColors.background, for: .navigationBar)
         .toolbarColorScheme(.dark, for: .navigationBar)
+        .toolbar(.hidden, for: .tabBar)
         .onAppear {
             if viewModel == nil {
                 composer.viewFactory.fetchPuzzleStreakViewModel { fetchedVM in
