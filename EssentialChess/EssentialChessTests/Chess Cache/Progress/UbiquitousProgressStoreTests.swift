@@ -154,7 +154,9 @@ final class UbiquitousProgressStoreTests: XCTestCase {
             examFailureTimes: ["e2": Date()],
             isPro: true,
             dailyPuzzleMixCount: 5,
-            lastPuzzleMixDate: Date()
+            lastPuzzleMixDate: Date(),
+            dailyPuzzleStormCount: 1,
+            lastPuzzleStormDate: Date()
         )
     }
 }

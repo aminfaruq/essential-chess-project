@@ -31,6 +31,8 @@ public struct UserProgress: Equatable {
     // NEW: Puzzle Mode Records
     public var highestPuzzleStreak: Int
     public var highestPuzzleStorm: Int
+    public var dailyPuzzleStormCount: Int
+    public var lastPuzzleStormDate: Date?
     
     public init(
         hiddenRating: Double = 500.0,
@@ -49,7 +51,9 @@ public struct UserProgress: Equatable {
         activePuzzleStreak: Int = 0,
         activePuzzleStreakUsedIDs: Set<String> = [],
         highestPuzzleStreak: Int = 0,
-        highestPuzzleStorm: Int = 0
+        highestPuzzleStorm: Int = 0,
+        dailyPuzzleStormCount: Int = 0,
+        lastPuzzleStormDate: Date? = nil
     ) {
         self.hiddenRating = hiddenRating
         self.actualRating = actualRating
@@ -68,5 +72,7 @@ public struct UserProgress: Equatable {
         self.activePuzzleStreakUsedIDs = activePuzzleStreakUsedIDs
         self.highestPuzzleStreak = highestPuzzleStreak
         self.highestPuzzleStorm = highestPuzzleStorm
+        self.dailyPuzzleStormCount = dailyPuzzleStormCount
+        self.lastPuzzleStormDate = lastPuzzleStormDate
     }
 }

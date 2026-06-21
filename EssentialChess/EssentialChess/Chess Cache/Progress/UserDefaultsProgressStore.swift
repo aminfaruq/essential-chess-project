@@ -59,6 +59,8 @@ public final class UserDefaultsProgressStore: ProgressStore {
         let activePuzzleStreakUsedIDs: Set<String>?
         let highestPuzzleStreak: Int?
         let highestPuzzleStorm: Int?
+        let dailyPuzzleStormCount: Int?
+        let lastPuzzleStormDate: Date?
         
         init(from model: UserProgress) {
             self.hiddenRating = model.hiddenRating
@@ -78,6 +80,8 @@ public final class UserDefaultsProgressStore: ProgressStore {
             self.activePuzzleStreakUsedIDs = model.activePuzzleStreakUsedIDs
             self.highestPuzzleStreak = model.highestPuzzleStreak
             self.highestPuzzleStorm = model.highestPuzzleStorm
+            self.dailyPuzzleStormCount = model.dailyPuzzleStormCount
+            self.lastPuzzleStormDate = model.lastPuzzleStormDate
         }
         
         func toModel() -> UserProgress {
@@ -98,7 +102,9 @@ public final class UserDefaultsProgressStore: ProgressStore {
                 activePuzzleStreak: activePuzzleStreak ?? 0,
                 activePuzzleStreakUsedIDs: activePuzzleStreakUsedIDs ?? [],
                 highestPuzzleStreak: highestPuzzleStreak ?? 0,
-                highestPuzzleStorm: highestPuzzleStorm ?? 0
+                highestPuzzleStorm: highestPuzzleStorm ?? 0,
+                dailyPuzzleStormCount: dailyPuzzleStormCount ?? 0,
+                lastPuzzleStormDate: lastPuzzleStormDate
             )
         }
     }
