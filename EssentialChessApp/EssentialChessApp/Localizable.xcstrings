@@ -74,6 +74,9 @@
         }
       }
     },
+    "+%llds" : {
+
+    },
     "~%lld" : {
       "localizations" : {
         "id" : {
@@ -163,6 +166,9 @@
           }
         }
       }
+    },
+    "🗑️ Hard Clean Store Data" : {
+
     },
     "🚀 Unlock First Exam (Solve 100%)" : {
       "localizations" : {
@@ -391,6 +397,9 @@
         }
       }
     },
+    "Best Combo" : {
+
+    },
     "Best Storm" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -521,11 +530,21 @@
         }
       }
     },
+    "Combo" : {
+
+    },
     "Coming Soon" : {
+      "extractionState" : "manual",
       "localizations" : {
-        "id" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Segera Hadir"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Segera Hadir"
           }
         }
@@ -923,6 +942,9 @@
         }
       }
     },
+    "Loading puzzles..." : {
+
+    },
     "Loading Puzzles..." : {
       "localizations" : {
         "id" : {
@@ -932,6 +954,9 @@
           }
         }
       }
+    },
+    "Loading Storm..." : {
+
     },
     "Loading Streak..." : {
       "localizations" : {
@@ -1466,6 +1491,16 @@
         }
       }
     },
+    "Session ended. Final Score: %lld" : {
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sesi berakhir. Skor Akhir: %lld"
+          }
+        }
+      }
+    },
     "Session ended. Final Streak: %lld" : {
       "localizations" : {
         "id" : {
@@ -1528,6 +1563,16 @@
         }
       }
     },
+    "Solve as many as you can in 3 minutes" : {
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selesaikan sebanyak mungkin dalam 3 menit"
+          }
+        }
+      }
+    },
     "Solve as many puzzles as you can without making a mistake." : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1571,6 +1616,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mulai Belajar"
+          }
+        }
+      }
+    },
+    "Start Storm" : {
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mulai Puzzle Storm"
           }
         }
       }
@@ -1641,6 +1696,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tindakan ini tidak dapat dibatalkan."
+          }
+        }
+      }
+    },
+    "Time's Up!" : {
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waktu Habis!"
           }
         }
       }
@@ -1803,6 +1868,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Anda telah membuka bagian berikutnya."
+          }
+        }
+      }
+    },
+    "You've used your free Puzzle Storm today. Come back tomorrow or upgrade to Pro to play endlessly." : {
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anda telah menggunakan Puzzle Storm gratis Anda hari ini. Kembali besok atau tingkatkan ke Pro untuk bermain tanpa batas."
           }
         }
       }
