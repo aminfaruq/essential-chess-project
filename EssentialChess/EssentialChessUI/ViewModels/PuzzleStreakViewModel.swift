@@ -50,7 +50,7 @@ public final class PuzzleStreakViewModel: ObservableObject, Identifiable {
         updateDailyLimits: @escaping (Int, Date) -> Void,
         onPuzzleSolved: @escaping () -> Void
     ) {
-        self.pool = pool
+        self.pool = pool.shuffled()
         self.checkIsPro = checkIsPro
         self.dailyPuzzleStreakCount = dailyPuzzleStreakCount
         self.lastPuzzleStreakDate = lastPuzzleStreakDate
@@ -185,8 +185,17 @@ public final class PuzzleStreakViewModel: ObservableObject, Identifiable {
         let targetRating = 500 + (currentStreak * 50)
         let range = (targetRating - 100)...(targetRating + 100)
         
-        let candidates = pool.filter { 
+        var candidates = pool.filter { 
             !usedPuzzleIds.contains($0.id) && range.contains($0.rating)
+        }
+        
+        // If the database has very few puzzles in this specific rating range,
+        // it will cause the same few puzzles to repeat. To fix this, we ensure
+        // there are always at least 50 candidates to choose from by picking the closest ones.
+        if candidates.count < 50 {
+            let unused = pool.filter { !usedPuzzleIds.contains($0.id) }
+            let sortedByClosest = unused.sorted { abs($0.rating - targetRating) < abs($1.rating - targetRating) }
+            candidates = Array(sortedByClosest.prefix(50))
         }
         
         if let next = candidates.randomElement() {
@@ -194,20 +203,12 @@ public final class PuzzleStreakViewModel: ObservableObject, Identifiable {
             usedPuzzleIds.insert(next.id)
             onStreakUpdated(currentStreak, usedPuzzleIds)
         } else {
-            // Fallback: If no puzzles within range, find closest unused puzzle
-            if let closest = pool.filter({ !usedPuzzleIds.contains($0.id) })
-                                 .min(by: { abs($0.rating - targetRating) < abs($1.rating - targetRating) }) {
-                currentPuzzle = closest
-                usedPuzzleIds.insert(closest.id)
+            // Ultimate fallback (should only hit if pool is completely exhausted)
+            usedPuzzleIds.removeAll()
+            if let refresh = pool.randomElement() {
+                currentPuzzle = refresh
+                usedPuzzleIds.insert(refresh.id)
                 onStreakUpdated(currentStreak, usedPuzzleIds)
-            } else {
-                // Exhausted all puzzles, recycle pool
-                usedPuzzleIds.removeAll()
-                if let refresh = pool.randomElement() {
-                    currentPuzzle = refresh
-                    usedPuzzleIds.insert(refresh.id)
-                    onStreakUpdated(currentStreak, usedPuzzleIds)
-                }
             }
         }
     }
