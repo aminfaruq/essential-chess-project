@@ -120,7 +120,9 @@ public struct PuzzleSessionView: View {
         HStack(spacing: 12) {
             Button { boardController.showHint() } label: {
                 Label("Hint", systemImage: "lightbulb")
-                    .font(.system(size: 12))
+                    .font(.system(size: 14))
+                    .minimumScaleFactor(0.7)
+                    .lineLimit(1)
                     .foregroundColor(AppColors.textSecondary)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 12)
@@ -132,7 +134,9 @@ public struct PuzzleSessionView: View {
             if !boardVM.isSolved {
                 Button { boardController.showSolution() } label: {
                     Label("Solution", systemImage: "key.horizontal")
-                        .font(.system(size: 12))
+                        .font(.system(size: 14))
+                        .minimumScaleFactor(0.7)
+                        .lineLimit(1)
                         .foregroundColor(AppColors.textSecondary)
                         .padding(.horizontal, 16)
                         .padding(.vertical, 12)
@@ -144,7 +148,9 @@ public struct PuzzleSessionView: View {
             
             Button { showSequenceList = true } label: {
                 Label("Puzzles", systemImage: "list.number")
-                    .font(.system(size: 12))
+                    .font(.system(size: 14))
+                    .minimumScaleFactor(0.8)
+                    .lineLimit(1)
                     .foregroundColor(AppColors.textSecondary)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 12)
@@ -158,8 +164,9 @@ public struct PuzzleSessionView: View {
             if boardVM.isSolved {
                 Button { boardVM.triggerNext() } label: {
                     Label("Next", systemImage: "arrow.right")
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(.black)
+                        .fixedSize(horizontal: true, vertical: false)
                         .padding(.horizontal, 18)
                         .padding(.vertical, 12)
                         .background(AppColors.accent)
