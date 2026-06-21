@@ -191,6 +191,62 @@ public final class ViewFactory: ObservableObject {
         }
     }
     
+    // MARK: - Puzzle Storm Factory
+    
+    public func fetchPuzzleStormViewModel(
+        onReady: @escaping (PuzzleStormViewModel) -> Void
+    ) {
+        guard let loader = container.mixPoolLoader else { return }
+        
+        loader.load { [weak self] result in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                
+                let pool: [Puzzle]
+                switch result {
+                case .success(let mixPool):
+                    pool = mixPool.difficultyTiers.flatMap { $0.puzzles }
+                case .failure(_):
+                    pool = []
+                }
+                
+                let progress = self.container.progressAdapter.currentProgress
+                
+                let viewModel = PuzzleStormViewModel(
+                    pool: pool,
+                    checkIsPro: { [weak self] in
+                        self?.container.progressAdapter.currentProgress.isPro ?? false
+                    },
+                    dailyPuzzleStormCount: progress.dailyPuzzleStormCount,
+                    lastPuzzleStormDate: progress.lastPuzzleStormDate,
+                    highestScore: progress.highestPuzzleStorm,
+                    onScoreUpdated: { newHighestScore in
+                        self.container.progressAdapter.update { progress in
+                            progress.highestPuzzleStorm = newHighestScore
+                        }
+                    },
+                    onSessionFinished: { _ in
+                        // Handled via onScoreUpdated for now, but could be useful for analytics
+                    },
+                    updateDailyLimits: { count, date in
+                        self.container.progressAdapter.update { progress in
+                            progress.dailyPuzzleStormCount = count
+                            progress.lastPuzzleStormDate = date
+                        }
+                    },
+                    onPuzzleSolved: {
+                        //MARK: Daily streak
+                        self.container.progressAdapter.update { progress in
+                            progress.recordActivity()
+                        }
+                    }
+                )
+                
+                onReady(viewModel)
+            }
+        }
+    }
+    
     // MARK: - Curriculum Navigation Factory
     
     public func makePuzzleSessionView(title: String, puzzles: [PuzzleUIModel]) -> some View {
