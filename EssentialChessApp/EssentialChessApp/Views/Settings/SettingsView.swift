@@ -279,6 +279,9 @@ public struct SettingsView: View {
             progress.completedPuzzleIDs.removeAll()
             progress.passedExamIDs.removeAll()
             progress.examFailureTimes.removeAll()
+            progress.highestPuzzleStreak = 0
+            progress.highestPuzzleStorm = 0
+            progress.activePuzzleStreak = 0
             progress.onboardingComplete = false
         }
     }
