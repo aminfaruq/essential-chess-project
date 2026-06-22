@@ -122,7 +122,7 @@ private struct PuzzleMixActiveView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 6) {
                         ForEach(puzzle.tags, id: \.self) { theme in
-                            Text(theme.replacingOccurrences(of: "_", with: " ").capitalized)
+                            Text(PuzzleTagFormatter.format(tag: theme))
                                 .font(.system(size: 10, weight: .bold))
                                 .foregroundColor(.white)
                                 .padding(.horizontal, 6)
