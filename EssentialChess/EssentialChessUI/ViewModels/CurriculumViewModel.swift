@@ -40,7 +40,7 @@ public enum ExamUIState: Equatable {
     case onCooldown(availableIn: String)
 }
 
-public struct SubThemeUIModel: Identifiable, Equatable {
+public struct SubThemeUIModel: Identifiable, Equatable, Hashable {
     public let id: String
     public let title: String
     public let totalPuzzles: Int
@@ -54,9 +54,13 @@ public struct SubThemeUIModel: Identifiable, Equatable {
         self.completedPuzzles = completedPuzzles
         self.puzzles = puzzles
     }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
 }
 
-public struct PuzzleUIModel: Equatable {
+public struct PuzzleUIModel: Equatable, Hashable {
     public let id: String
     public let fen: String
     public let moves: [String]
@@ -69,6 +73,10 @@ public struct PuzzleUIModel: Equatable {
         self.moves = moves
         self.rating = rating
         self.tags = tags
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }
 
