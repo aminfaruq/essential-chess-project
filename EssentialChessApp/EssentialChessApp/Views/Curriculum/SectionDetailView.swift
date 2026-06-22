@@ -16,6 +16,9 @@ struct SectionDetailView: View {
     @EnvironmentObject var viewFactory: ViewFactory
     @State private var expandedCategoryID: String?
     @State private var refreshTrigger = UUID()
+    @State private var lastToggleTime: Date = .distantPast
+    @State private var isThemeSelected = false
+    @State private var selectedTheme: SubThemeUIModel?
     
     private var nonExamCategories: [CategoryUIModel] { model.categories.filter { !$0.isExamMode } }
     private var examCategory: CategoryUIModel? { model.categories.first { $0.isExamMode } }
@@ -30,12 +33,19 @@ struct SectionDetailView: View {
                             categoryModel: categoryModel,
                             isExpanded: expandedCategoryID == categoryModel.id,
                             onToggle: {
+                                lastToggleTime = Date()
                                 withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                                     if expandedCategoryID == categoryModel.id {
                                         expandedCategoryID = nil
                                     } else {
                                         expandedCategoryID = categoryModel.id
                                     }
+                                }
+                            },
+                            onSelectTheme: { theme in
+                                if Date().timeIntervalSince(lastToggleTime) > 0.45 {
+                                    selectedTheme = theme
+                                    isThemeSelected = true
                                 }
                             },
                             refreshTrigger: refreshTrigger
@@ -60,6 +70,11 @@ struct SectionDetailView: View {
         .onAppear {
             refreshTrigger = UUID()
         }
+        .navigationDestination(isPresented: $isThemeSelected) {
+            if let theme = selectedTheme {
+                viewFactory.makePuzzleSessionView(title: theme.title, puzzles: theme.puzzles)
+            }
+        }
     }
 }
 
@@ -68,9 +83,8 @@ private struct ExpandableCategoryRow: View {
     let categoryModel: CategoryUIModel
     let isExpanded: Bool
     let onToggle: () -> Void
+    let onSelectTheme: (SubThemeUIModel) -> Void
     let refreshTrigger: UUID
-    
-    @State private var allowClicks: Bool = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -85,9 +99,9 @@ private struct ExpandableCategoryRow: View {
                     if let themes = categoryModel.subThemes {
                         VStack(spacing: 8) {
                             ForEach(themes) { theme in
-                                NavigationLink(
-                                    destination: viewFactory.makePuzzleSessionView(title: theme.title, puzzles: theme.puzzles)
-                                ) {
+                                Button {
+                                    onSelectTheme(theme)
+                                } label: {
                                     SectionSubThemeCard(subTheme: theme, refreshTrigger: refreshTrigger)
                                 }
                                 .buttonStyle(.plain)
