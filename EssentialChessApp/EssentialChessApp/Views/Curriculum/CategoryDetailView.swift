@@ -9,6 +9,7 @@ import Combine
 import EssentialChess
 import EssentialChessUI
 
+//MARK: - NO LONGER USED
 struct CategoryDetailView: View {
     @EnvironmentObject var viewFactory: ViewFactory
     let section: SectionUIModel

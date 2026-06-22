@@ -13,6 +13,10 @@ import EssentialChess
 struct SectionDetailView: View {
     let model: SectionUIModel
     
+    @EnvironmentObject var viewFactory: ViewFactory
+    @State private var expandedCategoryID: String?
+    @State private var refreshTrigger = UUID()
+    
     private var nonExamCategories: [CategoryUIModel] { model.categories.filter { !$0.isExamMode } }
     private var examCategory: CategoryUIModel? { model.categories.first { $0.isExamMode } }
     
@@ -22,11 +26,20 @@ struct SectionDetailView: View {
             ScrollView {
                 VStack(spacing: 12) {
                     ForEach(nonExamCategories) { categoryModel in
-                        NavigationLink(destination: CategoryDetailView(section: model, category: categoryModel)) {
-                            CategoryCard(model: categoryModel)
-                        }
-                        .buttonStyle(.plain)
-                        
+                        ExpandableCategoryRow(
+                            categoryModel: categoryModel,
+                            isExpanded: expandedCategoryID == categoryModel.id,
+                            onToggle: {
+                                withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                                    if expandedCategoryID == categoryModel.id {
+                                        expandedCategoryID = nil
+                                    } else {
+                                        expandedCategoryID = categoryModel.id
+                                    }
+                                }
+                            },
+                            refreshTrigger: refreshTrigger
+                        )
                     }
                     
                     if let exam = examCategory {
@@ -44,11 +57,56 @@ struct SectionDetailView: View {
         .toolbarBackground(AppColors.background, for: .navigationBar)
         .toolbarColorScheme(.dark, for: .navigationBar)
         .toolbar(.hidden, for: .tabBar)
+        .onAppear {
+            refreshTrigger = UUID()
+        }
+    }
+}
+
+private struct ExpandableCategoryRow: View {
+    @EnvironmentObject var viewFactory: ViewFactory
+    let categoryModel: CategoryUIModel
+    let isExpanded: Bool
+    let onToggle: () -> Void
+    let refreshTrigger: UUID
+    
+    @State private var allowClicks: Bool = false
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            Button(action: onToggle) {
+                CategoryCard(model: categoryModel, isExpanded: isExpanded)
+            }
+            .buttonStyle(.plain)
+            .zIndex(1) // Ensure the card is above the sliding list
+            
+            VStack(spacing: 0) {
+                if isExpanded {
+                    if let themes = categoryModel.subThemes {
+                        VStack(spacing: 8) {
+                            ForEach(themes) { theme in
+                                NavigationLink(
+                                    destination: viewFactory.makePuzzleSessionView(title: theme.title, puzzles: theme.puzzles)
+                                ) {
+                                    SectionSubThemeCard(subTheme: theme, refreshTrigger: refreshTrigger)
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                        .padding(.leading, 16)
+                        .padding(.top, 8)
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                    }
+                }
+            }
+            .clipped() // Prevents rendering behind the card during animation
+        }
     }
 }
 
 private struct CategoryCard: View {
     let model: CategoryUIModel
+    var isExpanded: Bool = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -60,6 +118,11 @@ private struct CategoryCard: View {
                 Text("\(Int(model.progress * 100))%")
                     .font(.system(size: 13, weight: .medium, design: .monospaced))
                     .foregroundColor(model.progress >= 1.0 ? AppColors.gold : AppColors.textSecondary)
+                
+                Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(AppColors.textSecondary)
+                    .padding(.leading, 4)
             }
             ProgressBarView(
                 progress: model.progress,
@@ -70,6 +133,13 @@ private struct CategoryCard: View {
         .padding(18)
         .background(AppColors.surface)
         .clipShape(RoundedRectangle(cornerRadius: 14))
+        .overlay(
+            RoundedRectangle(cornerRadius: 14)
+                .strokeBorder(
+                    model.progress >= 1.0 ? AppColors.gold.opacity(0.35) : Color.clear,
+                    lineWidth: 1
+                )
+        )
     }
 }
 
@@ -208,5 +278,68 @@ private struct CooldownBadge: View {
         let m = (Int(safeRemaining) % 3600) / 60
         let s = Int(safeRemaining) % 60
         return String(format: "%02d:%02d:%02d", h, m, s)
+    }
+}
+
+private struct SectionSubThemeCard: View {
+    @EnvironmentObject var container: DependencyContainer
+    let subTheme: SubThemeUIModel
+    let refreshTrigger: UUID
+    
+    private var completed: Int {
+        _ = refreshTrigger
+        let completedIDs = container.progressAdapter.currentProgress.completedPuzzleIDs
+        return subTheme.puzzles.filter { completedIDs.contains($0.id) }.count
+    }
+    
+    private var progress: Double {
+        guard subTheme.totalPuzzles > 0 else { return 0.0 }
+        return Double(completed) / Double(subTheme.totalPuzzles)
+    }
+    
+    var body: some View {
+        HStack(spacing: 14) {
+            // Icon Indicator
+            ZStack {
+                Circle()
+                    .fill(progress >= 1.0 ? AppColors.gold.opacity(0.15) : AppColors.accent.opacity(0.15))
+                    .frame(width: 36, height: 36)
+                
+                Image(systemName: progress >= 1.0 ? "checkmark" : "play.fill")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundColor(progress >= 1.0 ? AppColors.gold : AppColors.accent)
+                    .offset(x: progress >= 1.0 ? 0 : 1.5) // Center the play icon visually
+            }
+            
+            // Text and Progress
+            VStack(alignment: .leading, spacing: 6) {
+                Text(LocalizedStringKey(subTheme.title))
+                    .font(.system(size: 15, weight: .medium))
+                    .foregroundColor(AppColors.textPrimary)
+                
+                HStack(spacing: 10) {
+                    ProgressBarView(
+                        progress: progress,
+                        height: 4,
+                        fillColor: progress >= 1.0 ? AppColors.gold : AppColors.accent
+                    )
+                    
+                    Text("\(completed)/\(subTheme.totalPuzzles)")
+                        .font(.system(size: 11, weight: .bold, design: .monospaced))
+                        .foregroundColor(AppColors.textSecondary)
+                }
+            }
+        }
+        .padding(.vertical, 12)
+        .padding(.horizontal, 14)
+        .background(AppColors.surface.opacity(0.4)) // Subtle background to differentiate from parent
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .strokeBorder(
+                    progress >= 1.0 ? AppColors.gold.opacity(0.4) : AppColors.surface,
+                    lineWidth: 1
+                )
+        )
     }
 }
