@@ -102,6 +102,7 @@ struct DebugMenuView: View {
             progress.activePuzzleStreak = 0
             progress.onboardingComplete = false
         }
+        container.beginnerProgressStore.clearProgress()
     }
     
     private func hardCleanStoreData() {
@@ -111,7 +112,8 @@ struct DebugMenuView: View {
         
         // Clear UserDefaults
         UserDefaults.standard.removeObject(forKey: "user_progress_cache")
+        UserDefaults.standard.removeObject(forKey: "beginner_completed_puzzles")
         
-        print("UbiquitousProgressStore completely cleaned. Please restart the app for full effect.")
+        print("UbiquitousProgressStore & BeginnerStore completely cleaned. Please restart the app for full effect.")
     }
 }

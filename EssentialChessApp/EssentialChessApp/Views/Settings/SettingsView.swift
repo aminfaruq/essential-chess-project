@@ -284,6 +284,7 @@ public struct SettingsView: View {
             progress.activePuzzleStreak = 0
             progress.onboardingComplete = false
         }
+        composer.container.beginnerProgressStore.clearProgress()
     }
 }
 
