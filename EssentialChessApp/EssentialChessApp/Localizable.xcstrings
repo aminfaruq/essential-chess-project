@@ -966,6 +966,17 @@
         }
       }
     },
+    "Learn How to Move" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pelajari Cara Melangkah"
+          }
+        }
+      }
+    },
     "Loading chess board..." : {
       "localizations" : {
         "id" : {
@@ -1681,6 +1692,17 @@
         }
       }
     },
+    "Start your chess journey. Learn how each piece moves, understand essential board rules, and grasp the absolute fundamentals of safe captures and defense." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Langkah awal perjalanan caturmu. Kenali cara jalan setiap bidak, pahami aturan dasar, dan kuasai teknik fundamental untuk bertahan serta menangkap bidak dengan aman."
+          }
+        }
+      }
+    },
     "Streak Ended" : {
       "localizations" : {
         "id" : {
@@ -1721,12 +1743,78 @@
         }
       }
     },
+    "The Bishop" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gajah"
+          }
+        }
+      }
+    },
     "The correct move has been highlighted." : {
       "localizations" : {
         "id" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Langkah yang benar telah disorot."
+          }
+        }
+      }
+    },
+    "The King" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Raja"
+          }
+        }
+      }
+    },
+    "The Knight" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kuda"
+          }
+        }
+      }
+    },
+    "The Pawn" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pion"
+          }
+        }
+      }
+    },
+    "The Queen" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menteri"
+          }
+        }
+      }
+    },
+    "The Rook" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benteng"
           }
         }
       }
