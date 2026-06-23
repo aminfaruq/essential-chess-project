@@ -15,6 +15,7 @@ public final class AppComposer: ObservableObject {
     
     /// ViewModels
     public let curriculumVM: CurriculumViewModel
+    public let beginnerVM: BeginnerCurriculumViewModel
     public let navigationVM: MainNavigationViewModel
     public let streakVM: StreakViewModel
     public let settingsVM: SettingsViewModel
@@ -47,6 +48,18 @@ public final class AppComposer: ObservableObject {
                 return Fail(error: FileMixPoolLoader.Error.invalidData).eraseToAnyPublisher()
             },
             progressPublisher: { [adapter] in adapter.publisher() }
+        )
+        
+        let validBegLoader = container.beginnerCurriculumLoader
+        
+        self.beginnerVM = BeginnerCurriculumViewModel(
+            curriculumPublisher: {
+                if let loader = validBegLoader {
+                    return loader.publisher()
+                }
+                return Fail(error: FileCurriculumLoader.Error.invalidData).eraseToAnyPublisher()
+            },
+            progressPublisher: { [container] in container.beginnerProgressStore.progressPublisher }
         )
         
         self.streakVM = StreakViewModel(progressPublisher: adapter.publisher())

@@ -27,6 +27,7 @@ public struct AppRootView: View {
                     .environmentObject(composer.viewFactory)
                     .environmentObject(composer.container.languageAdapter)
                     .environmentObject(composer.curriculumVM)
+                    .environmentObject(composer.beginnerVM)
                     .environmentObject(composer.container.themeAdapter)
                     .environmentObject(composer.streakVM)
                     .preferredColorScheme(.dark)

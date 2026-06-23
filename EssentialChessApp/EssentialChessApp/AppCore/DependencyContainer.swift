@@ -23,6 +23,8 @@ public final class DependencyContainer: ObservableObject {
     
     public let curriculumLoader: FileCurriculumLoader?
     public let mixPoolLoader: FileMixPoolLoader?
+    public let beginnerCurriculumLoader: FileCurriculumLoader?
+    public let beginnerProgressStore: UserDefaultsBeginnerProgressStore
     
     public let languageAdapter: LanguageAdapter
     
@@ -32,6 +34,8 @@ public final class DependencyContainer: ObservableObject {
         
         let progressStore = UbiquitousProgressStore()
         self.progressAdapter = ProgressAdapter(store: progressStore)
+        
+        self.beginnerProgressStore = UserDefaultsBeginnerProgressStore()
         
         self.notificationStorage = UserDefaultsNotificationStorage()
         self.notificationScheduler = UserNotificationsAdapter()
@@ -49,6 +53,12 @@ public final class DependencyContainer: ObservableObject {
             self.mixPoolLoader = FileMixPoolLoader(url: mixUrl, reader: reader)
         } else {
             self.mixPoolLoader = nil
+        }
+        
+        if let begUrl = Bundle.main.url(forResource: "beginner_curriculum", withExtension: "json") {
+            self.beginnerCurriculumLoader = FileCurriculumLoader(url: begUrl, reader: reader)
+        } else {
+            self.beginnerCurriculumLoader = nil
         }
         
         let languageStorage = UserDefaultsLanguageStorage()
