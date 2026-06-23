@@ -19,6 +19,18 @@ public struct SectionUIModel: Identifiable, Equatable {
     public let isUnlocked: Bool
     public let isPremiumLocked: Bool
     public let categories: [CategoryUIModel]
+    public let isBeginnerMode: Bool
+    
+    public init(id: String, title: String, eloRange: String, progress: Double, isUnlocked: Bool, isPremiumLocked: Bool, categories: [CategoryUIModel], isBeginnerMode: Bool = false) {
+        self.id = id
+        self.title = title
+        self.eloRange = eloRange
+        self.progress = progress
+        self.isUnlocked = isUnlocked
+        self.isPremiumLocked = isPremiumLocked
+        self.categories = categories
+        self.isBeginnerMode = isBeginnerMode
+    }
 }
 
 public struct CategoryUIModel: Identifiable, Equatable {
@@ -31,6 +43,20 @@ public struct CategoryUIModel: Identifiable, Equatable {
     public let puzzles: [PuzzleUIModel]?
     public let subThemes: [SubThemeUIModel]?
     public let examState: ExamUIState?
+    public let isBeginnerMode: Bool
+    
+    public init(id: String, title: String, progress: Double, isExamMode: Bool, description: String?, totalPuzzles: Int?, puzzles: [PuzzleUIModel]?, subThemes: [SubThemeUIModel]?, examState: ExamUIState?, isBeginnerMode: Bool = false) {
+        self.id = id
+        self.title = title
+        self.progress = progress
+        self.isExamMode = isExamMode
+        self.description = description
+        self.totalPuzzles = totalPuzzles
+        self.puzzles = puzzles
+        self.subThemes = subThemes
+        self.examState = examState
+        self.isBeginnerMode = isBeginnerMode
+    }
 }
 
 public enum ExamUIState: Equatable {
@@ -46,13 +72,15 @@ public struct SubThemeUIModel: Identifiable, Equatable, Hashable {
     public let totalPuzzles: Int
     public let completedPuzzles: Int
     public let puzzles: [PuzzleUIModel]
+    public let isBeginnerMode: Bool
     
-    public init(id: String, title: String, totalPuzzles: Int, completedPuzzles: Int, puzzles: [PuzzleUIModel]) {
+    public init(id: String, title: String, totalPuzzles: Int, completedPuzzles: Int, puzzles: [PuzzleUIModel], isBeginnerMode: Bool = false) {
         self.id = id
         self.title = title
         self.totalPuzzles = totalPuzzles
         self.completedPuzzles = completedPuzzles
         self.puzzles = puzzles
+        self.isBeginnerMode = isBeginnerMode
     }
     
     public func hash(into hasher: inout Hasher) {
