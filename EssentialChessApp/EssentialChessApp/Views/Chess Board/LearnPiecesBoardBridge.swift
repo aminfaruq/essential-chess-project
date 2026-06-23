@@ -1,8 +1,8 @@
 //
-//  ChessBoardBridge.swift
+//  LearnPiecesBoardBridge.swift
 //  EssentialChessApp
 //
-//  Created by Amin faruq on 11/06/26.
+//  Created by Amin faruq on 23/06/26.
 //
 
 import SwiftUI
@@ -11,33 +11,7 @@ import Combine
 import EssentialChess
 import NativeChessBoard
 
-public class ChessBoardController: ObservableObject {
-    public internal(set) weak var boardView: NativeChessBoardView?
-    
-    @Published public var userColorName: String = ""
-    
-    public init() {}
-    
-    public func showHint() {
-        boardView?.showHint()
-    }
-    
-    public func showSolution() {
-        boardView?.showSolution()
-    }
-    
-    public func enableHaptic(_ state: Bool) {
-        boardView?.setHapticEnabled(state)
-    }
-    
-    public func enableSound(_ state: Bool) {
-        boardView?.setSoundEnabled(state)
-    }
-}
-
-// MARK: - UIViewRepresentable Bridge
-
-public struct ChessBoardBridge: UIViewRepresentable, Equatable {
+public struct LearnPiecesBoardBridge: UIViewRepresentable, Equatable {
     public let puzzle: Puzzle
     public let controller: ChessBoardController
     public var onCompleted: () -> Void
@@ -90,7 +64,9 @@ public struct ChessBoardBridge: UIViewRepresentable, Equatable {
         }
         
         context.coordinator.lastPuzzleId = puzzle.id
-        view.startPuzzle(fen: puzzle.fen, moves: puzzle.moves)
+        
+        view.startLearnThePiecesPuzzle(fen: puzzle.fen)
+        
         return view
     }
     
@@ -105,9 +81,11 @@ public struct ChessBoardBridge: UIViewRepresentable, Equatable {
         }
         
         applyTheme(to: uiView)
+        
         if context.coordinator.lastPuzzleId != puzzle.id {
             context.coordinator.lastPuzzleId = puzzle.id
-            uiView.startPuzzle(fen: puzzle.fen, moves: puzzle.moves)
+            
+            uiView.startLearnThePiecesPuzzle(fen: puzzle.fen)
         }
     }
     
@@ -123,7 +101,7 @@ public struct ChessBoardBridge: UIViewRepresentable, Equatable {
         view.setSoundEnabled(isSoundEnabled)
     }
     
-    public static func == (lhs: ChessBoardBridge, rhs: ChessBoardBridge) -> Bool {
+    public static func == (lhs: LearnPiecesBoardBridge, rhs: LearnPiecesBoardBridge) -> Bool {
         return lhs.puzzle.id == rhs.puzzle.id &&
                lhs.boardThemeLight == rhs.boardThemeLight &&
                lhs.boardThemeDark == rhs.boardThemeDark &&
