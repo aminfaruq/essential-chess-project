@@ -12,8 +12,8 @@ import EssentialChess
 
 struct SectionDetailView: View {
     let model: SectionUIModel
-    
     @EnvironmentObject var viewFactory: ViewFactory
+    @EnvironmentObject var container: DependencyContainer
     @State private var expandedCategoryID: String?
     @State private var refreshTrigger = UUID()
     @State private var selectedTheme: SubThemeUIModel?
@@ -65,7 +65,18 @@ struct SectionDetailView: View {
             refreshTrigger = UUID()
         }
         .navigationDestination(item: $selectedTheme) { theme in
-            viewFactory.makePuzzleSessionView(title: theme.title, puzzles: theme.puzzles)
+            if theme.isBeginnerMode {
+                let completed = container.beginnerProgressStore.currentProgress.completedPuzzleIDs
+                let initialIndex = theme.puzzles.firstIndex(where: { !completed.contains($0.id) }) ?? 0
+                
+                LearnPiecesPuzzleSessionView(
+                    title: theme.title, 
+                    puzzles: theme.puzzles,
+                    initialIndex: initialIndex
+                )
+            } else {
+                viewFactory.makePuzzleSessionView(title: theme.title, puzzles: theme.puzzles)
+            }
         }
     }
 }
@@ -303,8 +314,12 @@ private struct SectionSubThemeCard: View {
     
     private var completed: Int {
         _ = refreshTrigger
-        let completedIDs = container.progressAdapter.currentProgress.completedPuzzleIDs
-        return subTheme.puzzles.filter { completedIDs.contains($0.id) }.count
+        if subTheme.isBeginnerMode {
+            return subTheme.completedPuzzles
+        } else {
+            let completedIDs = container.progressAdapter.currentProgress.completedPuzzleIDs
+            return subTheme.puzzles.filter { completedIDs.contains($0.id) }.count
+        }
     }
     
     private var progress: Double {
