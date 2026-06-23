@@ -96,6 +96,7 @@ public struct LearnPiecesPuzzleSessionView: View {
             onCompleted: {
                 isSolved = true
                 container.beginnerProgressStore.markCompleted(puzzleID: domainPuzzle.id)
+                container.progressAdapter.update { $0.recordActivity() }
             },
             onWrong: {
                 // Do nothing for beginner mode or show a shake animation via controller if available
