@@ -184,7 +184,7 @@ extension SectionUIModel {
         case "sec_1600_2000":
             return "True mastery. Execute standard tactical patterns hidden within complex variations, deep combinations, and unforgiving endgame positions."
         default:
-            return ""
+            return "Start your chess journey. Learn how each piece moves, understand essential board rules, and grasp the absolute fundamentals of safe captures and defense."
         }
     }
 }
