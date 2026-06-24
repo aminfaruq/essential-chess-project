@@ -9,6 +9,7 @@ public struct LearnPiecesPuzzleSessionView: View {
     @EnvironmentObject var composer: AppComposer
     @EnvironmentObject var container: DependencyContainer
     
+    let themeId: String?
     let title: String
     let puzzles: [PuzzleUIModel]
     
@@ -18,7 +19,8 @@ public struct LearnPiecesPuzzleSessionView: View {
     @State private var showSequenceList = false
     @StateObject private var boardController = ChessBoardController()
     
-    public init(title: String, puzzles: [PuzzleUIModel], initialIndex: Int) {
+    public init(themeId: String? = nil, title: String, puzzles: [PuzzleUIModel], initialIndex: Int) {
+        self.themeId = themeId
         self.title = title
         self.puzzles = puzzles
         self._currentActiveIndex = State(initialValue: initialIndex)
@@ -27,6 +29,25 @@ public struct LearnPiecesPuzzleSessionView: View {
     private var currentPuzzle: PuzzleUIModel? {
         guard currentActiveIndex < puzzles.count else { return nil }
         return puzzles[currentActiveIndex]
+    }
+    
+    private var descriptionText: String? {
+        switch themeId {
+        case "sub_move_rook":
+            return "The rook moves in straight lines, either horizontally along ranks or vertically along files, for any number of unoccupied squares. It cannot jump over other pieces, but it captures an enemy piece by landing on the square it occupies."
+        case "sub_move_bishop":
+            return "The bishop moves any number of squares diagonally in any direction, provided the path is clear. It cannot jump over other pieces and must stay on the same square color for the entire game. To capture, the bishop moves to a square occupied by an opponent's piece and removes it from the board."
+        case "sub_move_queen":
+            return "The queen is the most powerful piece in chess, able to move any number of squares horizontally, vertically, or diagonally in a straight line. It combines the movement powers of the rook and the bishop but cannot jump over other pieces. The queen captures an opponent's piece by landing on the square it occupies."
+        case "sub_move_king":
+            return "The king moves exactly one square in any direction: horizontally, vertically, or diagonally. It is the most important piece but has limited mobility, and it can never move onto a square that is under attack by an enemy piece."
+        case "sub_move_knight":
+            return "The knight moves in an L-shape: two squares in one direction (vertically or horizontally) and then one square perpendicularly. It is the unique piece that can jump over other pieces, and it always lands on a square of the opposite color from its starting position."
+        case "sub_move_pawn":
+            return "The pawn moves directly forward one square at a time, but on its first move, it can advance two squares if both are vacant. It captures by moving one square diagonally forward to the left or right, and it is the only piece that captures differently than it moves. If a pawn reaches the opposite end of the board, it is promoted to any piece except a king, and it can also perform the special en passant capture."
+        default:
+            return nil
+        }
     }
     
     public var body: some View {
@@ -38,10 +59,28 @@ public struct LearnPiecesPuzzleSessionView: View {
             } else if let puzzle = currentPuzzle {
                 VStack(spacing: 0) {
                     puzzleProgress
+                    
+                    if let text = descriptionText {
+                        ScrollView(showsIndicators: true) {
+                            Text(LocalizedStringKey(text))
+                                .font(.system(size: 13))
+                                .foregroundColor(AppColors.textSecondary)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 12)
+                        }
+                        .frame(maxHeight: 80)
+                        .background(AppColors.surface.opacity(0.6))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .padding(.horizontal, 20)
+                        .padding(.top, 16)
+                    }
+                    
                     Spacer(minLength: 8)
                     boardArea(puzzle: puzzle)
-                    playerTurnInfo
-                        .padding(.top)
+                   
+//                    playerTurnInfo
+//                        .padding(.top)
                     Spacer(minLength: 8)
                     controls
                 }
@@ -200,7 +239,7 @@ public struct LearnPiecesPuzzleSessionView: View {
             Text("Theme Complete!")
                 .font(.system(size: 28, weight: .bold))
                 .foregroundColor(AppColors.textPrimary)
-            Text(title)
+            Text(LocalizedStringKey(title))
                 .font(.system(size: 16))
                 .foregroundColor(AppColors.textSecondary)
             Spacer()

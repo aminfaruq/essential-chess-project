@@ -70,7 +70,8 @@ struct SectionDetailView: View {
                 let initialIndex = theme.puzzles.firstIndex(where: { !completed.contains($0.id) }) ?? 0
                 
                 LearnPiecesPuzzleSessionView(
-                    title: theme.title, 
+                    themeId: theme.id,
+                    title: theme.title,
                     puzzles: theme.puzzles,
                     initialIndex: initialIndex
                 )

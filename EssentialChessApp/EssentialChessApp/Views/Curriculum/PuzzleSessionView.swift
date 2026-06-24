@@ -213,7 +213,7 @@ public struct PuzzleSessionView: View {
             Text("Theme Complete!")
                 .font(.system(size: 28, weight: .bold))
                 .foregroundColor(AppColors.textPrimary)
-            Text(categoryTitle)
+            Text(LocalizedStringKey(categoryTitle))
                 .font(.system(size: 16))
                 .foregroundColor(AppColors.textSecondary)
             Spacer()
