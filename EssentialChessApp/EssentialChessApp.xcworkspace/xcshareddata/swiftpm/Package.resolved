@@ -1,5 +1,5 @@
 {
-  "originHash" : "e30fadb6ba502589e1c0029d6aeb017a08aff711adc98ff81d7468e3108c9976",
+  "originHash" : "5fdba8044529ba1bb386c866d5d6e969c5c4dd479948ed575dcd9410f433fda5",
   "pins" : [
     {
       "identity" : "chesskit-swift",
@@ -8,15 +8,6 @@
       "state" : {
         "revision" : "44ef7a1aa9da25bf0a9606a8960591a4dde3fad2",
         "version" : "0.17.0"
-      }
-    },
-    {
-      "identity" : "nativechessboard",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/aminfaruq/NativeChessBoard.git",
-      "state" : {
-        "branch" : "master",
-        "revision" : "64157bcde8afd4c31efb2407ea21d9249cd2663d"
       }
     },
     {
