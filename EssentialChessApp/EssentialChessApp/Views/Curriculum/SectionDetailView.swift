@@ -90,12 +90,10 @@ private struct ExpandableCategoryRow: View {
     let onSelectTheme: (SubThemeUIModel) -> Void
     let refreshTrigger: UUID
     
-    @State private var localToggleTime: Date = .distantPast
     
     var body: some View {
         VStack(spacing: 0) {
             Button {
-                localToggleTime = Date()
                 onToggle()
             } label: {
                 CategoryCard(model: categoryModel, isExpanded: isExpanded)
@@ -110,9 +108,7 @@ private struct ExpandableCategoryRow: View {
                         VStack(spacing: 8) {
                             ForEach(themes) { theme in
                                 Button {
-                                    if Date().timeIntervalSince(localToggleTime) > 1.0 {
-                                        onSelectTheme(theme)
-                                    }
+                                    onSelectTheme(theme)
                                 } label: {
                                     SectionSubThemeCard(subTheme: theme, refreshTrigger: refreshTrigger)
                                 }
