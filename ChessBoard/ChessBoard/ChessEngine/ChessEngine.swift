@@ -210,6 +210,49 @@ public final class ChessEngine {
         return false
     }
     
+    // MARK: - Game State Detection
+    
+    /// Represents the current state of the game.
+    public enum GameState: Equatable {
+        case inProgress
+        case check(EngineColor)
+        case checkmate(EngineColor)
+        case stalemate
+    }
+    
+    /// Returns the current game state after the last move.
+    public var gameState: GameState {
+        guard let position = game.positions[currentIndex] else { return .inProgress }
+        let board = Board(position: position)
+        switch board.state {
+        case .checkmate(let color):
+            return .checkmate(color == .white ? .white : .black)
+        case .check(let color):
+            return .check(color == .white ? .white : .black)
+        case .draw(let reason) where reason == .stalemate:
+            return .stalemate
+        case .draw:
+            return .stalemate // All draw types treated as stalemate for UI purposes
+        default:
+            return .inProgress
+        }
+    }
+    
+    /// Checks if a pawn move from source to target is an en passant capture.
+    /// An en passant occurs when a pawn moves diagonally but the target square is empty.
+    /// - Parameters:
+    ///   - source: The starting square notation.
+    ///   - target: The destination square notation.
+    /// - Returns: True if this is an en passant capture.
+    public func isEnPassantCapture(from source: String, to target: String) -> Bool {
+        guard let sourcePiece = piece(at: source), sourcePiece.kind == .pawn else { return false }
+        
+        // En passant: pawn moves to a different file but the target square is empty
+        let sourceFile = source.first
+        let targetFile = target.first
+        return sourceFile != targetFile && self.piece(at: target) == nil
+    }
+    
     /// Undoes the last move if possible.
     /// - Returns: True if a move was successfully undone.
     public func undo() -> Bool {
@@ -217,12 +260,22 @@ public final class ChessEngine {
             return false
         }
         
-        let prevIndex = currentIndex.previous
+        let prevIndex = game.moves.index(before: currentIndex)
+        if prevIndex == currentIndex {
+            return false
+        }
+        
         if game.positions[prevIndex] != nil {
             self.currentIndex = prevIndex
             return true
         }
         
+        
         return false
+    }
+    
+    /// Resets the engine back to the starting position.
+    public func resetToStart() {
+        self.currentIndex = game.startingIndex
     }
 }
