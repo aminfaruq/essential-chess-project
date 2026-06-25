@@ -1,0 +1,228 @@
+//
+//  ChessEngine.swift
+//  NativeChessBoard
+//
+//  Created by Amin faruq on 08/06/26.
+//
+import Foundation
+internal import ChessKit
+
+// MARK: - Domain Primitives
+
+/// Represents the color of a chess piece or player turn.
+public enum EngineColor: Equatable {
+    case white
+    case black
+}
+
+/// Represents the type of a chess piece.
+public enum EnginePieceKind: Equatable {
+    case pawn, knight, bishop, rook, queen, king
+}
+
+/// A simplified representation of a chess piece to be consumed by the View layer.
+public struct EnginePiece: Equatable {
+    public let kind: EnginePieceKind
+    public let color: EngineColor
+    
+    public init(kind: EnginePieceKind, color: EngineColor) {
+        self.kind = kind
+        self.color = color
+    }
+}
+
+// MARK: - Core Engine Adapter
+
+/// An adapter class that encapsulates the third-party chess logic (ChessKit),
+/// providing a clean, decoupled interface for the View layer.
+public final class ChessEngine {
+    
+    private var game: Game
+    private var currentIndex: MoveTree.Index
+    
+    /// Indicates which color's turn it is to move.
+    public var sideToMove: EngineColor {
+        guard let position = game.positions[currentIndex] else { return .white }
+        return position.sideToMove == .white ? .white : .black
+    }
+    
+    /// Gets the current FEN string of the board.
+    public var currentFEN: String {
+        guard let position = game.positions[currentIndex] else { return "" }
+        return position.fen
+    }
+    
+    /// Forces the turn to a specific color by modifying the current FEN.
+    public func forceTurn(to color: EngineColor) {
+        let fen = currentFEN
+        var tokens = fen.components(separatedBy: " ")
+        guard tokens.count >= 2 else { return }
+        tokens[1] = color == .white ? "w" : "b"
+        let newFen = tokens.joined(separator: " ")
+        if let newPos = Position(fen: newFen) {
+            self.game = Game(startingWith: newPos)
+            self.currentIndex = self.game.startingIndex
+        }
+    }
+    
+    /// Returns the color of the king currently under check, or nil if no king is in check.
+    public var kingInCheckColor: EngineColor? {
+        guard let position = game.positions[currentIndex] else { return nil }
+        
+        let fenTokens = position.fen.components(separatedBy: " ")
+        guard fenTokens.count >= 2 else { return nil }
+        
+        var newTokens = fenTokens
+        let side = fenTokens[1]
+        
+        if side == "w" { newTokens[1] = "b" }
+        else if side == "b" { newTokens[1] = "w" }
+        else { return nil }
+        
+        let dummyFen = newTokens.joined(separator: " ")
+        guard let dummyPos = Position(fen: dummyFen) else { return nil }
+        
+        let dummyBoard = Board(position: dummyPos)
+        switch dummyBoard.state {
+        case .check(let color), .checkmate(let color):
+            return color == .white ? .white : .black
+        default:
+            return nil
+        }
+    }
+    
+    /// Initializes the engine with a specific Forsyth-Edwards Notation (FEN) string.
+    /// - Parameter fen: The starting position.
+    public init(fen: String) {
+        if let position = Position(fen: fen) {
+            self.game = Game(startingWith: position)
+        } else {
+            self.game = Game() // Fallback
+        }
+        self.currentIndex = self.game.startingIndex
+    }
+    
+    /// Retrieves a simplified piece representation at a given algebraic square.
+    /// - Parameter squareString: Algebraic notation (e.g., "e2").
+    /// - Returns: An `EnginePiece` if a piece exists, otherwise nil.
+    public func piece(at squareString: String) -> EnginePiece? {
+        guard let position = game.positions[currentIndex],
+              let piece = position.piece(at: Square(squareString)) else { return nil }
+        
+        let kind: EnginePieceKind
+        switch piece.kind {
+        case .pawn: kind = .pawn
+        case .knight: kind = .knight
+        case .bishop: kind = .bishop
+        case .rook: kind = .rook
+        case .queen: kind = .queen
+        case .king: kind = .king
+        }
+        
+        let color: EngineColor = piece.color == .white ? .white : .black
+        return EnginePiece(kind: kind, color: color)
+    }
+    
+    /// Calculates all physically legal destination squares for a piece at a given square.
+    /// - Parameter squareString: The starting square notation.
+    /// - Returns: An array of algebraic notations for legal destinations.
+    public func legalMoves(for squareString: String) -> [String] {
+        guard let position = game.positions[currentIndex] else { return [] }
+        let board = Board(position: position)
+        let legalSquares = board.legalMoves(forPieceAt: Square(squareString))
+        return legalSquares.map { $0.notation }
+    }
+    
+    /// Attempts to execute a move on the board.
+    /// - Parameters:
+    ///   - source: The starting square notation.
+    ///   - target: The destination square notation.
+    ///   - promotion: An optional single character indicating promotion (e.g., "q").
+    /// - Returns: True if the move was successfully executed.
+    public func move(from source: String, to target: String, promotion: String? = nil) -> Bool {
+        guard let position = game.positions[currentIndex] else { return false }
+        
+        let startSquare = Square(source)
+        let endSquare = Square(target)
+        var board = Board(position: position)
+        
+        if !board.canMove(pieceAt: startSquare, to: endSquare) {
+            return false
+        }
+        
+        if var validMove = board.move(pieceAt: startSquare, to: endSquare) {
+            if let promo = promotion, promo.count == 1 {
+                let kind: Piece.Kind
+                switch promo.lowercased() {
+                case "r": kind = .rook
+                case "b": kind = .bishop
+                case "n": kind = .knight
+                default: kind = .queen
+                }
+                validMove = board.completePromotion(of: validMove, to: kind)
+            }
+            
+            let newIndex = game.make(move: validMove, from: currentIndex)
+            self.currentIndex = newIndex
+            return true
+        }
+        return false
+    }
+    
+    /// Checks if a move would result in a checkmate without actually committing the move to the engine.
+    /// This is useful for validating alternative puzzle solutions (e.g., multiple mate-in-1s).
+    /// - Parameters:
+    ///   - source: The starting square notation.
+    ///   - target: The destination square notation.
+    ///   - promotion: An optional single character indicating promotion (e.g., "q").
+    /// - Returns: True if the move is legal and results in a checkmate.
+    public func wouldMoveResultInCheckmate(from source: String, to target: String, promotion: String? = nil) -> Bool {
+        guard let position = game.positions[currentIndex] else { return false }
+        
+        let startSquare = Square(source)
+        let endSquare = Square(target)
+        var board = Board(position: position)
+        
+        if !board.canMove(pieceAt: startSquare, to: endSquare) {
+            return false
+        }
+        
+        if var validMove = board.move(pieceAt: startSquare, to: endSquare) {
+            if let promo = promotion, promo.count == 1 {
+                let kind: Piece.Kind
+                switch promo.lowercased() {
+                case "r": kind = .rook
+                case "b": kind = .bishop
+                case "n": kind = .knight
+                default: kind = .queen
+                }
+                validMove = board.completePromotion(of: validMove, to: kind)
+            }
+            
+            switch board.state {
+            case .checkmate:
+                return true
+            default:
+                return false
+            }
+        }
+        
+        return false
+    }
+    
+    /// Undoes the last move if possible.
+    /// - Returns: True if a move was successfully undone.
+    public func undo() -> Bool {
+        if currentIndex == game.startingIndex {
+            return false
+        }
+        
+        let prevIndex = currentIndex.previous
+        if game.positions[prevIndex] != nil {
+            self.currentIndex = prevIndex
+            return true
+        }
+        
+        return false
+    }
+}
