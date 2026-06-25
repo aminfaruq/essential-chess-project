@@ -9,7 +9,7 @@ import SwiftUI
 import UIKit
 import Combine
 import EssentialChess
-import NativeChessBoard
+import ChessBoard
 
 public struct LearnPiecesBoardBridge: UIViewRepresentable, Equatable {
     public let puzzle: Puzzle
@@ -50,8 +50,8 @@ public struct LearnPiecesBoardBridge: UIViewRepresentable, Equatable {
     
     public func makeCoordinator() -> Coordinator { Coordinator() }
     
-    public func makeUIView(context: Context) -> NativeChessBoardView {
-        let view = NativeChessBoardView()
+    public func makeUIView(context: Context) -> PuzzleChessBoardView {
+        let view = PuzzleChessBoardView()
         applyTheme(to: view)
         controller.boardView = view
         
@@ -70,7 +70,7 @@ public struct LearnPiecesBoardBridge: UIViewRepresentable, Equatable {
         return view
     }
     
-    public func updateUIView(_ uiView: NativeChessBoardView, context: Context) {
+    public func updateUIView(_ uiView: PuzzleChessBoardView, context: Context) {
         controller.boardView = uiView
         uiView.onPuzzleCompleted = onCompleted
         uiView.onPuzzleWrong = onWrong
@@ -93,7 +93,7 @@ public struct LearnPiecesBoardBridge: UIViewRepresentable, Equatable {
         var lastPuzzleId: String?
     }
     
-    private func applyTheme(to view: NativeChessBoardView) {
+    private func applyTheme(to view: PuzzleChessBoardView) {
         view.setBoardTheme(light: UIColor(boardThemeLight), dark: UIColor(boardThemeDark))
         view.setHighlightColor(UIColor(AppColors.hint), alpha: 0.45)
         view.setPieceTheme(pieceTheme)

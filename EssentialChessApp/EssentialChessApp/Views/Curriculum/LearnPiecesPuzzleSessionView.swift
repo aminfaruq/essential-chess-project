@@ -1,7 +1,7 @@
 import SwiftUI
 import EssentialChess
 import EssentialChessUI
-import NativeChessBoard
+import ChessBoard
 
 public struct LearnPiecesPuzzleSessionView: View {
     @Environment(\.dismiss) private var dismiss
