@@ -13,6 +13,8 @@ public final class SM2Algorithm {
         public let nextReviewDate: Date
     }
     
+    public init() {}
+    
     /// Calculates the next spaced repetition scheduling variables using the SM-2 algorithm.
     /// - Parameters:
     ///   - quality: 0 to 5 (5: perfect, 4: correct with hesitation, 3: correct with difficulty, 2: incorrect but easy to recall, 1: incorrect but remembered, 0: complete blackout).

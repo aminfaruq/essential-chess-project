@@ -20,9 +20,7 @@ public final class FileRepertoireLoader: RepertoireLoader {
     }
     
     public func load(completion: @escaping (RepertoireLoader.Result) -> Void) {
-        reader.get(from: url) { [weak self] result in
-            guard self != nil else { return }
-            
+        reader.get(from: url) { result in
             switch result {
             case let .success(data):
                 do {

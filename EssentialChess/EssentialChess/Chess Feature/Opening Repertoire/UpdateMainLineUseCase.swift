@@ -23,7 +23,7 @@ public final class DefaultUpdateMainLineUseCase: UpdateMainLineUseCase {
         try store.update(updatedNode)
         
         if let parentFen = node.parentFen {
-            let siblings = try store.children(for: parentFen)
+            let siblings = try store.children(for: parentFen, category: node.openingCategory)
             for sibling in siblings where sibling.fen != node.fen && sibling.isMainLine {
                 var updatedSibling = sibling
                 updatedSibling.isMainLine = false
