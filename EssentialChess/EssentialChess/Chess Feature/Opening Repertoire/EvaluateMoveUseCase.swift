@@ -22,8 +22,9 @@ public protocol EvaluateMoveUseCase {
     ///   - userMoveUci: The UCI string of the user's move (e.g. "e2e4").
     ///   - currentFen: The FEN of the board *before* the user made the move.
     ///   - resultingFen: The FEN of the board *after* the user made the move (needed for Cloud Eval).
+    ///   - category: The opening category to scope the evaluation.
     ///   - completion: Callback with the evaluation result.
-    func evaluate(userMoveUci: String, currentFen: String, resultingFen: String, completion: @escaping (Result<EvaluationResult, Error>) -> Void)
+    func evaluate(userMoveUci: String, currentFen: String, resultingFen: String, category: String, completion: @escaping (Result<EvaluationResult, Error>) -> Void)
 }
 
 public final class DefaultEvaluateMoveUseCase: EvaluateMoveUseCase {
@@ -40,13 +41,13 @@ public final class DefaultEvaluateMoveUseCase: EvaluateMoveUseCase {
         self.cloudLoader = cloudLoader
     }
     
-    public func evaluate(userMoveUci: String, currentFen: String, resultingFen: String, completion: @escaping (Result<EvaluationResult, Swift.Error>) -> Void) {
+    public func evaluate(userMoveUci: String, currentFen: String, resultingFen: String, category: String, completion: @escaping (Result<EvaluationResult, Swift.Error>) -> Void) {
         do {
-            let children = try store.children(for: currentFen)
+            let children = try store.children(for: currentFen, category: category)
             
             if let matchedNode = children.first(where: { $0.uciMove == userMoveUci }) {
                 if matchedNode.isMainLine {
-                    let responses = try store.children(for: matchedNode.fen)
+                    let responses = try store.children(for: matchedNode.fen, category: category)
                     let computerResponse = responses.first(where: { $0.isMainLine }) ?? responses.first
                     completion(.success(.correct(computerResponse: computerResponse)))
                 } else {

@@ -12,7 +12,7 @@ public final class RepertoireMapper {
         let uci: String
         let colorToMove: String
         let parentFen: String?
-        let openingCategory: String
+        let categoryName: String
         
         var node: RepertoireNode {
             return RepertoireNode(
@@ -21,7 +21,7 @@ public final class RepertoireMapper {
                 uciMove: uci,
                 colorToMove: colorToMove,
                 parentFen: parentFen,
-                openingCategory: openingCategory
+                openingCategory: categoryName
             )
         }
     }
@@ -31,9 +31,12 @@ public final class RepertoireMapper {
     }
     
     public static func map(_ data: Data) throws -> [RepertoireNode] {
-        guard let root = try? JSONDecoder().decode([Root].self, from: data) else {
+        do {
+            let root = try JSONDecoder().decode([Root].self, from: data)
+            return root.map { $0.node }
+        } catch {
+            print("DECODING ERROR: \(error)")
             throw Error.invalidData
         }
-        return root.map { $0.node }
     }
 }

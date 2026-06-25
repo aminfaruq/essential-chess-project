@@ -19,7 +19,7 @@ public final class RemoteCloudEvaluationLoader: CloudEvaluationLoader {
     
     public func load(fen: String, completion: @escaping (CloudEvaluationLoader.Result) -> Void) {
         guard let encodedFen = fen.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
-              let url = URL(string: "https://lichess.org/api/cloud-eval?fen=\(encodedFen)&multiPv=1&variant=standard") else {
+              let url = URL(string: "https://lichess.org/api/cloud-eval?fen=\(encodedFen)&multiPv=3&variant=standard") else {
             return
         }
         
