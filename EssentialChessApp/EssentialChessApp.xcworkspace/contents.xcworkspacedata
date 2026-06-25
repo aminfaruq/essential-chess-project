@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "container:../ChessBoard/ChessBoard.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "container:../EssentialChess/EssentialChess.xcodeproj">
    </FileRef>
    <FileRef

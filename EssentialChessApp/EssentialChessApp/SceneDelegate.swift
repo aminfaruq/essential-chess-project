@@ -9,6 +9,7 @@ import UIKit
 import EssentialChess
 import EssentialChessUI
 import SwiftUI
+import SwiftData
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -22,6 +23,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let rootViewController = UIHostingController(
             rootView: AppRootView(composer: composer)
+                .modelContainer(for: SwiftDataRepertoireNode.self)
         )
         
         window.rootViewController = rootViewController
