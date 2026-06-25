@@ -8,7 +8,7 @@ import SwiftData
 
 @Model
 public final class SwiftDataRepertoireNode {
-    @Attribute(.unique) public var fen: String
+    public var fen: String
     public var movePlayed: String
     public var uciMove: String
     public var colorToMove: String
