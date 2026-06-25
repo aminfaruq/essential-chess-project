@@ -7,6 +7,7 @@ public final class AnalysisChessBoardView: UIView {
     
     // MARK: - Callbacks
     public var onUserMoved: ((String) -> Void)?
+    public var onGameStateChanged: ((String) -> Void)?
     
     // MARK: - Internal Dependencies & State
     var userColor: EngineColor = .white
@@ -88,6 +89,28 @@ public final class AnalysisChessBoardView: UIView {
     public func undoLastMove() {
         guard let engine = engine, engine.undo() else { return }
         
+        self.selectedSquareString = nil
+        cleanupGhost()
+        clearSolutionArrow()
+        clearLegalMoveHints()
+        clearHighlights()
+        renderPieces()
+    }
+    
+    public func resetToStart() {
+        guard let engine = engine else { return }
+        engine.resetToStart()
+        
+        self.selectedSquareString = nil
+        cleanupGhost()
+        clearSolutionArrow()
+        clearLegalMoveHints()
+        clearHighlights()
+        renderPieces()
+    }
+    
+    public func flipBoard() {
+        self.userColor = (self.userColor == .white) ? .black : .white
         setupBoardGrid()
         
         self.selectedSquareString = nil

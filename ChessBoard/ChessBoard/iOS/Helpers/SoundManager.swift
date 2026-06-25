@@ -109,4 +109,15 @@ final class SoundManager {
         onSoundTriggered?("playVictory")
 #endif
     }
+    
+    /// Plays the check notification sound.
+    /// Reuses the capture sound with a slight delay to differentiate from a normal capture.
+    func playCheck() {
+        guard isEnabled else { return }
+        capturePlayer?.currentTime = 0
+        capturePlayer?.play()
+#if DEBUG
+        onSoundTriggered?("playCheck")
+#endif
+    }
 }

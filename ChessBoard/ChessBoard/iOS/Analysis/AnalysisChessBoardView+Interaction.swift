@@ -11,6 +11,16 @@ extension AnalysisChessBoardView {
                 clearLegalMoveHints(); clearHighlights(); return
             }
             
+            // If the clicked square has the current side's piece, switch selection
+            if let clickedPiece = engine.piece(at: clickedSquareStr), clickedPiece.color == engine.sideToMove {
+                selectedSquareString = clickedSquareStr
+                clearLegalMoveHints()
+                clearHighlights()
+                highlightViews[clickedSquareStr]?.isHidden = false
+                showLegalMoveHints(for: clickedSquareStr)
+                return
+            }
+            
             if isPromotionMove(from: sourceStr, to: clickedSquareStr) {
                 showPromotionDialog(from: sourceStr, to: clickedSquareStr) { [weak self] choice in
                     if let choice = choice {

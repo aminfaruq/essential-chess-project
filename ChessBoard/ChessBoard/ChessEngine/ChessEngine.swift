@@ -129,8 +129,13 @@ public final class ChessEngine {
     public func legalMoves(for squareString: String) -> [String] {
         guard let position = game.positions[currentIndex] else { return [] }
         let board = Board(position: position)
-        let legalSquares = board.legalMoves(forPieceAt: Square(squareString))
-        return legalSquares.map { $0.notation }
+        var legalSquares = board.legalMoves(forPieceAt: Square(squareString)).map { $0.notation }
+        
+        if let epTarget = validEnPassantTarget(for: squareString) {
+            legalSquares.append(epTarget)
+        }
+        
+        return legalSquares
     }
     
     /// Attempts to execute a move on the board.
@@ -145,6 +150,25 @@ public final class ChessEngine {
         let startSquare = Square(source)
         let endSquare = Square(target)
         var board = Board(position: position)
+        
+        if isEnPassantCapture(from: source, to: target), validEnPassantTarget(for: source) == target {
+            // ChessKit's Game.make drops epTarget, so board.canMove might return false.
+            // We manually construct and apply the En Passant move.
+            let capturedSquareNotation = "\(target.first!)\(source.last!)"
+            if let capturedPiece = position.piece(at: Square(capturedSquareNotation)),
+               let movingPawn = position.piece(at: Square(source)) {
+                
+                let epMove = Move(
+                    result: .capture(capturedPiece),
+                    piece: movingPawn,
+                    start: Square(source),
+                    end: Square(target)
+                )
+                let newIndex = game.make(move: epMove, from: currentIndex)
+                self.currentIndex = newIndex
+                return true
+            }
+        }
         
         if !board.canMove(pieceAt: startSquare, to: endSquare) {
             return false
@@ -182,6 +206,29 @@ public final class ChessEngine {
         let startSquare = Square(source)
         let endSquare = Square(target)
         var board = Board(position: position)
+        if isEnPassantCapture(from: source, to: target), validEnPassantTarget(for: source) == target {
+            let capturedSquareNotation = "\(target.first!)\(source.last!)"
+            if let capturedPiece = position.piece(at: Square(capturedSquareNotation)),
+               let movingPawn = position.piece(at: Square(source)) {
+                
+                let epMove = Move(
+                    result: .capture(capturedPiece),
+                    piece: movingPawn,
+                    start: Square(source),
+                    end: Square(target)
+                )
+                
+                var tempGame = game
+                let newIndex = tempGame.make(move: epMove, from: currentIndex)
+                if let newPosition = tempGame.positions[newIndex] {
+                    let tempBoard = Board(position: newPosition)
+                    switch tempBoard.state {
+                    case .checkmate: return true
+                    default: return false
+                    }
+                }
+            }
+        }
         
         if !board.canMove(pieceAt: startSquare, to: endSquare) {
             return false
@@ -277,5 +324,53 @@ public final class ChessEngine {
     /// Resets the engine back to the starting position.
     public func resetToStart() {
         self.currentIndex = game.startingIndex
+    }
+    
+    // MARK: - En Passant Manual Detection
+    
+    /// Manually determines if the pawn at `pawnSquare` has a valid en passant target square.
+    /// This is necessary because `ChessKit`'s `Game.make` drops the FEN `epTarget` state on double pawn pushes.
+    private func validEnPassantTarget(for pawnSquare: String) -> String? {
+        guard let position = game.positions[currentIndex] else { return nil }
+        guard let pawn = position.piece(at: Square(pawnSquare)), pawn.kind == .pawn else { return nil }
+        
+        // Find the last move made to reach currentIndex
+        guard let lastMove = game.moves[currentIndex] else {
+            return nil
+        }
+        
+        // The last move must be a double pawn push by the opponent
+        guard lastMove.piece.kind == .pawn,
+              lastMove.piece.color != pawn.color,
+              abs(lastMove.start.rank.value - lastMove.end.rank.value) == 2 else {
+            return nil
+        }
+        
+        // The opponent's pawn must have landed adjacent to our pawn
+        let opponentPawnSquare = lastMove.end
+        let ourSquare = Square(pawnSquare)
+        
+        guard let ourFileAscii = ourSquare.file.rawValue.first?.asciiValue,
+              let oppFileAscii = opponentPawnSquare.file.rawValue.first?.asciiValue else {
+            return nil
+        }
+        
+        guard ourSquare.rank == opponentPawnSquare.rank,
+              abs(Int(ourFileAscii) - Int(oppFileAscii)) == 1 else {
+            return nil
+        }
+        
+        // Target is the square exactly behind the opponent's pawn
+        let direction = pawn.color == .white ? 1 : -1
+        let targetRank = opponentPawnSquare.rank.value + direction
+        let targetFile = opponentPawnSquare.file.rawValue
+        
+        if let fileScalar = UnicodeScalar(targetFile),
+           let fileChar = Character(fileScalar) as Character?,
+           (1...8).contains(targetRank) {
+            return "\(fileChar)\(targetRank)"
+        }
+        
+        return nil
     }
 }
