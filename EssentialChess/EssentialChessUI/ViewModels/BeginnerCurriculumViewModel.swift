@@ -62,8 +62,7 @@ public final class BeginnerCurriculumViewModel: ObservableObject {
                 title: section.title,
                 eloRange: "ELO \(section.eloRange)",
                 progress: sectionProgress,
-                isUnlocked: true, // Beginner curriculum is always unlocked
-                isPremiumLocked: false, // Beginner curriculum is always free
+                isUnlocked: true,
                 categories: categories,
                 isBeginnerMode: true
             )

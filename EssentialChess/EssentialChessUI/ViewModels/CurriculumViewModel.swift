@@ -17,17 +17,15 @@ public struct SectionUIModel: Identifiable, Equatable {
     public let eloRange: String
     public let progress: Double
     public let isUnlocked: Bool
-    public let isPremiumLocked: Bool
     public let categories: [CategoryUIModel]
     public let isBeginnerMode: Bool
     
-    public init(id: String, title: String, eloRange: String, progress: Double, isUnlocked: Bool, isPremiumLocked: Bool, categories: [CategoryUIModel], isBeginnerMode: Bool = false) {
+    public init(id: String, title: String, eloRange: String, progress: Double, isUnlocked: Bool, categories: [CategoryUIModel], isBeginnerMode: Bool = false) {
         self.id = id
         self.title = title
         self.eloRange = eloRange
         self.progress = progress
         self.isUnlocked = isUnlocked
-        self.isPremiumLocked = isPremiumLocked
         self.categories = categories
         self.isBeginnerMode = isBeginnerMode
     }
@@ -160,8 +158,7 @@ public final class CurriculumViewModel: ObservableObject {
     
     private func mapToUIModels(curriculum: Curriculum, progress: UserProgress) -> [SectionUIModel] {
         return curriculum.sections.enumerated().map { index, section in
-            let isPremiumLocked = !progress.unlockedFeatures.contains(.openingStudy) && index > 0
-            let isUnlocked = isPremiumLocked ? false : isSectionUnlocked(section, at: index, in: curriculum, progress: progress)
+            let isUnlocked = isSectionUnlocked(section, at: index, in: curriculum, progress: progress)
             let sectionProgress = CurriculumProgressTracker.progress(for: section, progress: progress)
             
             let categories = section.categories.map { category in
@@ -173,8 +170,7 @@ public final class CurriculumViewModel: ObservableObject {
                 title: section.title,
                 eloRange: "ELO \(section.eloRange)",
                 progress: sectionProgress,
-                isUnlocked: isUnlocked, 
-                isPremiumLocked: isPremiumLocked,
+                isUnlocked: isUnlocked,
                 categories: categories
             )
         }

@@ -67,7 +67,7 @@ final class CurriculumViewModelTests: XCTestCase {
     
     // MARK: - New Core Logic Tests
     
-    func test_load_mapsSequentialProgressionCorrectly_forProUser() {
+    func test_load_mapsSequentialProgressionCorrectly() {
         let (sut, curriculumSubject, mixPoolSubject, progressSubject) = makeSUT()
         
         let dummyCurriculum = makeSequentialCurriculum()
@@ -77,8 +77,8 @@ final class CurriculumViewModelTests: XCTestCase {
         curriculumSubject.send(dummyCurriculum)
         mixPoolSubject.send(dummyMixPool)
         
-        // SCENARIO 1: Pro user (Not yet passed Level 1 exam)
-        let initialProgress = makeUserProgress(hiddenRating: 150.0, passedExamIDs: [], unlockedFeatures: [.openingStudy])
+        // SCENARIO 1: User has not passed Level 1 exam
+        let initialProgress = makeUserProgress(hiddenRating: 150.0, passedExamIDs: [])
         progressSubject.send(initialProgress)
         
         flushMainQueue()
@@ -88,43 +88,15 @@ final class CurriculumViewModelTests: XCTestCase {
         
         XCTAssertTrue(section1.isUnlocked, "Section 1 should ALWAYS be unlocked.")
         XCTAssertFalse(section2.isUnlocked, "Section 2 should be locked because Section 1 Exam is not passed.")
-        XCTAssertFalse(section2.isPremiumLocked, "Section 2 should NOT be premium locked for Pro users.")
         
-        // SCENARIO 2: Pro user passes Level 1 exam
-        let advancedProgress = makeUserProgress(hiddenRating: 150.0, passedExamIDs: ["exam_1"], unlockedFeatures: [.openingStudy])
+        // SCENARIO 2: User passes Level 1 exam
+        let advancedProgress = makeUserProgress(hiddenRating: 150.0, passedExamIDs: ["exam_1"])
         progressSubject.send(advancedProgress)
         
         flushMainQueue()
         
         let updatedSection2 = sut.sections[1]
         XCTAssertTrue(updatedSection2.isUnlocked, "Section 2 should UNLOCK immediately after passing Section 1 Exam.")
-        XCTAssertFalse(updatedSection2.isPremiumLocked)
-    }
-    
-    func test_load_mapsPremiumLocksCorrectly_forFreeUser() {
-        let (sut, curriculumSubject, mixPoolSubject, progressSubject) = makeSUT()
-        
-        let dummyCurriculum = makeSequentialCurriculum()
-        let dummyMixPool = makeMixPool()
-        
-        sut.load()
-        curriculumSubject.send(dummyCurriculum)
-        mixPoolSubject.send(dummyMixPool)
-        
-        // SCENARIO: Free user passes Level 1 exam
-        let freeAdvancedProgress = makeUserProgress(hiddenRating: 150.0, passedExamIDs: ["exam_1"], unlockedFeatures: [])
-        progressSubject.send(freeAdvancedProgress)
-        
-        flushMainQueue()
-        
-        let section1 = sut.sections[0]
-        let section2 = sut.sections[1]
-        
-        XCTAssertTrue(section1.isUnlocked, "Section 1 should ALWAYS be unlocked.")
-        XCTAssertFalse(section1.isPremiumLocked, "Section 1 should NEVER be premium locked.")
-        
-        XCTAssertFalse(section2.isUnlocked, "Section 2 should remain LOCKED for Free users even if Exam is passed.")
-        XCTAssertTrue(section2.isPremiumLocked, "Section 2 should be explicitly Premium Locked for Free users.")
     }
     
     // MARK: - Helpers

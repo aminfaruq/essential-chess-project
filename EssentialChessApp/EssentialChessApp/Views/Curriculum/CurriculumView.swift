@@ -74,14 +74,11 @@ private struct SectionCard: View {
     let model: SectionUIModel
     
     @State private var navigateToDetail = false
-    @State private var showPaywall = false
     @State private var showLockedAlert = false
     
     var body: some View {
         Button {
-            if model.isPremiumLocked {
-                showPaywall = true
-            } else if !model.isUnlocked {
+            if !model.isUnlocked {
                 showLockedAlert = true
             } else {
                 navigateToDetail = true
@@ -100,10 +97,6 @@ private struct SectionCard: View {
                         Text("\(Int(model.progress * 100))%")
                             .font(.system(size: 15, weight: .bold, design: .monospaced))
                             .foregroundColor(model.progress >= 1.0 ? AppColors.gold : AppColors.accent)
-                    } else if model.isPremiumLocked {
-                        Image(systemName: "crown.fill")
-                            .font(.system(size: 16))
-                            .foregroundColor(AppColors.gold)
                     } else {
                         Image(systemName: "lock.fill")
                             .font(.system(size: 16))
@@ -158,9 +151,6 @@ private struct SectionCard: View {
         .buttonStyle(.plain)
         .navigationDestination(isPresented: $navigateToDetail) {
             SectionDetailView(model: model)
-        }
-        .sheet(isPresented: $showPaywall) {
-            PaywallView()
         }
         .alert("Section Locked", isPresented: $showLockedAlert) {
             Button("OK", role: .cancel) { }
