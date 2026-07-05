@@ -10,7 +10,7 @@ import EssentialChessUI
 
 public struct CurriculumView: View {
     @EnvironmentObject var curriculumVM: CurriculumViewModel
-    @EnvironmentObject var beginnerVM: BeginnerCurriculumViewModel
+    //@EnvironmentObject var beginnerVM: BeginnerCurriculumViewModel
     
     @Binding var scrollToTopTrigger: Int
     
@@ -26,9 +26,9 @@ public struct CurriculumView: View {
                 ScrollViewReader { proxy in
                     ScrollView {
                         VStack(spacing: 12) {
-                            ForEach(beginnerVM.sections) { sectionModel in
+                            /*ForEach(beginnerVM.sections) { sectionModel in
                                 SectionCard(model: sectionModel)
-                            }
+                            }*/
                             
                             ForEach(curriculumVM.sections) { sectionModel in
                                 SectionCard(model: sectionModel)
@@ -61,9 +61,9 @@ public struct CurriculumView: View {
             if curriculumVM.sections.isEmpty {
                 curriculumVM.load()
             }
-            if beginnerVM.sections.isEmpty {
+            /*if beginnerVM.sections.isEmpty {
                 beginnerVM.load()
-            }
+            }*/
         }
     }
 }
