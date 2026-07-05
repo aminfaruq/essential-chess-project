@@ -17,17 +17,17 @@ public final class PuzzleStreakViewModel: ObservableObject, Identifiable {
     @Published public private(set) var currentStreak: Int = 0
     @Published public private(set) var isPuzzleFinished: Bool = false
     @Published public private(set) var hasFailed: Bool = false
-    @Published public var showPaywall: Bool = false
-    @Published public var isDailyLimitReached: Bool = false
+    // MARK: - Freemium State (Commented out — app is now fully free)
+    // @Published public var showPaywall: Bool = false
+    // @Published public var isDailyLimitReached: Bool = false
+    //
+    // private let checkIsPro: () -> Bool
+    // private var dailyPuzzleStreakCount: Int
+    // private var lastPuzzleStreakDate: Date?
     @Published public private(set) var showCorrectMove: Bool = false
     @Published public private(set) var isNewRecord: Bool = false
     @Published public var showResultOverlay: Bool = false
     @Published public private(set) var currentHighestStreak: Int
-
-    // MARK: - Freemium State
-    private let checkIsPro: () -> Bool
-    private var dailyPuzzleStreakCount: Int
-    private var lastPuzzleStreakDate: Date?
 
     // MARK: - Dependencies
     private let pool: [Puzzle]
@@ -39,9 +39,9 @@ public final class PuzzleStreakViewModel: ObservableObject, Identifiable {
 
     public init(
         pool: [Puzzle],
-        checkIsPro: @escaping () -> Bool,
-        dailyPuzzleStreakCount: Int,
-        lastPuzzleStreakDate: Date?,
+        // checkIsPro: @escaping () -> Bool,
+        // dailyPuzzleStreakCount: Int,
+        // lastPuzzleStreakDate: Date?,
         activeStreak: Int,
         activeUsedIDs: Set<String>,
         highestStreak: Int,
@@ -51,9 +51,9 @@ public final class PuzzleStreakViewModel: ObservableObject, Identifiable {
         onPuzzleSolved: @escaping () -> Void
     ) {
         self.pool = pool.shuffled()
-        self.checkIsPro = checkIsPro
-        self.dailyPuzzleStreakCount = dailyPuzzleStreakCount
-        self.lastPuzzleStreakDate = lastPuzzleStreakDate
+        // self.checkIsPro = checkIsPro
+        // self.dailyPuzzleStreakCount = dailyPuzzleStreakCount
+        // self.lastPuzzleStreakDate = lastPuzzleStreakDate
         self.currentStreak = activeStreak
         self.usedPuzzleIds = activeUsedIDs
         self.currentHighestStreak = highestStreak
@@ -93,11 +93,12 @@ public final class PuzzleStreakViewModel: ObservableObject, Identifiable {
     public func onNextTapped() {
         showResultOverlay = false
         
-        if checkDailyLimit() {
-            showPaywall = true
-            isDailyLimitReached = true
-            return
-        }
+        // MARK: - Freemium daily limit check (commented out — app is now fully free)
+        // if checkDailyLimit() {
+        //     showPaywall = true
+        //     isDailyLimitReached = true
+        //     return
+        // }
         
         // Reset state for a new session
         hasFailed = false
@@ -115,71 +116,70 @@ public final class PuzzleStreakViewModel: ObservableObject, Identifiable {
         loadNextPuzzle()
     }
     
-    public func resumeAfterPurchase() {
-        if checkIsPro() {
-            isDailyLimitReached = false
-            showPaywall = false
-            onNextTapped()
-        }
-    }
-    
-    public func refreshDailyLimit() {
-        if checkDailyLimit() {
-            if !isDailyLimitReached {
-                isDailyLimitReached = true
-                showPaywall = true
-            }
-        } else {
-            if isDailyLimitReached {
-                isDailyLimitReached = false
-                showPaywall = false
-                if currentPuzzle == nil {
-                    loadNextPuzzle()
-                }
-            }
-        }
-    }
-    
-    private func checkDailyLimit() -> Bool {
-        if !checkIsPro() {
-            let calendar = Calendar.current
-            let now = Date()
-            if let lastDate = lastPuzzleStreakDate, calendar.isDate(lastDate, inSameDayAs: now) {
-                // Same day limit check: 1 free session per day
-                if dailyPuzzleStreakCount >= 1 {
-                    return true
-                }
-            } else {
-                // New day, reset limit
-                dailyPuzzleStreakCount = 0
-                lastPuzzleStreakDate = now
-                updateDailyLimits(dailyPuzzleStreakCount, now)
-            }
-        }
-        return false
-    }
-    
-    private func recordSessionStart() {
-        if !checkIsPro() {
-            dailyPuzzleStreakCount += 1
-            lastPuzzleStreakDate = Date()
-            updateDailyLimits(dailyPuzzleStreakCount, lastPuzzleStreakDate!)
-        }
-    }
+    // MARK: - Freemium resume after purchase (commented out — app is now fully free)
+    // public func resumeAfterPurchase() {
+    //     if checkIsPro() {
+    //         isDailyLimitReached = false
+    //         showPaywall = false
+    //         onNextTapped()
+    //     }
+    // }
+    //
+    // public func refreshDailyLimit() {
+    //     if checkDailyLimit() {
+    //         if !isDailyLimitReached {
+    //             isDailyLimitReached = true
+    //             showPaywall = true
+    //         }
+    //     } else {
+    //         if isDailyLimitReached {
+    //             isDailyLimitReached = false
+    //             showPaywall = false
+    //             if currentPuzzle == nil {
+    //                 loadNextPuzzle()
+    //             }
+    //         }
+    //     }
+    // }
+    //
+    // private func checkDailyLimit() -> Bool {
+    //     if !checkIsPro() {
+    //         let calendar = Calendar.current
+    //         let now = Date()
+    //         if let lastDate = lastPuzzleStreakDate, calendar.isDate(lastDate, inSameDayAs: now) {
+    //             if dailyPuzzleStreakCount >= 1 {
+    //                 return true
+    //             }
+    //         } else {
+    //             dailyPuzzleStreakCount = 0
+    //             lastPuzzleStreakDate = now
+    //             updateDailyLimits(dailyPuzzleStreakCount, now)
+    //         }
+    //     }
+    //     return false
+    // }
+    //
+    // private func recordSessionStart() {
+    //     if !checkIsPro() {
+    //         dailyPuzzleStreakCount += 1
+    //         lastPuzzleStreakDate = Date()
+    //         updateDailyLimits(dailyPuzzleStreakCount, lastPuzzleStreakDate!)
+    //     }
+    // }
     
     private func loadNextPuzzle() {
         let isResumingSession = (currentStreak > 0) || !usedPuzzleIds.isEmpty
         
-        if !isResumingSession && !hasFailed {
-            // Check limits and record session start only at the beginning of a NEW streak
-            if checkDailyLimit() {
-                showPaywall = true
-                isDailyLimitReached = true
-                currentPuzzle = nil
-                return
-            }
-            recordSessionStart()
-        }
+        // MARK: - Freemium daily limit check (commented out — app is now fully free)
+        // if !isResumingSession && !hasFailed {
+        //     if checkDailyLimit() {
+        //         showPaywall = true
+        //         isDailyLimitReached = true
+        //         currentPuzzle = nil
+        //         return
+        //     }
+        //     recordSessionStart()
+        // }
 
         // Calculate target rating: Baseline 500 + 50 for each successful puzzle
         let targetRating = 500 + (currentStreak * 50)

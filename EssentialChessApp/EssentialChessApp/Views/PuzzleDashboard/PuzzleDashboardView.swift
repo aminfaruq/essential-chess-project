@@ -56,6 +56,7 @@ public struct PuzzleDashboardView: View {
             
             HStack(spacing: 12) {
                 let currentProg = progress ?? composer.container.progressAdapter.currentProgress
+                let currentProgStreak = currentProg.highestPuzzleStreak <= currentProg.activePuzzleStreak ? "\(currentProg.activePuzzleStreak)" : "\(currentProg.highestPuzzleStreak)"
                 
                 // Actual Rating
                 achievementCard(
@@ -68,7 +69,7 @@ public struct PuzzleDashboardView: View {
                 // Max Streak
                 achievementCard(
                     title: "Best Streak",
-                    value: currentProg.highestPuzzleStreak == 0 ? "\(currentProg.activePuzzleStreak)" : "\(currentProg.highestPuzzleStreak)",
+                    value: currentProgStreak,
                     icon: "flame.fill",
                     color: .orange
                 )
