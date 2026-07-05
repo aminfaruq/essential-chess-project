@@ -7,6 +7,10 @@
 
 import Foundation
 
+public enum ProFeature: String, Codable, CaseIterable, Hashable {
+    case openingStudy
+}
+
 public struct UserProgress: Equatable {
     public var hiddenRating: Double
     public var actualRating: Double?
@@ -20,7 +24,7 @@ public struct UserProgress: Equatable {
     public var lastActivityDate: Date?
     
     // NEW: Freemium & Limits
-    public var isPro: Bool
+    public var unlockedFeatures: Set<ProFeature>
     public var dailyPuzzleMixCount: Int
     public var lastPuzzleMixDate: Date?
     public var dailyPuzzleStreakCount: Int
@@ -43,7 +47,7 @@ public struct UserProgress: Equatable {
         examFailureTimes: [String: Date] = [:],
         currentStreak: Int = 0,
         lastActivityDate: Date? = nil,
-        isPro: Bool = false,
+        unlockedFeatures: Set<ProFeature> = [],
         dailyPuzzleMixCount: Int = 0,
         lastPuzzleMixDate: Date? = nil,
         dailyPuzzleStreakCount: Int = 0,
@@ -63,7 +67,7 @@ public struct UserProgress: Equatable {
         self.examFailureTimes = examFailureTimes
         self.currentStreak = currentStreak
         self.lastActivityDate = lastActivityDate
-        self.isPro = isPro
+        self.unlockedFeatures = unlockedFeatures
         self.dailyPuzzleMixCount = dailyPuzzleMixCount
         self.lastPuzzleMixDate = lastPuzzleMixDate
         self.dailyPuzzleStreakCount = dailyPuzzleStreakCount

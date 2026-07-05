@@ -97,7 +97,7 @@ final class UserDefaultsProgressStoreTests: XCTestCase {
             completedPuzzleIDs: ["p1", "p2"],
             passedExamIDs: ["e1"],
             examFailureTimes: ["e2": Date()],
-            isPro: true,
+            unlockedFeatures: [.openingStudy],
             dailyPuzzleMixCount: 5,
             lastPuzzleMixDate: Date(),
             dailyPuzzleStormCount: 1,

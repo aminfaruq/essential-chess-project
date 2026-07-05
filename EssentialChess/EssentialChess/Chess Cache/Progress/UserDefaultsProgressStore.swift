@@ -51,6 +51,7 @@ public final class UserDefaultsProgressStore: ProgressStore {
         let currentStreak: Int
         let lastActivityDate: Date?
         let isPro: Bool?
+        let unlockedFeatures: Set<ProFeature>?
         let dailyPuzzleMixCount: Int?
         let lastPuzzleMixDate: Date?
         let dailyPuzzleStreakCount: Int?
@@ -71,7 +72,8 @@ public final class UserDefaultsProgressStore: ProgressStore {
             self.examFailureTimes = model.examFailureTimes
             self.currentStreak = model.currentStreak
             self.lastActivityDate = model.lastActivityDate
-            self.isPro = model.isPro
+            self.isPro = nil
+            self.unlockedFeatures = model.unlockedFeatures
             self.dailyPuzzleMixCount = model.dailyPuzzleMixCount
             self.lastPuzzleMixDate = model.lastPuzzleMixDate
             self.dailyPuzzleStreakCount = model.dailyPuzzleStreakCount
@@ -94,7 +96,7 @@ public final class UserDefaultsProgressStore: ProgressStore {
                 examFailureTimes: examFailureTimes,
                 currentStreak: currentStreak,
                 lastActivityDate: lastActivityDate,
-                isPro: isPro ?? false,
+                unlockedFeatures: unlockedFeatures ?? [],
                 dailyPuzzleMixCount: dailyPuzzleMixCount ?? 0,
                 lastPuzzleMixDate: lastPuzzleMixDate,
                 dailyPuzzleStreakCount: dailyPuzzleStreakCount ?? 0,
