@@ -26,9 +26,9 @@ public final class PuzzleStormViewModel: ObservableObject, Identifiable {
     @Published public var showBonusIndicator: Bool = false
     @Published public private(set) var lastBonusAmount: Int = 0
     
-    // Freemium & Limits
-    @Published public var showPaywall: Bool = false
-    @Published public var isDailyLimitReached: Bool = false
+    // Freemium & Limits (Commented out — app is now fully free)
+    // @Published public var showPaywall: Bool = false
+    // @Published public var isDailyLimitReached: Bool = false
     @Published public private(set) var currentHighestScore: Int
     @Published public private(set) var isNewRecord: Bool = false
 
@@ -36,9 +36,10 @@ public final class PuzzleStormViewModel: ObservableObject, Identifiable {
     private let pool: [Puzzle]
     private var usedPuzzleIds: Set<String> = []
     
-    private let checkIsPro: () -> Bool
-    private var dailyPuzzleStormCount: Int
-    private var lastPuzzleStormDate: Date?
+    // MARK: - Freemium State (Commented out — app is now fully free)
+    // private let checkIsPro: () -> Bool
+    // private var dailyPuzzleStormCount: Int
+    // private var lastPuzzleStormDate: Date?
     
     private let onScoreUpdated: (Int) -> Void
     private let onSessionFinished: (Int) -> Void
@@ -49,9 +50,9 @@ public final class PuzzleStormViewModel: ObservableObject, Identifiable {
 
     public init(
         pool: [Puzzle],
-        checkIsPro: @escaping () -> Bool,
-        dailyPuzzleStormCount: Int,
-        lastPuzzleStormDate: Date?,
+        // checkIsPro: @escaping () -> Bool,
+        // dailyPuzzleStormCount: Int,
+        // lastPuzzleStormDate: Date?,
         highestScore: Int,
         onScoreUpdated: @escaping (Int) -> Void,
         onSessionFinished: @escaping (Int) -> Void,
@@ -59,9 +60,9 @@ public final class PuzzleStormViewModel: ObservableObject, Identifiable {
         onPuzzleSolved: @escaping () -> Void
     ) {
         self.pool = pool.shuffled()
-        self.checkIsPro = checkIsPro
-        self.dailyPuzzleStormCount = dailyPuzzleStormCount
-        self.lastPuzzleStormDate = lastPuzzleStormDate
+        // self.checkIsPro = checkIsPro
+        // self.dailyPuzzleStormCount = dailyPuzzleStormCount
+        // self.lastPuzzleStormDate = lastPuzzleStormDate
         self.currentHighestScore = highestScore
         
         self.onScoreUpdated = onScoreUpdated
@@ -73,11 +74,12 @@ public final class PuzzleStormViewModel: ObservableObject, Identifiable {
     // MARK: - Actions
     
     public func onStartTapped() {
-        if checkDailyLimit() {
-            showPaywall = true
-            isDailyLimitReached = true
-            return
-        }
+        // MARK: - Freemium daily limit check (commented out — app is now fully free)
+        // if checkDailyLimit() {
+        //     showPaywall = true
+        //     isDailyLimitReached = true
+        //     return
+        // }
         
         // Reset state for a new session
         isGameOver = false
@@ -88,7 +90,7 @@ public final class PuzzleStormViewModel: ObservableObject, Identifiable {
         timeRemaining = 180
         usedPuzzleIds.removeAll()
         
-        recordSessionStart()
+        // recordSessionStart()
         isGameActive = true
         loadNextPuzzle()
         startTimer()
@@ -122,27 +124,28 @@ public final class PuzzleStormViewModel: ObservableObject, Identifiable {
         }
     }
     
-    public func resumeAfterPurchase() {
-        if checkIsPro() {
-            isDailyLimitReached = false
-            showPaywall = false
-            onStartTapped()
-        }
-    }
-    
-    public func refreshDailyLimit() {
-        if checkDailyLimit() {
-            if !isDailyLimitReached {
-                isDailyLimitReached = true
-                showPaywall = true
-            }
-        } else {
-            if isDailyLimitReached {
-                isDailyLimitReached = false
-                showPaywall = false
-            }
-        }
-    }
+    // MARK: - Freemium resume/refresh/limit (commented out — app is now fully free)
+    // public func resumeAfterPurchase() {
+    //     if checkIsPro() {
+    //         isDailyLimitReached = false
+    //         showPaywall = false
+    //         onStartTapped()
+    //     }
+    // }
+    //
+    // public func refreshDailyLimit() {
+    //     if checkDailyLimit() {
+    //         if !isDailyLimitReached {
+    //             isDailyLimitReached = true
+    //             showPaywall = true
+    //         }
+    //     } else {
+    //         if isDailyLimitReached {
+    //             isDailyLimitReached = false
+    //             showPaywall = false
+    //         }
+    //     }
+    // }
     
     // MARK: - Mechanics
     
@@ -201,32 +204,32 @@ public final class PuzzleStormViewModel: ObservableObject, Identifiable {
         onSessionFinished(currentScore)
     }
     
-    // MARK: - Freemium Limits
-    
-    private func checkDailyLimit() -> Bool {
-        if !checkIsPro() {
-            let calendar = Calendar.current
-            let now = Date()
-            if let lastDate = lastPuzzleStormDate, calendar.isDate(lastDate, inSameDayAs: now) {
-                if dailyPuzzleStormCount >= 1 {
-                    return true
-                }
-            } else {
-                dailyPuzzleStormCount = 0
-                lastPuzzleStormDate = now
-                updateDailyLimits(dailyPuzzleStormCount, now)
-            }
-        }
-        return false
-    }
-    
-    private func recordSessionStart() {
-        if !checkIsPro() {
-            dailyPuzzleStormCount += 1
-            lastPuzzleStormDate = Date()
-            updateDailyLimits(dailyPuzzleStormCount, lastPuzzleStormDate!)
-        }
-    }
+    // MARK: - Freemium Limits (commented out — app is now fully free)
+    //
+    // private func checkDailyLimit() -> Bool {
+    //     if !checkIsPro() {
+    //         let calendar = Calendar.current
+    //         let now = Date()
+    //         if let lastDate = lastPuzzleStormDate, calendar.isDate(lastDate, inSameDayAs: now) {
+    //             if dailyPuzzleStormCount >= 1 {
+    //                 return true
+    //             }
+    //         } else {
+    //             dailyPuzzleStormCount = 0
+    //             lastPuzzleStormDate = now
+    //             updateDailyLimits(dailyPuzzleStormCount, now)
+    //         }
+    //     }
+    //     return false
+    // }
+    //
+    // private func recordSessionStart() {
+    //     if !checkIsPro() {
+    //         dailyPuzzleStormCount += 1
+    //         lastPuzzleStormDate = Date()
+    //         updateDailyLimits(dailyPuzzleStormCount, lastPuzzleStormDate!)
+    //     }
+    // }
     
     // MARK: - Puzzle Loading
     

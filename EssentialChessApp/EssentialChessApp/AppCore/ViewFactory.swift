@@ -220,11 +220,12 @@ public final class ViewFactory: ObservableObject {
                 
                 let viewModel = PuzzleStormViewModel(
                     pool: pool,
-                    checkIsPro: { [weak self] in
-                        self?.container.progressAdapter.currentProgress.unlockedFeatures.contains(.openingStudy) ?? false
-                    },
-                    dailyPuzzleStormCount: progress.dailyPuzzleStormCount,
-                    lastPuzzleStormDate: progress.lastPuzzleStormDate,
+                    // MARK: - Freemium params (commented out — app is now fully free)
+                    // checkIsPro: { [weak self] in
+                    //     self?.container.progressAdapter.currentProgress.unlockedFeatures.contains(.openingStudy) ?? false
+                    // },
+                    // dailyPuzzleStormCount: progress.dailyPuzzleStormCount,
+                    // lastPuzzleStormDate: progress.lastPuzzleStormDate,
                     highestScore: progress.highestPuzzleStorm,
                     onScoreUpdated: { newHighestScore in
                         self.container.progressAdapter.update { progress in
@@ -234,12 +235,14 @@ public final class ViewFactory: ObservableObject {
                     onSessionFinished: { _ in
                         // Handled via onScoreUpdated for now, but could be useful for analytics
                     },
-                    updateDailyLimits: { count, date in
-                        self.container.progressAdapter.update { progress in
-                            progress.dailyPuzzleStormCount = count
-                            progress.lastPuzzleStormDate = date
-                        }
-                    },
+                    // MARK: - Freemium daily limits (commented out — app is now fully free)
+                    // updateDailyLimits: { count, date in
+                    //     self.container.progressAdapter.update { progress in
+                    //         progress.dailyPuzzleStormCount = count
+                    //         progress.lastPuzzleStormDate = date
+                    //     }
+                    // }
+                    updateDailyLimits: { _, _ in },
                     onPuzzleSolved: {
                         //MARK: Daily streak
                         self.container.progressAdapter.update { progress in
