@@ -96,7 +96,7 @@ private struct PuzzleStormContainerView: View {
             PaywallView()
         }
         .onReceive(container.progressAdapter.publisher()) { progress in
-            if progress.isPro && (vm.isDailyLimitReached || vm.showPaywall) {
+            if progress.unlockedFeatures.contains(.openingStudy) && (vm.isDailyLimitReached || vm.showPaywall) {
                 vm.resumeAfterPurchase()
             }
         }

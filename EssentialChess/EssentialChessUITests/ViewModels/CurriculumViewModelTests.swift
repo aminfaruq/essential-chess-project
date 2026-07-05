@@ -78,7 +78,7 @@ final class CurriculumViewModelTests: XCTestCase {
         mixPoolSubject.send(dummyMixPool)
         
         // SCENARIO 1: Pro user (Not yet passed Level 1 exam)
-        let initialProgress = makeUserProgress(hiddenRating: 150.0, passedExamIDs: [], isPro: true)
+        let initialProgress = makeUserProgress(hiddenRating: 150.0, passedExamIDs: [], unlockedFeatures: [.openingStudy])
         progressSubject.send(initialProgress)
         
         flushMainQueue()
@@ -91,7 +91,7 @@ final class CurriculumViewModelTests: XCTestCase {
         XCTAssertFalse(section2.isPremiumLocked, "Section 2 should NOT be premium locked for Pro users.")
         
         // SCENARIO 2: Pro user passes Level 1 exam
-        let advancedProgress = makeUserProgress(hiddenRating: 150.0, passedExamIDs: ["exam_1"], isPro: true)
+        let advancedProgress = makeUserProgress(hiddenRating: 150.0, passedExamIDs: ["exam_1"], unlockedFeatures: [.openingStudy])
         progressSubject.send(advancedProgress)
         
         flushMainQueue()
@@ -112,7 +112,7 @@ final class CurriculumViewModelTests: XCTestCase {
         mixPoolSubject.send(dummyMixPool)
         
         // SCENARIO: Free user passes Level 1 exam
-        let freeAdvancedProgress = makeUserProgress(hiddenRating: 150.0, passedExamIDs: ["exam_1"], isPro: false)
+        let freeAdvancedProgress = makeUserProgress(hiddenRating: 150.0, passedExamIDs: ["exam_1"], unlockedFeatures: [])
         progressSubject.send(freeAdvancedProgress)
         
         flushMainQueue()
@@ -176,14 +176,14 @@ final class CurriculumViewModelTests: XCTestCase {
         )
     }
     
-    private func makeUserProgress(hiddenRating: Double = 1500.0, passedExamIDs: Set<String> = [], isPro: Bool = false) -> UserProgress {
+    private func makeUserProgress(hiddenRating: Double = 1500.0, passedExamIDs: Set<String> = [], unlockedFeatures: Set<ProFeature> = []) -> UserProgress {
         return UserProgress(
             hiddenRating: hiddenRating,
             onboardingComplete: true,
             completedPuzzleIDs: [],
             passedExamIDs: passedExamIDs,
             examFailureTimes: [:],
-            isPro: isPro
+            unlockedFeatures: unlockedFeatures
         )
     }
     

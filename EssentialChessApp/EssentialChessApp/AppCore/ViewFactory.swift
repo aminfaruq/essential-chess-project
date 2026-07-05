@@ -89,7 +89,7 @@ public final class ViewFactory: ObservableObject {
                     hiddenRating: progress.hiddenRating,
                     actualRating: progress.actualRating,
                     checkIsPro: { [weak self] in
-                        self?.container.progressAdapter.currentProgress.isPro ?? false
+                        self?.container.progressAdapter.currentProgress.unlockedFeatures.contains(.openingStudy) ?? false
                     },
                     dailyPuzzleMixCount: progress.dailyPuzzleMixCount,
                     lastPuzzleMixDate: progress.lastPuzzleMixDate,
@@ -152,7 +152,7 @@ public final class ViewFactory: ObservableObject {
                 let viewModel = PuzzleStreakViewModel(
                     pool: pool,
                     checkIsPro: { [weak self] in
-                        self?.container.progressAdapter.currentProgress.isPro ?? false
+                        self?.container.progressAdapter.currentProgress.unlockedFeatures.contains(.openingStudy) ?? false
                     },
                     dailyPuzzleStreakCount: progress.dailyPuzzleStreakCount,
                     lastPuzzleStreakDate: progress.lastPuzzleStreakDate,
@@ -215,7 +215,7 @@ public final class ViewFactory: ObservableObject {
                 let viewModel = PuzzleStormViewModel(
                     pool: pool,
                     checkIsPro: { [weak self] in
-                        self?.container.progressAdapter.currentProgress.isPro ?? false
+                        self?.container.progressAdapter.currentProgress.unlockedFeatures.contains(.openingStudy) ?? false
                     },
                     dailyPuzzleStormCount: progress.dailyPuzzleStormCount,
                     lastPuzzleStormDate: progress.lastPuzzleStormDate,

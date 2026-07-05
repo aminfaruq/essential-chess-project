@@ -92,7 +92,7 @@ private struct PuzzleMixContainerView: View {
             PaywallView()
         }
         .onReceive(container.progressAdapter.publisher()) { progress in
-            if progress.isPro && vm.isDailyLimitReached {
+            if progress.unlockedFeatures.contains(.openingStudy) && vm.isDailyLimitReached {
                 vm.resumeAfterPurchase()
             }
         }

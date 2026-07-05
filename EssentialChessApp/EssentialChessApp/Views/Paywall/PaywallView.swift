@@ -103,7 +103,7 @@ public struct PaywallView: View {
     // MOCK Purchase Logic until RevenueCat is integrated
     private func purchasePro() {
         container.progressAdapter.update { progress in
-            progress.isPro = true
+            progress.unlockedFeatures.insert(.openingStudy)
         }
         dismiss()
     }

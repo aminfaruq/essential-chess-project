@@ -160,7 +160,7 @@ public final class CurriculumViewModel: ObservableObject {
     
     private func mapToUIModels(curriculum: Curriculum, progress: UserProgress) -> [SectionUIModel] {
         return curriculum.sections.enumerated().map { index, section in
-            let isPremiumLocked = !progress.isPro && index > 0
+            let isPremiumLocked = !progress.unlockedFeatures.contains(.openingStudy) && index > 0
             let isUnlocked = isPremiumLocked ? false : isSectionUnlocked(section, at: index, in: curriculum, progress: progress)
             let sectionProgress = CurriculumProgressTracker.progress(for: section, progress: progress)
             

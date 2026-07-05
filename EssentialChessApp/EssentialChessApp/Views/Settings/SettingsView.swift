@@ -181,13 +181,13 @@ public struct SettingsView: View {
             }
         }
         .onAppear {
-            self.isPro = composer.container.progressAdapter.currentProgress.isPro
+            self.isPro = composer.container.progressAdapter.currentProgress.unlockedFeatures.contains(.openingStudy)
             self.isDailyReminderEnabled = composer.settingsVM.isDailyReminderEnabled
             self.isHapticEnabled = composer.settingsVM.isHapticEnabled
             self.isSoundEnabled = composer.settingsVM.isSoundEnabled
         }
         .onReceive(composer.container.progressAdapter.publisher()) { progress in
-            self.isPro = progress.isPro
+            self.isPro = progress.unlockedFeatures.contains(.openingStudy)
         }
         .onReceive(composer.settingsVM.$isDailyReminderEnabled) { enabled in
             self.isDailyReminderEnabled = enabled
