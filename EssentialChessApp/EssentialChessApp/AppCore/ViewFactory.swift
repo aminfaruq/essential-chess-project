@@ -88,11 +88,12 @@ public final class ViewFactory: ObservableObject {
                     pool: pool,
                     hiddenRating: progress.hiddenRating,
                     actualRating: progress.actualRating,
-                    checkIsPro: { [weak self] in
-                        self?.container.progressAdapter.currentProgress.unlockedFeatures.contains(.openingStudy) ?? false
-                    },
-                    dailyPuzzleMixCount: progress.dailyPuzzleMixCount,
-                    lastPuzzleMixDate: progress.lastPuzzleMixDate,
+                    // MARK: - Freemium params (commented out — app is now fully free)
+                    // checkIsPro: { [weak self] in
+                    //     self?.container.progressAdapter.currentProgress.unlockedFeatures.contains(.openingStudy) ?? false
+                    // },
+                    // dailyPuzzleMixCount: progress.dailyPuzzleMixCount,
+                    // lastPuzzleMixDate: progress.lastPuzzleMixDate,
                     hasSeenHintWarning: UserDefaults.standard.bool(forKey: "hasSeenHintWarning"),
                     calculateRating: { currentRating, puzzleRating, isCorrect in
                         return RatingCalculator().calculateRegularRating(
@@ -115,12 +116,14 @@ public final class ViewFactory: ObservableObject {
                             progress.recordActivity()
                         }
                     },
-                    updateDailyLimits: { count, date in
-                        self.container.progressAdapter.update { progress in
-                            progress.dailyPuzzleMixCount = count
-                            progress.lastPuzzleMixDate = date
-                        }
-                    }
+                    // MARK: - Freemium daily limits (commented out — app is now fully free)
+                    // updateDailyLimits: { count, date in
+                    //     self.container.progressAdapter.update { progress in
+                    //         progress.dailyPuzzleMixCount = count
+                    //         progress.lastPuzzleMixDate = date
+                    //     }
+                    // }
+                    // updateDailyLimits: { _, _ in }
                 )
                 
                 onReady(viewModel)

@@ -90,39 +90,40 @@ final class PuzzleMixViewModelTests: XCTestCase {
         XCTAssertTrue(sut.showCorrectMove, "Expected to reveal the correct move")
     }
     
-    func test_handlePuzzleCompletion_correctMove_incrementsDailyLimit() {
-        var updatedCount: Int? = nil
-        let sut = makeSUT(
-            actualRating: 1200.0,
-            checkIsPro: { false },
-            dailyPuzzleMixCount: 3,
-            lastPuzzleMixDate: Date(),
-            updateDailyLimits: { count, _ in
-                updatedCount = count
-            }
-        )
-        
-        sut.handlePuzzleCompletion(isCorrect: true)
-        
-        XCTAssertEqual(updatedCount, 4, "Expected daily count to increment on correct move")
-    }
-    
-    func test_handlePuzzleCompletion_incorrectMove_incrementsDailyLimit() {
-        var updatedCount: Int? = nil
-        let sut = makeSUT(
-            actualRating: 1200.0,
-            checkIsPro: { false },
-            dailyPuzzleMixCount: 3,
-            lastPuzzleMixDate: Date(),
-            updateDailyLimits: { count, _ in
-                updatedCount = count
-            }
-        )
-        
-        sut.handlePuzzleCompletion(isCorrect: false)
-        
-        XCTAssertEqual(updatedCount, 4, "Expected daily count to increment even on incorrect move")
-    }
+    // MARK: - Freemium daily limit tracking (commented out — app is now fully free)
+    // func test_handlePuzzleCompletion_correctMove_incrementsDailyLimit() {
+    //     var updatedCount: Int? = nil
+    //     let sut = makeSUT(
+    //         actualRating: 1200.0,
+    //         checkIsPro: { false },
+    //         dailyPuzzleMixCount: 3,
+    //         lastPuzzleMixDate: Date(),
+    //         updateDailyLimits: { count, _ in
+    //             updatedCount = count
+    //         }
+    //     )
+    //     
+    //     sut.handlePuzzleCompletion(isCorrect: true)
+    //     
+    //     XCTAssertEqual(updatedCount, 4, "Expected daily count to increment on correct move")
+    // }
+    //
+    // func test_handlePuzzleCompletion_incorrectMove_incrementsDailyLimit() {
+    //     var updatedCount: Int? = nil
+    //     let sut = makeSUT(
+    //         actualRating: 1200.0,
+    //         checkIsPro: { false },
+    //         dailyPuzzleMixCount: 3,
+    //         lastPuzzleMixDate: Date(),
+    //         updateDailyLimits: { count, _ in
+    //             updatedCount = count
+    //         }
+    //     )
+    //     
+    //     sut.handlePuzzleCompletion(isCorrect: false)
+    //     
+    //     XCTAssertEqual(updatedCount, 4, "Expected daily count to increment even on incorrect move")
+    // }
     
     // MARK: - Scenario: Uninterrupted endless progression
     
@@ -195,40 +196,40 @@ final class PuzzleMixViewModelTests: XCTestCase {
         XCTAssertEqual(sut.currentPuzzle?.id, "1", "Expected to cycle the pool and present the puzzle again")
     }
     
-    // MARK: - Scenario: Freemium Daily Limit
-    
-    func test_loadNextPuzzle_whenDailyLimitReached_showsPaywallAndBlocksPuzzle() {
-        let sut = makeSUT(
-            actualRating: 1200.0,
-            checkIsPro: { false },
-            dailyPuzzleMixCount: 7,
-            lastPuzzleMixDate: Date() // Today
-        )
-        
-        XCTAssertTrue(sut.showPaywall, "Expected paywall to show when limit is reached")
-        XCTAssertTrue(sut.isDailyLimitReached, "Expected isDailyLimitReached to be true")
-        XCTAssertNil(sut.currentPuzzle, "Expected no puzzle to be loaded when limit is reached")
-    }
-    
-    func test_loadNextPuzzle_whenDayHasChanged_resetsLimitAndAllowsProgression() {
-        var updatedCount: Int? = nil
-        let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
-        
-        let sut = makeSUT(
-            actualRating: 1200.0,
-            checkIsPro: { false },
-            dailyPuzzleMixCount: 7, // Reached limit yesterday
-            lastPuzzleMixDate: yesterday,
-            updateDailyLimits: { count, _ in
-                updatedCount = count
-            }
-        )
-        
-        XCTAssertFalse(sut.showPaywall, "Expected paywall not to show because day has changed")
-        XCTAssertFalse(sut.isDailyLimitReached, "Expected isDailyLimitReached to be false")
-        XCTAssertNotNil(sut.currentPuzzle, "Expected a new puzzle to be loaded")
-        XCTAssertEqual(updatedCount, 0, "Expected daily count to be reset to 0 and saved")
-    }
+    //    // MARK: - Scenario: Freemium Daily Limit
+    //
+    //    func test_loadNextPuzzle_whenDailyLimitReached_showsPaywallAndBlocksPuzzle() {
+    //        let sut = makeSUT(
+    //            actualRating: 1200.0,
+    //            checkIsPro: { false },
+    //            dailyPuzzleMixCount: 7,
+    //            lastPuzzleMixDate: Date() // Today
+    //        )
+    //
+    //        XCTAssertTrue(sut.showPaywall, "Expected paywall to show when limit is reached")
+    //        XCTAssertTrue(sut.isDailyLimitReached, "Expected isDailyLimitReached to be true")
+    //        XCTAssertNil(sut.currentPuzzle, "Expected no puzzle to be loaded when limit is reached")
+    //    }
+    //
+    //    func test_loadNextPuzzle_whenDayHasChanged_resetsLimitAndAllowsProgression() {
+    //        var updatedCount: Int? = nil
+    //        let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
+    //
+    //        let sut = makeSUT(
+    //            actualRating: 1200.0,
+    //            checkIsPro: { false },
+    //            dailyPuzzleMixCount: 7, // Reached limit yesterday
+    //            lastPuzzleMixDate: yesterday,
+    //            updateDailyLimits: { count, _ in
+    //                updatedCount = count
+    //            }
+    //        )
+    //
+    //        XCTAssertFalse(sut.showPaywall, "Expected paywall not to show because day has changed")
+    //        XCTAssertFalse(sut.isDailyLimitReached, "Expected isDailyLimitReached to be false")
+    //        XCTAssertNotNil(sut.currentPuzzle, "Expected a new puzzle to be loaded")
+    //        XCTAssertEqual(updatedCount, 0, "Expected daily count to be reset to 0 and saved")
+    //    }
     
     // MARK: - Helpers
     
@@ -236,14 +237,15 @@ final class PuzzleMixViewModelTests: XCTestCase {
         pool: [Puzzle]? = nil,
         hiddenRating: Double = 500.0,
         actualRating: Double? = nil,
-        checkIsPro: @escaping () -> Bool = { false },
-        dailyPuzzleMixCount: Int = 0,
-        lastPuzzleMixDate: Date? = nil,
+        // MARK: - Freemium params (commented out — app is now fully free)
+        // checkIsPro: @escaping () -> Bool = { false },
+        // dailyPuzzleMixCount: Int = 0,
+        // lastPuzzleMixDate: Date? = nil,
         hasSeenHintWarning: Bool = false,
         calculateRating: @escaping (Double, Double, Bool) -> Double = { rating, _, _ in rating },
         saveActualRating: @escaping (Double) -> Void = { _ in },
         saveHasSeenHintWarning: @escaping (Bool) -> Void = { _ in },
-        updateDailyLimits: @escaping (Int, Date) -> Void = { _, _ in },
+        // updateDailyLimits: @escaping (Int, Date) -> Void = { _, _ in },
         file: StaticString = #filePath,
         line: UInt = #line
     ) -> PuzzleMixViewModel {
@@ -254,15 +256,12 @@ final class PuzzleMixViewModelTests: XCTestCase {
             pool: puzzles,
             hiddenRating: hiddenRating,
             actualRating: actualRating,
-            checkIsPro: checkIsPro,
-            dailyPuzzleMixCount: dailyPuzzleMixCount,
-            lastPuzzleMixDate: lastPuzzleMixDate,
             hasSeenHintWarning: hasSeenHintWarning,
             calculateRating: calculateRating,
             saveActualRating: saveActualRating,
             saveHasSeenHintWarning: saveHasSeenHintWarning,
             onPuzzleSolved: {},
-            updateDailyLimits: updateDailyLimits
+            // updateDailyLimits: { _, _ in }
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
