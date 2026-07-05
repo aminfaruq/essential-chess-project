@@ -36,13 +36,18 @@ extension AnalysisChessBoardView {
             
             selectedSquareString = nil
             
+            let capturedSquareStr = isEnPassant ? "\(targetStr.first!)\(sourceStr.last!)" : targetStr
+            let pieceToHide = (isCapture || isEnPassant) ? pieceImageViews[capturedSquareStr] : nil
+            
             let finishMove = { [weak self] in
+                pieceToHide?.alpha = 1.0
                 self?.cleanupGhost()
                 self?.renderPieces()
                 
                 let uci = "\(sourceStr)\(targetStr)\(promotionChar ?? "")"
                 self?.onUserMoved?(uci)
                 self?.notifyGameStateIfNeeded()
+                self?.broadcastState()
             }
             
             if let rookMove = rookMove {
@@ -53,13 +58,29 @@ extension AnalysisChessBoardView {
                 )
             } else if let ghost = ghostPieceView, let targetView = squareViews[targetStr] {
                 // Drag-based move: animate ghost piece to target
-                UIView.animate(withDuration: 0.15, animations: {
+                UIView.animate(withDuration: 0.15, delay: 0.0, options: .curveEaseOut, animations: {
                     ghost.center = self.overlayView.convert(targetView.center, from: targetView.superview)
+                    pieceToHide?.alpha = 0.0
                 }) { _ in
                     finishMove()
                 }
+            } else if let originalPieceView = pieceImageViews[sourceStr], let targetView = squareViews[targetStr] {
+                // Tap-based move: animate ghost piece from source to target
+                let ghost = UIImageView(image: originalPieceView.image)
+                ghost.contentMode = .scaleAspectFit
+                ghost.frame = originalPieceView.convert(originalPieceView.bounds, to: overlayView)
+                overlayView.addSubview(ghost)
+                originalPieceView.isHidden = true
+                
+                UIView.animate(withDuration: 0.25, delay: 0.0, options: .curveEaseInOut, animations: {
+                    ghost.center = self.overlayView.convert(targetView.center, from: targetView.superview)
+                    pieceToHide?.alpha = 0.0
+                }) { _ in
+                    ghost.removeFromSuperview()
+                    finishMove()
+                }
             } else {
-                // Tap-based move: instant render
+                // Fallback instant render
                 finishMove()
             }
             
@@ -74,6 +95,9 @@ extension AnalysisChessBoardView {
             return
         }
         
+        // Force layout so newly rendered pieces from renderPieces() have valid frames before animation
+        boardContainer.layoutIfNeeded()
+        
         let isCapture = engine.piece(at: targetStr) != nil
         let isEnPassant = engine.isEnPassantCapture(from: sourceStr, to: targetStr)
         
@@ -86,9 +110,18 @@ extension AnalysisChessBoardView {
         let rookMove = isKingMove ? castlingMoves["\(sourceStr)\(targetStr)"] : nil
         
         if engine.move(from: sourceStr, to: targetStr, promotion: promoStr) {
-            guard let srcView = squareViews[sourceStr],
+            guard let _ = squareViews[sourceStr],
                   let tgtView = squareViews[targetStr],
                   let originalPieceView = pieceImageViews[sourceStr] else {
+                playSoundForMove(isCapture: isCapture || isEnPassant, gameState: engine.gameState)
+                renderPieces()
+                notifyGameStateIfNeeded()
+                completion?()
+                return
+            }
+            
+            // If the view hasn't been fully laid out or isn't on screen yet, don't attempt to animate pieces from (0,0)
+            if self.window == nil || originalPieceView.bounds.width == 0 {
                 playSoundForMove(isCapture: isCapture || isEnPassant, gameState: engine.gameState)
                 renderPieces()
                 notifyGameStateIfNeeded()
@@ -102,6 +135,8 @@ extension AnalysisChessBoardView {
             overlayView.addSubview(ghost)
             
             originalPieceView.isHidden = true
+            // Captured piece is intentionally kept visible during animation for a natural slide-over effect.
+            
             clearLegalMoveHints()
             clearHighlights()
             highlightViews[sourceStr]?.isHidden = false
@@ -120,14 +155,19 @@ extension AnalysisChessBoardView {
                 rookTargetCenter = rookTargetSquare.superview!.convert(rookTargetSquare.center, to: overlayView)
             }
             
+            let capturedSquareStr = isEnPassant ? "\(targetStr.first!)\(sourceStr.last!)" : targetStr
+            let pieceToHide = (isCapture || isEnPassant) ? pieceImageViews[capturedSquareStr] : nil
+            
             let targetCenter = overlayView.convert(tgtView.center, from: tgtView.superview)
             
-            UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseInOut, animations: {
+            UIView.animate(withDuration: 0.25, delay: 0.0, options: .curveEaseInOut, animations: {
                 ghost.center = targetCenter
+                pieceToHide?.alpha = 0.0
                 if let rg = rookGhost, let rtc = rookTargetCenter {
                     rg.center = rtc
                 }
             }) { [weak self] _ in
+                pieceToHide?.alpha = 1.0
                 self?.playSoundForMove(isCapture: isCapture || isEnPassant, gameState: engine.gameState)
                 self?.highlightViews[targetStr]?.isHidden = false
                 self?.renderPieces()
@@ -185,8 +225,6 @@ extension AnalysisChessBoardView {
         rookSource: String, rookTarget: String,
         completion: @escaping () -> Void
     ) {
-        // Setup rook ghost
-        var rookGhost: UIImageView?
         if let rookView = pieceImageViews[rookSource],
            let rookTargetSquare = squareViews[rookTarget] {
             let rg = UIImageView(image: rookView.image)
@@ -194,7 +232,6 @@ extension AnalysisChessBoardView {
             rg.frame = rookView.convert(rookView.bounds, to: overlayView)
             overlayView.addSubview(rg)
             rookView.isHidden = true
-            rookGhost = rg
             
             let rookTargetCenter = rookTargetSquare.superview!.convert(rookTargetSquare.center, to: overlayView)
             
@@ -240,3 +277,4 @@ extension AnalysisChessBoardView {
         }
     }
 }
+

@@ -39,6 +39,8 @@ public final class ChessEngine {
     
     private var game: Game
     private var currentIndex: MoveTree.Index
+    private var indexMap: [String: MoveTree.Index] = [:]
+    private var indexToIdMap: [MoveTree.Index: String] = [:]
     
     /// Indicates which color's turn it is to move.
     public var sideToMove: EngineColor {
@@ -62,6 +64,8 @@ public final class ChessEngine {
         if let newPos = Position(fen: newFen) {
             self.game = Game(startingWith: newPos)
             self.currentIndex = self.game.startingIndex
+            self.indexMap = [:]
+            self.indexToIdMap = [:]
         }
     }
     
@@ -136,6 +140,22 @@ public final class ChessEngine {
         }
         
         return legalSquares
+    }
+    
+    /// Counts total legal moves available for the side to move in the current position.
+    /// - Returns: Total number of legal moves across all pieces, or -1 if position is invalid.
+    public func legalMoveCount() -> Int {
+        guard let position = game.positions[currentIndex] else { return -1 }
+        let board = Board(position: position)
+
+        var total = 0
+        for square in Square.allCases {
+            if let piece = position.piece(at: square),
+               piece.color == position.sideToMove {
+                total += board.legalMoves(forPieceAt: square).count
+            }
+        }
+        return total
     }
     
     /// Attempts to execute a move on the board.
@@ -324,6 +344,48 @@ public final class ChessEngine {
     /// Resets the engine back to the starting position.
     public func resetToStart() {
         self.currentIndex = game.startingIndex
+    }
+    
+    /// Jumps to a specific move index in the tree using a string ID.
+    public func jump(to moveId: String) {
+        if let index = indexMap[moveId], game.positions[index] != nil {
+            self.currentIndex = index
+        }
+    }
+    
+    /// Exposes the current move identifier.
+    public var currentMoveId: String? {
+        return indexToIdMap[currentIndex]
+    }
+    
+    /// Exposes the PGN elements without leaking internal ChessKit types.
+    public var boardPGNElements: [BoardPGNElement] {
+        var newMap: [String: MoveTree.Index] = [:]
+        var newReverseMap: [MoveTree.Index: String] = [:]
+        var counter = 0
+        let elements = game.moves.pgnRepresentation.map { element -> BoardPGNElement in
+            switch element {
+            case let .whiteNumber(number):
+                return .whiteNumber(number)
+            case let .blackNumber(number):
+                return .blackNumber(number)
+            case let .move(move, index):
+                let id = "m\(counter)"
+                counter += 1
+                newMap[id] = index
+                newReverseMap[index] = id
+                return .move(san: move.san, moveId: id)
+            case let .positionAssessment(assessment):
+                return .positionAssessment(assessment.rawValue)
+            case .variationStart:
+                return .variationStart
+            case .variationEnd:
+                return .variationEnd
+            }
+        }
+        self.indexMap = newMap
+        self.indexToIdMap = newReverseMap
+        return elements
     }
     
     // MARK: - En Passant Manual Detection

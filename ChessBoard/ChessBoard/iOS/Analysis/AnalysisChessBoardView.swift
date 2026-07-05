@@ -1,4 +1,5 @@
 import UIKit
+internal import ChessKit
 internal import SnapKit
 
 /// A custom, highly interactive chess board view built natively with UIKit.
@@ -8,6 +9,7 @@ public final class AnalysisChessBoardView: UIView {
     // MARK: - Callbacks
     public var onUserMoved: ((String) -> Void)?
     public var onGameStateChanged: ((String) -> Void)?
+    public var onStateChanged: (([BoardPGNElement], String?) -> Void)?
     
     // MARK: - Internal Dependencies & State
     var userColor: EngineColor = .white
@@ -16,7 +18,7 @@ public final class AnalysisChessBoardView: UIView {
     var engine: ChessEngine?
     let interactionHandler = BoardInteractionHandler()
     
-    var isBoardLocked = true
+    public var isBoardLocked = true
     var selectedSquareString: String?
     
     var squareViews: [String: UIView] = [:]
@@ -72,9 +74,12 @@ public final class AnalysisChessBoardView: UIView {
     public func setPosition(fen: String, orientation: EngineColor = .white) {
         self.engine = ChessEngine(fen: fen)
         
+        let needsGridSetup = (self.userColor != orientation) || squareViews.isEmpty
         self.userColor = orientation
         
-        setupBoardGrid()
+        if needsGridSetup {
+            setupBoardGrid()
+        }
         
         self.selectedSquareString = nil
         self.isBoardLocked = false
@@ -84,6 +89,7 @@ public final class AnalysisChessBoardView: UIView {
         clearLegalMoveHints()
         clearHighlights()
         renderPieces()
+        broadcastState()
     }
     
     public func undoLastMove() {
@@ -95,6 +101,7 @@ public final class AnalysisChessBoardView: UIView {
         clearLegalMoveHints()
         clearHighlights()
         renderPieces()
+        broadcastState()
     }
     
     public func resetToStart() {
@@ -107,6 +114,7 @@ public final class AnalysisChessBoardView: UIView {
         clearLegalMoveHints()
         clearHighlights()
         renderPieces()
+        broadcastState()
     }
     
     public func flipBoard() {
@@ -146,5 +154,25 @@ public final class AnalysisChessBoardView: UIView {
     public func setHighlightColor(_ baseColor: UIColor, alpha: CGFloat = 0.35) {
         self.highlightColor = baseColor.withAlphaComponent(alpha)
         highlightViews.values.forEach { $0.backgroundColor = self.highlightColor }
+    }
+    
+    public func jump(to moveId: String) {
+        guard let engine = engine else { return }
+        engine.jump(to: moveId)
+        self.selectedSquareString = nil
+        cleanupGhost()
+        clearSolutionArrow()
+        clearLegalMoveHints()
+        clearHighlights()
+        renderPieces()
+        broadcastState()
+        
+        let fen = self.currentFen ?? ""
+        onUserMoved?(fen)
+    }
+    
+    func broadcastState() {
+        guard let engine = engine else { return }
+        onStateChanged?(engine.boardPGNElements, engine.currentMoveId)
     }
 }

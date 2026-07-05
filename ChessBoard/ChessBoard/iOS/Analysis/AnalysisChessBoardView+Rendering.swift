@@ -4,37 +4,39 @@ internal import SnapKit
 extension AnalysisChessBoardView {
     
     func renderPieces() {
-        guard let engine = engine else { return }
-        
-        pieceImageViews.values.forEach { $0.removeFromSuperview() }
-        pieceImageViews.removeAll()
-        checkHighlightViews.values.forEach { $0.isHidden = true }
-        
-        let checkColor = engine.kingInCheckColor
-        
-        for rank in 1...8 {
-            for file in ["a", "b", "c", "d", "e", "f", "g", "h"] {
-                let squareString = "\(file)\(rank)"
-                guard let piece = engine.piece(at: squareString),
-                      let squareView = squareViews[squareString] else { continue }
-                
-                if piece.kind == .king && piece.color == checkColor {
-                    checkHighlightViews[squareString]?.isHidden = false
-                }
-                
-                let colorLetter = piece.color == .white ? "w" : "b"
-                let pieceLetter: String
-                switch piece.kind {
-                case .pawn: pieceLetter = "p"; case .knight: pieceLetter = "n"; case .bishop: pieceLetter = "b"
-                case .rook: pieceLetter = "r"; case .queen: pieceLetter = "q"; case .king: pieceLetter = "k"
-                }
-                
-                if let image = UIImage(named: "\(currentPieceTheme)_\(colorLetter)\(pieceLetter)") {
-                    let imageView = UIImageView(image: image)
-                    imageView.contentMode = .scaleAspectFit
-                    squareView.addSubview(imageView)
-                    imageView.snp.makeConstraints { make in make.edges.equalToSuperview().inset(4) }
-                    pieceImageViews[squareString] = imageView
+        UIView.performWithoutAnimation {
+            guard let engine = engine else { return }
+            
+            pieceImageViews.values.forEach { $0.removeFromSuperview() }
+            pieceImageViews.removeAll()
+            checkHighlightViews.values.forEach { $0.isHidden = true }
+            
+            let checkColor = engine.kingInCheckColor
+            
+            for rank in 1...8 {
+                for file in ["a", "b", "c", "d", "e", "f", "g", "h"] {
+                    let squareString = "\(file)\(rank)"
+                    guard let piece = engine.piece(at: squareString),
+                          let squareView = squareViews[squareString] else { continue }
+                    
+                    if piece.kind == .king && piece.color == checkColor {
+                        checkHighlightViews[squareString]?.isHidden = false
+                    }
+                    
+                    let colorLetter = piece.color == .white ? "w" : "b"
+                    let pieceLetter: String
+                    switch piece.kind {
+                    case .pawn: pieceLetter = "p"; case .knight: pieceLetter = "n"; case .bishop: pieceLetter = "b"
+                    case .rook: pieceLetter = "r"; case .queen: pieceLetter = "q"; case .king: pieceLetter = "k"
+                    }
+                    
+                    if let image = UIImage(named: "\(currentPieceTheme)_\(colorLetter)\(pieceLetter)") {
+                        let imageView = UIImageView(image: image)
+                        imageView.contentMode = .scaleAspectFit
+                        squareView.addSubview(imageView)
+                        imageView.snp.makeConstraints { make in make.edges.equalToSuperview().inset(4) }
+                        pieceImageViews[squareString] = imageView
+                    }
                 }
             }
         }
