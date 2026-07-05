@@ -12,6 +12,7 @@ import EssentialChessUI
 public struct PuzzleSessionView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var themeAdapter: ThemeAdapter
+    @EnvironmentObject var composer: AppComposer
 
     @StateObject private var boardVM: PuzzleBoardViewModel
     @StateObject private var boardController = ChessBoardController()
@@ -51,7 +52,7 @@ public struct PuzzleSessionView: View {
                     .foregroundColor(AppColors.textSecondary)
             }
         }
-        .navigationTitle(categoryTitle)
+        .navigationTitle(LocalizedStringKey(categoryTitle))
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(AppColors.background, for: .navigationBar)
         .toolbarColorScheme(.dark, for: .navigationBar)
@@ -106,9 +107,12 @@ public struct PuzzleSessionView: View {
                 blue: themeAdapter.currentTheme.boardTheme.darkSquareColor.blue,
                 opacity: themeAdapter.currentTheme.boardTheme.darkSquareColor.alpha
             ),
-            pieceTheme: themeAdapter.currentTheme.pieceTheme
+            pieceTheme: themeAdapter.currentTheme.pieceTheme,
+            isHapticEnabled: composer.settingsVM.isHapticEnabled,
+            isSoundEnabled: composer.settingsVM.isSoundEnabled
         )
-        .padding(.horizontal, 16)
+        .equatable()
+        //.padding(.horizontal, 16)
         .aspectRatio(1, contentMode: .fit)
     }
     
@@ -117,6 +121,8 @@ public struct PuzzleSessionView: View {
             Button { boardController.showHint() } label: {
                 Label("Hint", systemImage: "lightbulb")
                     .font(.system(size: 14))
+                    .minimumScaleFactor(0.7)
+                    .lineLimit(1)
                     .foregroundColor(AppColors.textSecondary)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 12)
@@ -125,9 +131,26 @@ public struct PuzzleSessionView: View {
             }
             .hoverEffect(.highlight)
             
+            if !boardVM.isSolved {
+                Button { boardController.showSolution() } label: {
+                    Label("Solution", systemImage: "key.horizontal")
+                        .font(.system(size: 14))
+                        .minimumScaleFactor(0.7)
+                        .lineLimit(1)
+                        .foregroundColor(AppColors.textSecondary)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
+                        .background(AppColors.surface)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                }
+                .hoverEffect(.highlight)
+            }
+            
             Button { showSequenceList = true } label: {
                 Label("Puzzles", systemImage: "list.number")
                     .font(.system(size: 14))
+                    .minimumScaleFactor(0.8)
+                    .lineLimit(1)
                     .foregroundColor(AppColors.textSecondary)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 12)
@@ -143,7 +166,8 @@ public struct PuzzleSessionView: View {
                     Label("Next", systemImage: "arrow.right")
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(.black)
-                        .padding(.horizontal, 24)
+                        .fixedSize(horizontal: true, vertical: false)
+                        .padding(.horizontal, 18)
                         .padding(.vertical, 12)
                         .background(AppColors.accent)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -169,7 +193,9 @@ public struct PuzzleSessionView: View {
                         .scaledToFit()
                         .frame(width: 42, height: 42)
                     
-                    Text("\(boardController.userColorName) to Move")
+                    
+                    let key = "\(boardController.userColorName) to Move"
+                    Text(LocalizedStringKey(key))
                         .font(.system(size: 16, weight: .light))
                         .foregroundColor(AppColors.textPrimary)
                 }
@@ -187,7 +213,7 @@ public struct PuzzleSessionView: View {
             Text("Theme Complete!")
                 .font(.system(size: 28, weight: .bold))
                 .foregroundColor(AppColors.textPrimary)
-            Text(categoryTitle)
+            Text(LocalizedStringKey(categoryTitle))
                 .font(.system(size: 16))
                 .foregroundColor(AppColors.textSecondary)
             Spacer()

@@ -12,6 +12,7 @@ final class LocalFileReaderTests: XCTestCase {
     
     func test_get_deliversErrorOnInvalidURL() {
         let sut = LocalFileReader()
+        trackForMemoryLeaks(sut)
         let invalidURL = URL(fileURLWithPath: "/path/that/does/not/exist.json")
         
         let expectation = expectation(description: "Wait for file reading completion")
@@ -31,6 +32,7 @@ final class LocalFileReaderTests: XCTestCase {
     
     func test_get_deliversDataOnValidURL() {
         let sut = LocalFileReader()
+        trackForMemoryLeaks(sut)
         
         // 1. Create a temporary file
         let temporaryFileURL = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)

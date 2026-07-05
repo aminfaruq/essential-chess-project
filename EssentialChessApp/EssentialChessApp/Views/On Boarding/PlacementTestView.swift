@@ -13,6 +13,7 @@ public struct PlacementTestView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var viewModel: OnboardingViewModel
     @EnvironmentObject var themeAdapter: ThemeAdapter
+    @EnvironmentObject var composer: AppComposer
 
     @StateObject private var boardController = ChessBoardController()
     
@@ -58,9 +59,12 @@ public struct PlacementTestView: View {
                             blue: themeAdapter.currentTheme.boardTheme.darkSquareColor.blue,
                             opacity: themeAdapter.currentTheme.boardTheme.darkSquareColor.alpha
                         ),
-                        pieceTheme: themeAdapter.currentTheme.pieceTheme
+                        pieceTheme: themeAdapter.currentTheme.pieceTheme,
+                        isHapticEnabled: composer.settingsVM.isHapticEnabled,
+                        isSoundEnabled: composer.settingsVM.isSoundEnabled
                     )
-                    .padding(.horizontal, 16)
+                    .equatable()
+                    //.padding(.horizontal, 16)
                     .aspectRatio(1, contentMode: .fit)
                     
                     Spacer(minLength: 12)
@@ -92,7 +96,7 @@ public struct PlacementTestView: View {
                 Text("Placement Test")
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundColor(AppColors.textPrimary)
-                Text("Puzzle \(viewModel.currentPuzzleIndex + 1) of \(viewModel.puzzles.count)")
+                Text("Puzzle \(viewModel.currentPuzzleIndex + 1) of \(viewModel.totalPuzzles)")
                     .font(.system(size: 12))
                     .foregroundColor(AppColors.textSecondary)
             }
@@ -121,7 +125,8 @@ public struct PlacementTestView: View {
                 let pieceImageName = "\(themeAdapter.currentTheme.pieceTheme)_\(colorPrefix)k"
                 
                 HStack(spacing: 12) {
-                    Text("\(boardController.userColorName) to Move")
+                    let key = "\(boardController.userColorName) to Move"
+                    Text(LocalizedStringKey(key))
                         .font(.system(size: 22, weight: .light))
                         .foregroundColor(AppColors.textPrimary)
                     
@@ -171,3 +176,4 @@ public struct PlacementTestView: View {
         }
     }
 }
+

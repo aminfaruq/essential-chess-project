@@ -15,15 +15,31 @@ public final class DependencyContainer: ObservableObject {
     public let progressAdapter: ProgressAdapter
     public let themeAdapter: ThemeAdapter
     
+    private var cancellables = Set<AnyCancellable>()
+    
+    public let notificationStorage: NotificationStoragePort
+    public let notificationScheduler: NotificationScheduler
+    public let boardSettingsStorage: BoardSettingsStoragePort
+    
     public let curriculumLoader: FileCurriculumLoader?
     public let mixPoolLoader: FileMixPoolLoader?
+    public let beginnerCurriculumLoader: FileCurriculumLoader?
+    public let beginnerProgressStore: UserDefaultsBeginnerProgressStore
+    
+    public let languageAdapter: LanguageAdapter
     
     public init() {
         let themeStore = UserDefaultsThemeStore()
         self.themeAdapter = ThemeAdapter(store: themeStore)
         
-        let progressStore = UserDefaultsProgressStore()
+        let progressStore = UbiquitousProgressStore()
         self.progressAdapter = ProgressAdapter(store: progressStore)
+        
+        self.beginnerProgressStore = UserDefaultsBeginnerProgressStore()
+        
+        self.notificationStorage = UserDefaultsNotificationStorage()
+        self.notificationScheduler = UserNotificationsAdapter()
+        self.boardSettingsStorage = UserDefaultsBoardSettingsStorage()
         
         let reader = LocalFileReader()
         
@@ -38,5 +54,25 @@ public final class DependencyContainer: ObservableObject {
         } else {
             self.mixPoolLoader = nil
         }
+        
+        if let begUrl = Bundle.main.url(forResource: "beginner_curriculum", withExtension: "json") {
+            self.beginnerCurriculumLoader = FileCurriculumLoader(url: begUrl, reader: reader)
+        } else {
+            self.beginnerCurriculumLoader = nil
+        }
+        
+        let languageStorage = UserDefaultsLanguageStorage()
+        self.languageAdapter = LanguageAdapter(store: languageStorage)
+        
+        setupUbiquitousSync()
+    }
+    
+    private func setupUbiquitousSync() {
+        NotificationCenter.default.publisher(for: NSUbiquitousKeyValueStore.didChangeExternallyNotification)
+            .sink { [weak self] _ in
+                // Real-time synchronization when other devices update the store
+                self?.progressAdapter.load { }
+            }
+            .store(in: &cancellables)
     }
 }

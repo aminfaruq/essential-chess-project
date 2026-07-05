@@ -1,0 +1,366 @@
+{
+  "curriculum_version": "1.0",
+  "metadata": {
+    "description": "Absolute Beginner Guide (0-499)",
+    "total_sections": 1,
+    "target_puzzles_per_sub_theme": 10,
+    "target_puzzles_per_exam": 0
+  },
+  "elo_sections": [
+    {
+      "section_id": "sec_0_499",
+      "title": "Welcome to Chess",
+      "elo_range": "0-499",
+      "is_locked_by_default": false,
+      "categories": [
+        {
+          "category_id": "cat_how_to_move",
+          "title": "Learn How to Move",
+          "is_exam_mode": false,
+          "description": "The rook moves in straight lines, either horizontally along ranks or vertically along files, for any number of unoccupied squares. It cannot jump over other pieces, but it captures an enemy piece by landing on the square it occupies.",
+          "sub_themes": [
+            {
+              "sub_theme_id": "sub_move_rook",
+              "title": "The Rook",
+              "total_puzzles": 5,
+              "puzzles": [
+                {
+                  "id": "beg_rook_1",
+                  "fen": "8/4p3/8/8/8/8/4R3/8 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                },
+                {
+                  "id": "beg_rook_2",
+                  "fen": "8/2R5/8/2p3p1/8/8/8/8 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                },
+                {
+                  "id": "beg_rook_3",
+                  "fen": "8/8/8/8/p2R2p1/6p1/8/8 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                },
+                {
+                  "id": "beg_rook_4",
+                  "fen": "5ppR/6pp/8/8/8/8/8/6p1 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                },
+                {
+                  "id": "beg_rook_5",
+                  "fen": "8/1R4p1/8/8/p2R3p/6p1/8/8 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                }
+              ]
+            },
+            {
+              "sub_theme_id": "sub_move_bishop",
+              "title": "The Bishop",
+              "total_puzzles": 5,
+              "puzzles": [
+                {
+                  "id": "beg_bishop_1",
+                  "fen": "6p1/8/8/3p4/8/5B2/8/8 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                },
+                {
+                  "id": "beg_bishop_2",
+                  "fen": "8/8/8/1p6/8/1B1p4/p3p3/1p1p4 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                },
+                {
+                  "id": "beg_bishop_3",
+                  "fen": "8/6p1/1p6/8/3B4/8/1p3p2/2p3p1 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                },
+                {
+                  "id": "beg_bishop_4",
+                  "fen": "6p1/5p1p/8/8/p1B5/1p1p4/2p1p3/1p6 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                },
+                {
+                  "id": "beg_bishop_5",
+                  "fen": "8/8/8/3pp3/3pp3/3pp3/8/2B2B2 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                }
+              ]
+            },
+            {
+              "sub_theme_id": "sub_move_queen",
+              "title": "The Queen",
+              "total_puzzles": 5,
+              "puzzles": [
+                {
+                  "id": "beg_queen_1",
+                  "fen": "8/2Q5/8/8/2p5/8/8/5p2 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                },
+                {
+                  "id": "beg_queen_2",
+                  "fen": "p7/2Q5/6p1/8/8/5p2/8/2p5 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                },
+                {
+                  "id": "beg_queen_3",
+                  "fen": "7p/2Q5/6p1/8/2p5/p4p2/8/2p5 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                },
+                {
+                  "id": "beg_queen_4",
+                  "fen": "4p3/2Q5/6p1/8/2p4p/p4p2/8/2p5 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                },
+                {
+                  "id": "beg_queen_5",
+                  "fen": "p3p3/2p5/4p1p1/p7/7p/1pp2p2/8/2pQ4 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                }
+              ]
+            },
+            {
+              "sub_theme_id": "sub_move_king",
+              "title": "The King",
+              "total_puzzles": 3,
+              "puzzles": [
+                {
+                  "id": "beg_king_1",
+                  "fen": "8/8/3p4/8/8/4K3/8/8 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                },
+                {
+                  "id": "beg_king_2",
+                  "fen": "8/3ppK2/2p5/8/2p5/8/8/8 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                },
+                {
+                  "id": "beg_king_3",
+                  "fen": "8/1p1p2p1/8/p2K4/4p1p1/8/8/8 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                }
+              ]
+            },
+            {
+              "sub_theme_id": "sub_move_knight",
+              "title": "The Knight",
+              "total_puzzles": 10,
+              "puzzles": [
+                {
+                  "id": "beg_knight_1",
+                  "fen": "8/8/3p4/8/2p5/4N3/8/8 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                },
+                {
+                  "id": "beg_knight_2",
+                  "fen": "7p/5p2/8/6p1/3p4/2p2p2/4p3/1N6 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                },
+                {
+                  "id": "beg_knight_3",
+                  "fen": "8/2Np4/1p2p3/3p4/5p2/8/8/8 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                },
+                {
+                  "id": "beg_knight_4",
+                  "fen": "8/8/8/4ppp1/4pNp1/4ppp1/8/8 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                },
+                {
+                  "id": "beg_knight_5",
+                  "fen": "8/8/6p1/8/4pp2/2pN4/4pp2/8 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                },
+                {
+                  "id": "beg_knight_6",
+                  "fen": "2p5/2N1p3/2p5/1p1p1p2/1p1p4/4p3/8/8 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                },
+                {
+                  "id": "beg_knight_7",
+                  "fen": "2p5/4p3/2p1N3/1p1p1p2/1p1p4/4pN2/8/8 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                },
+                {
+                  "id": "beg_knight_8",
+                  "fen": "2p1p3/6p1/1p1pN3/6p1/2p5/4p3/1p6/5N2 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                },
+                {
+                  "id": "beg_knight_9",
+                  "fen": "8/8/8/3pp3/3pp3/3pp3/3pp3/2N2N2 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                },
+                {
+                  "id": "beg_knight_10",
+                  "fen": "N6N/8/8/3pp3/3pp3/3pp3/3pp3/8 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                }
+              ]
+            },
+            {
+              "sub_theme_id": "sub_move_pawn",
+              "title": "The Pawn",
+              "total_puzzles": 5,
+              "puzzles": [
+                {
+                  "id": "beg_pawn_1",
+                  "fen": "8/8/8/P7/8/5p2/8/8 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                },
+                {
+                  "id": "beg_pawn_2",
+                  "fen": "p7/3p4/1p6/4pP2/2p5/8/8/8 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                },
+                {
+                  "id": "beg_pawn_3",
+                  "fen": "8/3p4/2p5/3p4/8/4P3/8/8 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                },
+                {
+                  "id": "beg_pawn_4",
+                  "fen": "8/2p5/1ppp4/8/1pp5/1P6/8/8 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                },
+                {
+                  "id": "beg_pawn_5",
+                  "fen": "3p4/4p3/2p2p2/2p1p3/3p4/4P3/8/8 w - - 0 1",
+                  "moves": [],
+                  "rating": 0,
+                  "tags": [
+                    "movement"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

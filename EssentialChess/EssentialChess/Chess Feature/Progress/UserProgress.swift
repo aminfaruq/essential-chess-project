@@ -8,7 +8,7 @@
 import Foundation
 
 public struct UserProgress: Equatable {
-    public let hiddenRating: Double
+    public var hiddenRating: Double
     public var actualRating: Double?
     public var onboardingComplete: Bool
     public var completedPuzzleIDs: Set<String>
@@ -19,6 +19,21 @@ public struct UserProgress: Equatable {
     public var currentStreak: Int
     public var lastActivityDate: Date?
     
+    // NEW: Freemium & Limits
+    public var isPro: Bool
+    public var dailyPuzzleMixCount: Int
+    public var lastPuzzleMixDate: Date?
+    public var dailyPuzzleStreakCount: Int
+    public var lastPuzzleStreakDate: Date?
+    public var activePuzzleStreak: Int
+    public var activePuzzleStreakUsedIDs: Set<String>
+    
+    // NEW: Puzzle Mode Records
+    public var highestPuzzleStreak: Int
+    public var highestPuzzleStorm: Int
+    public var dailyPuzzleStormCount: Int
+    public var lastPuzzleStormDate: Date?
+    
     public init(
         hiddenRating: Double = 500.0,
         actualRating: Double? = nil,
@@ -27,7 +42,18 @@ public struct UserProgress: Equatable {
         passedExamIDs: Set<String> = [],
         examFailureTimes: [String: Date] = [:],
         currentStreak: Int = 0,
-        lastActivityDate: Date? = nil
+        lastActivityDate: Date? = nil,
+        isPro: Bool = false,
+        dailyPuzzleMixCount: Int = 0,
+        lastPuzzleMixDate: Date? = nil,
+        dailyPuzzleStreakCount: Int = 0,
+        lastPuzzleStreakDate: Date? = nil,
+        activePuzzleStreak: Int = 0,
+        activePuzzleStreakUsedIDs: Set<String> = [],
+        highestPuzzleStreak: Int = 0,
+        highestPuzzleStorm: Int = 0,
+        dailyPuzzleStormCount: Int = 0,
+        lastPuzzleStormDate: Date? = nil
     ) {
         self.hiddenRating = hiddenRating
         self.actualRating = actualRating
@@ -37,5 +63,16 @@ public struct UserProgress: Equatable {
         self.examFailureTimes = examFailureTimes
         self.currentStreak = currentStreak
         self.lastActivityDate = lastActivityDate
+        self.isPro = isPro
+        self.dailyPuzzleMixCount = dailyPuzzleMixCount
+        self.lastPuzzleMixDate = lastPuzzleMixDate
+        self.dailyPuzzleStreakCount = dailyPuzzleStreakCount
+        self.lastPuzzleStreakDate = lastPuzzleStreakDate
+        self.activePuzzleStreak = activePuzzleStreak
+        self.activePuzzleStreakUsedIDs = activePuzzleStreakUsedIDs
+        self.highestPuzzleStreak = highestPuzzleStreak
+        self.highestPuzzleStorm = highestPuzzleStorm
+        self.dailyPuzzleStormCount = dailyPuzzleStormCount
+        self.lastPuzzleStormDate = lastPuzzleStormDate
     }
 }

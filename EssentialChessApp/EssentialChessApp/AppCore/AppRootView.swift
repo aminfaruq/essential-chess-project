@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import EssentialChess
 import EssentialChessUI
 
 public struct AppRootView: View {
@@ -24,7 +25,9 @@ public struct AppRootView: View {
                     .environmentObject(composer)
                     .environmentObject(composer.container)
                     .environmentObject(composer.viewFactory)
+                    .environmentObject(composer.container.languageAdapter)
                     .environmentObject(composer.curriculumVM)
+                    .environmentObject(composer.beginnerVM)
                     .environmentObject(composer.container.themeAdapter)
                     .environmentObject(composer.streakVM)
                     .preferredColorScheme(.dark)

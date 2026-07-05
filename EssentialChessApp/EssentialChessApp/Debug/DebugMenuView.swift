@@ -32,6 +32,10 @@ struct DebugMenuView: View {
             Button("💣 Reset All Progress", role: .destructive) {
                 resetProgress()
             }
+            
+            Button("🗑️ Hard Clean Store Data", role: .destructive) {
+                hardCleanStoreData()
+            }
         } label: {
             Image(systemName: "ladybug.fill")
                 .font(.system(size: 18))
@@ -93,7 +97,23 @@ struct DebugMenuView: View {
             progress.completedPuzzleIDs.removeAll()
             progress.passedExamIDs.removeAll()
             progress.examFailureTimes.removeAll()
+            progress.highestPuzzleStreak = 0
+            progress.highestPuzzleStorm = 0
+            progress.activePuzzleStreak = 0
             progress.onboardingComplete = false
         }
+        container.beginnerProgressStore.clearProgress()
+    }
+    
+    private func hardCleanStoreData() {
+        // Clear iCloud Key-Value Store
+        NSUbiquitousKeyValueStore.default.removeObject(forKey: "user_progress_cache")
+        NSUbiquitousKeyValueStore.default.synchronize()
+        
+        // Clear UserDefaults
+        UserDefaults.standard.removeObject(forKey: "user_progress_cache")
+        UserDefaults.standard.removeObject(forKey: "beginner_completed_puzzles")
+        
+        print("UbiquitousProgressStore & BeginnerStore completely cleaned. Please restart the app for full effect.")
     }
 }

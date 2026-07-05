@@ -12,6 +12,7 @@ import EssentialChessUI
 public struct ExamView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var themeAdapter: ThemeAdapter
+    @EnvironmentObject var composer: AppComposer
     
     let categoryTitle: String
     
@@ -87,9 +88,12 @@ public struct ExamView: View {
                     blue: themeAdapter.currentTheme.boardTheme.darkSquareColor.blue,
                     opacity: themeAdapter.currentTheme.boardTheme.darkSquareColor.alpha
                 ),
-                pieceTheme: themeAdapter.currentTheme.pieceTheme
+                pieceTheme: themeAdapter.currentTheme.pieceTheme,
+                isHapticEnabled: composer.settingsVM.isHapticEnabled,
+                isSoundEnabled: composer.settingsVM.isSoundEnabled
             )
-            .padding(.horizontal, 16)
+            .equatable()
+            //.padding(.horizontal, 16)
             .aspectRatio(1, contentMode: .fit)
             
             playerTurnInfo
@@ -181,7 +185,8 @@ public struct ExamView: View {
                         .scaledToFit()
                         .frame(width: 42, height: 42)
                     
-                    Text("\(boardController.userColorName) to Move")
+                    let key = "\(boardController.userColorName) to Move"
+                    Text(LocalizedStringKey(key))
                         .font(.system(size: 16, weight: .light))
                         .foregroundColor(AppColors.textPrimary)
                 }

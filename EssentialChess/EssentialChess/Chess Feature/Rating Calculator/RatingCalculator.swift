@@ -1,7 +1,8 @@
 import Foundation
 
 public struct RatingCalculator {
-    private let kFactor: Double = 100.0
+    private let placementKFactor: Double = 100.0
+    private let regularKFactor: Double = 32.0 // Standard FIDE K-Factor for general players
     public let baseProvisionalRating: Double = 1500.0
     private let minimumRating: Double = 100.0
     
@@ -13,6 +14,14 @@ public struct RatingCalculator {
     }
     
     public func calculatePlacementRating(current: Double, puzzleRating: Double, isCorrect: Bool) -> Double {
+        return calculate(current: current, puzzleRating: puzzleRating, isCorrect: isCorrect, kFactor: placementKFactor)
+    }
+    
+    public func calculateRegularRating(current: Double, puzzleRating: Double, isCorrect: Bool) -> Double {
+        return calculate(current: current, puzzleRating: puzzleRating, isCorrect: isCorrect, kFactor: regularKFactor)
+    }
+    
+    private func calculate(current: Double, puzzleRating: Double, isCorrect: Bool, kFactor: Double) -> Double {
         let actual = isCorrect ? 1.0 : 0.0
         let expected = expectedScore(userRating: current, puzzleRating: puzzleRating)
         let delta = kFactor * (actual - expected)

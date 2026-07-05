@@ -20,12 +20,22 @@ public final class PuzzleMixViewModel: ObservableObject, Identifiable {
     @Published public private(set) var isPuzzleFinished: Bool = false
     @Published public private(set) var hasUsedHint: Bool = false
     @Published public private(set) var ratingChange: Double? = nil
+    @Published public private(set) var hasSeenHintWarning: Bool
+    @Published public var showPaywall: Bool = false
+    @Published public var isDailyLimitReached: Bool = false
+    
+    // MARK: - Freemium State
+    private let checkIsPro: () -> Bool
+    private var dailyPuzzleMixCount: Int
+    private var lastPuzzleMixDate: Date?
     
     // MARK: - Dependencies
     private let pool: [Puzzle]
     private let calculateRating: (Double, Double, Bool) -> Double
     private let saveActualRating: (Double) -> Void
+    private let saveHasSeenHintWarning: (Bool) -> Void
     private let onPuzzleSolved: () -> Void
+    private let updateDailyLimits: (Int, Date) -> Void
     
     // MARK: - Internal State
     private var solvedPuzzleIds: Set<String> = []
@@ -34,14 +44,26 @@ public final class PuzzleMixViewModel: ObservableObject, Identifiable {
         pool: [Puzzle],
         hiddenRating: Double,
         actualRating: Double?,
+        checkIsPro: @escaping () -> Bool,
+        dailyPuzzleMixCount: Int,
+        lastPuzzleMixDate: Date?,
+        hasSeenHintWarning: Bool,
         calculateRating: @escaping (Double, Double, Bool) -> Double,
         saveActualRating: @escaping (Double) -> Void,
-        onPuzzleSolved: @escaping () -> Void
+        saveHasSeenHintWarning: @escaping (Bool) -> Void,
+        onPuzzleSolved: @escaping () -> Void,
+        updateDailyLimits: @escaping (Int, Date) -> Void
     ) {
         self.pool = pool
+        self.checkIsPro = checkIsPro
+        self.dailyPuzzleMixCount = dailyPuzzleMixCount
+        self.lastPuzzleMixDate = lastPuzzleMixDate
+        self.hasSeenHintWarning = hasSeenHintWarning
         self.calculateRating = calculateRating
         self.saveActualRating = saveActualRating
+        self.saveHasSeenHintWarning = saveHasSeenHintWarning
         self.onPuzzleSolved = onPuzzleSolved
+        self.updateDailyLimits = updateDailyLimits
 
         if let current = actualRating {
             self.actualRating = current
@@ -68,14 +90,16 @@ public final class PuzzleMixViewModel: ObservableObject, Identifiable {
         if isCorrect {
             isPuzzleFinished = true
             showCorrectMove = false
+            recordActivity()
             onPuzzleSolved()
         } else {
             isPuzzleFinished = true
             showCorrectMove = true
+            recordActivity()
         }
     }
     
-    public func handleHint() {
+    public func decreaseRating() {
         guard let puzzle = currentPuzzle, !isPuzzleFinished, !hasUsedHint else { return }
         
         hasUsedHint = true
@@ -87,9 +111,22 @@ public final class PuzzleMixViewModel: ObservableObject, Identifiable {
         self.actualRating = newRating
         self.ratingChange = newRating - oldRating
         saveActualRating(newRating)
+        
+        recordActivity()
+    }
+    
+    public func markHintWarningAsSeen() {
+        hasSeenHintWarning = true
+        saveHasSeenHintWarning(true)
     }
     
     public func onNextTapped() {
+        if checkDailyLimit() {
+            showPaywall = true
+            isDailyLimitReached = true
+            return
+        }
+        
         showCorrectMove = false
         isPuzzleFinished = false
         hasUsedHint = false
@@ -97,7 +134,60 @@ public final class PuzzleMixViewModel: ObservableObject, Identifiable {
         loadNextPuzzle()
     }
     
+    public func resumeAfterPurchase() {
+        if checkIsPro() {
+            isDailyLimitReached = false
+            showCorrectMove = false
+            isPuzzleFinished = false
+            hasUsedHint = false
+            ratingChange = nil
+            loadNextPuzzle()
+        }
+    }
+    
+    public func refreshDailyLimit() {
+        if checkDailyLimit() {
+            if !isDailyLimitReached {
+                isDailyLimitReached = true
+                showPaywall = true
+            }
+        } else {
+            if isDailyLimitReached {
+                isDailyLimitReached = false
+                showPaywall = false
+                if currentPuzzle == nil {
+                    loadNextPuzzle()
+                }
+            }
+        }
+    }
+    
+    private func checkDailyLimit() -> Bool {
+        if !checkIsPro() {
+            let calendar = Calendar.current
+            let now = Date()
+            if let lastDate = lastPuzzleMixDate, calendar.isDate(lastDate, inSameDayAs: now) {
+                // Same day
+                if dailyPuzzleMixCount >= 7 {
+                    return true
+                }
+            } else {
+                // New day, reset count
+                dailyPuzzleMixCount = 0
+                lastPuzzleMixDate = now
+                updateDailyLimits(dailyPuzzleMixCount, now)
+            }
+        }
+        return false
+    }
+    
     private func loadNextPuzzle() {
+        if checkDailyLimit() {
+            showPaywall = true
+            isDailyLimitReached = true
+            return
+        }
+        
         let range = (actualRating - 150)...(actualRating + 150)
         let candidates = pool.filter { 
             !solvedPuzzleIds.contains($0.id) && 
@@ -121,6 +211,14 @@ public final class PuzzleMixViewModel: ObservableObject, Identifiable {
                     solvedPuzzleIds.insert(refresh.id)
                 }
             }
+        }
+    }
+    
+    private func recordActivity() {
+        if !checkIsPro() {
+            dailyPuzzleMixCount += 1
+            lastPuzzleMixDate = Date()
+            updateDailyLimits(dailyPuzzleMixCount, lastPuzzleMixDate!)
         }
     }
 }

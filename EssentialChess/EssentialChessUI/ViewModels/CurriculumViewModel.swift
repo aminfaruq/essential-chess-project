@@ -17,7 +17,20 @@ public struct SectionUIModel: Identifiable, Equatable {
     public let eloRange: String
     public let progress: Double
     public let isUnlocked: Bool
+    public let isPremiumLocked: Bool
     public let categories: [CategoryUIModel]
+    public let isBeginnerMode: Bool
+    
+    public init(id: String, title: String, eloRange: String, progress: Double, isUnlocked: Bool, isPremiumLocked: Bool, categories: [CategoryUIModel], isBeginnerMode: Bool = false) {
+        self.id = id
+        self.title = title
+        self.eloRange = eloRange
+        self.progress = progress
+        self.isUnlocked = isUnlocked
+        self.isPremiumLocked = isPremiumLocked
+        self.categories = categories
+        self.isBeginnerMode = isBeginnerMode
+    }
 }
 
 public struct CategoryUIModel: Identifiable, Equatable {
@@ -30,6 +43,20 @@ public struct CategoryUIModel: Identifiable, Equatable {
     public let puzzles: [PuzzleUIModel]?
     public let subThemes: [SubThemeUIModel]?
     public let examState: ExamUIState?
+    public let isBeginnerMode: Bool
+    
+    public init(id: String, title: String, progress: Double, isExamMode: Bool, description: String?, totalPuzzles: Int?, puzzles: [PuzzleUIModel]?, subThemes: [SubThemeUIModel]?, examState: ExamUIState?, isBeginnerMode: Bool = false) {
+        self.id = id
+        self.title = title
+        self.progress = progress
+        self.isExamMode = isExamMode
+        self.description = description
+        self.totalPuzzles = totalPuzzles
+        self.puzzles = puzzles
+        self.subThemes = subThemes
+        self.examState = examState
+        self.isBeginnerMode = isBeginnerMode
+    }
 }
 
 public enum ExamUIState: Equatable {
@@ -39,23 +66,29 @@ public enum ExamUIState: Equatable {
     case onCooldown(availableIn: String)
 }
 
-public struct SubThemeUIModel: Identifiable, Equatable {
+public struct SubThemeUIModel: Identifiable, Equatable, Hashable {
     public let id: String
     public let title: String
     public let totalPuzzles: Int
     public let completedPuzzles: Int
     public let puzzles: [PuzzleUIModel]
+    public let isBeginnerMode: Bool
     
-    public init(id: String, title: String, totalPuzzles: Int, completedPuzzles: Int, puzzles: [PuzzleUIModel]) {
+    public init(id: String, title: String, totalPuzzles: Int, completedPuzzles: Int, puzzles: [PuzzleUIModel], isBeginnerMode: Bool = false) {
         self.id = id
         self.title = title
         self.totalPuzzles = totalPuzzles
         self.completedPuzzles = completedPuzzles
         self.puzzles = puzzles
+        self.isBeginnerMode = isBeginnerMode
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }
 
-public struct PuzzleUIModel: Equatable {
+public struct PuzzleUIModel: Equatable, Hashable {
     public let id: String
     public let fen: String
     public let moves: [String]
@@ -68,6 +101,10 @@ public struct PuzzleUIModel: Equatable {
         self.moves = moves
         self.rating = rating
         self.tags = tags
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }
 
@@ -102,6 +139,7 @@ public final class CurriculumViewModel: ObservableObject {
         
         // FIX 1: Match the Failure types using setFailureType
         Publishers.CombineLatest(dataZip, progressPublisher().setFailureType(to: Error.self))
+            .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { [weak self] completion in
                     self?.isLoading = false
@@ -122,7 +160,8 @@ public final class CurriculumViewModel: ObservableObject {
     
     private func mapToUIModels(curriculum: Curriculum, progress: UserProgress) -> [SectionUIModel] {
         return curriculum.sections.enumerated().map { index, section in
-            let isUnlocked = isSectionUnlocked(section, at: index, in: curriculum, progress: progress)
+            let isPremiumLocked = !progress.isPro && index > 0
+            let isUnlocked = isPremiumLocked ? false : isSectionUnlocked(section, at: index, in: curriculum, progress: progress)
             let sectionProgress = CurriculumProgressTracker.progress(for: section, progress: progress)
             
             let categories = section.categories.map { category in
@@ -135,6 +174,7 @@ public final class CurriculumViewModel: ObservableObject {
                 eloRange: "ELO \(section.eloRange)",
                 progress: sectionProgress,
                 isUnlocked: isUnlocked, 
+                isPremiumLocked: isPremiumLocked,
                 categories: categories
             )
         }
@@ -203,3 +243,4 @@ public final class CurriculumViewModel: ObservableObject {
         return .unlocked(livesText: "3 lives · 10 random puzzles")
     }
 }
+

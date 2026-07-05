@@ -11,31 +11,44 @@ import EssentialChess
 
 final class OnboardingViewModelTests: XCTestCase {
     
-    func test_init_setsInitialState() {
-        let (sut, _) = makeSUT(puzzles: [makePuzzle()], baseRating: 1500.0)
+    func test_init_setsInitialStateAndFetchesFirstPuzzle() {
+        let puzzle = makePuzzle(rating: 1500)
+        let (sut, _) = makeSUT(pool: [puzzle], totalPuzzles: 1, baseRating: 1500.0)
         
         XCTAssertEqual(sut.currentRating, 1500.0)
         XCTAssertEqual(sut.currentPuzzleIndex, 0)
         XCTAssertFalse(sut.isComplete)
         XCTAssertEqual(sut.progress, 0.0)
+        XCTAssertEqual(sut.currentPuzzle?.id, puzzle.id, "Expected first puzzle to be fetched on init")
     }
     
-    func test_handleResult_updatesRatingAndAdvancesPuzzle() {
-        // Provide 2 puzzles so that after answering 1, the status is not yet complete
-        let (sut, _) = makeSUT(puzzles: [makePuzzle(rating: 1500), makePuzzle(rating: 1500)], baseRating: 1500.0)
+    func test_handleResult_updatesRatingAndFetchesNextPuzzleAdaptively() {
+        let puzzle1 = makePuzzle(rating: 1500)
+        let puzzle2 = makePuzzle(rating: 1700)
+        let puzzle3 = makePuzzle(rating: 1300)
         
-        // Assumption: initial rating 1500, puzzle 1500, answered correctly (isCorrect: true) -> rating increases to 1550
+        // Provide 3 puzzles. We only need 2 iterations to test adaptive.
+        let (sut, _) = makeSUT(pool: [puzzle1, puzzle2, puzzle3], totalPuzzles: 2, baseRating: 1500.0)
+        
+        // At start, it should pick puzzle1 (closest to 1500)
+        XCTAssertEqual(sut.currentPuzzle?.id, puzzle1.id)
+        
+        // Answer correctly -> rating increases to 1550
         sut.handleResult(isCorrect: true)
         
         XCTAssertEqual(sut.currentRating, 1550.0)
         XCTAssertEqual(sut.currentPuzzleIndex, 1)
         XCTAssertFalse(sut.isComplete)
-        XCTAssertEqual(sut.progress, 0.5) // 1 out of 2 puzzles completed
+        XCTAssertEqual(sut.progress, 0.5)
+        
+        // Since rating is now 1550, it should dynamically fetch puzzle2 (rating 1550)
+        XCTAssertEqual(sut.currentPuzzle?.id, puzzle2.id)
     }
     
     func test_handleResult_completesOnboardingAndRequiresCommitToTriggerCallback() {
         var completedRating: Double?
-        let (sut, _) = makeSUT(puzzles: [makePuzzle(rating: 1500)], baseRating: 1500.0) { finalRating in
+        let puzzle = makePuzzle(rating: 1500)
+        let (sut, _) = makeSUT(pool: [puzzle], totalPuzzles: 1, baseRating: 1500.0) { finalRating in
             completedRating = finalRating
         }
         
@@ -54,21 +67,22 @@ final class OnboardingViewModelTests: XCTestCase {
     // MARK: - Helpers
     
     private func makeSUT(
-        puzzles: [Puzzle],
+        pool: [Puzzle],
+        totalPuzzles: Int,
         baseRating: Double,
         onComplete: @escaping (Double) -> Void = { _ in },
         file: StaticString = #filePath,
         line: UInt = #line
     ) -> (sut: OnboardingViewModel, onComplete: (Double) -> Void) {
         
-        // Inject the pure function from RatingCalculator as a dependency
         let calculator = RatingCalculator()
         let ratingLogic: (Double, Double, Bool) -> Double = { current, puzzleRating, isCorrect in
             calculator.calculatePlacementRating(current: current, puzzleRating: puzzleRating, isCorrect: isCorrect)
         }
         
         let sut = OnboardingViewModel(
-            puzzles: puzzles,
+            pool: pool,
+            totalPuzzles: totalPuzzles,
             initialRating: baseRating,
             calculateRating: ratingLogic,
             onComplete: onComplete

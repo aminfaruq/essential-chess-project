@@ -45,6 +45,26 @@ final class RatingCalculatorTests: XCTestCase {
         XCTAssertEqual(newRating, 100.0)
     }
     
+    func test_calculateRegularRating_increasesRatingOnCorrectAnswer() {
+        let sut = RatingCalculator()
+        
+        // When user and puzzle have the exact same rating (1500), the expected score is 0.5.
+        // For regular rating (K=32), if the answer is correct (actual = 1.0), the delta is 32 * (1.0 - 0.5) = +16.
+        let newRating = sut.calculateRegularRating(current: 1500.0, puzzleRating: 1500.0, isCorrect: true)
+        
+        XCTAssertEqual(newRating, 1516.0)
+    }
+    
+    func test_calculateRegularRating_decreasesRatingOnIncorrectAnswer() {
+        let sut = RatingCalculator()
+        
+        // When user and puzzle have the exact same rating (1500), the expected score is 0.5.
+        // For regular rating (K=32), if the answer is incorrect (actual = 0.0), the delta is 32 * (0.0 - 0.5) = -16.
+        let newRating = sut.calculateRegularRating(current: 1500.0, puzzleRating: 1500.0, isCorrect: false)
+        
+        XCTAssertEqual(newRating, 1484.0)
+    }
+    
     func test_placementBracket_returnsCorrectBrackets() {
         let sut = RatingCalculator()
         

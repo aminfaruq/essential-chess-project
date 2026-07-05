@@ -15,8 +15,10 @@ public final class AppComposer: ObservableObject {
     
     /// ViewModels
     public let curriculumVM: CurriculumViewModel
+    public let beginnerVM: BeginnerCurriculumViewModel
     public let navigationVM: MainNavigationViewModel
     public let streakVM: StreakViewModel
+    public let settingsVM: SettingsViewModel
     
     /// Core Components
     public let container: DependencyContainer
@@ -48,10 +50,28 @@ public final class AppComposer: ObservableObject {
             progressPublisher: { [adapter] in adapter.publisher() }
         )
         
+        let validBegLoader = container.beginnerCurriculumLoader
+        
+        self.beginnerVM = BeginnerCurriculumViewModel(
+            curriculumPublisher: {
+                if let loader = validBegLoader {
+                    return loader.publisher()
+                }
+                return Fail(error: FileCurriculumLoader.Error.invalidData).eraseToAnyPublisher()
+            },
+            progressPublisher: { [container] in container.beginnerProgressStore.progressPublisher }
+        )
+        
         self.streakVM = StreakViewModel(progressPublisher: adapter.publisher())
         
         let tabAdapter = UserDefaultsTabAdapter()
         self.navigationVM = MainNavigationViewModel(tabStorage: tabAdapter)
+        
+        self.settingsVM = SettingsViewModel(
+            notificationStorage: container.notificationStorage,
+            notificationScheduler: container.notificationScheduler,
+            boardSettingsStorage: container.boardSettingsStorage
+        )
     }
     
     public func start() {
@@ -63,12 +83,14 @@ public final class AppComposer: ObservableObject {
         
         container.progressAdapter.load { [weak self] in
             DispatchQueue.main.async {
-                self?.isReady = true
-                self?.curriculumVM.load()
+                guard let self = self else { return }
+                self.isReady = true
+                self.curriculumVM.load()
             }
         }
         
         container.themeAdapter.load { }
+        container.languageAdapter.load()
     }
 }
 

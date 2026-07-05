@@ -33,9 +33,9 @@ public struct MainTabView: View {
                 }
                 .tag(AppTab.curriculum)
             
-            PuzzleMixView()
+            PuzzleDashboardView()
                 .tabItem {
-                    Label("Puzzle Mix", systemImage: "puzzlepiece.extension.fill")
+                    Label("Puzzle", systemImage: "puzzlepiece.extension.fill")
                 }
                 .tag(AppTab.puzzleMix)
             
@@ -56,6 +56,9 @@ public struct MainTabView: View {
             if #available(iOS 15.0, *) {
                 UITabBar.appearance().scrollEdgeAppearance = appearance
             }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("DeepLinkToPuzzleMix"))) { _ in
+            navigationViewModel.selectedTab = .puzzleMix
         }
     }
 }

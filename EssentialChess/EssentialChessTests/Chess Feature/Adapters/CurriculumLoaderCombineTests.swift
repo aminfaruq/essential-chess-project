@@ -13,6 +13,8 @@ final class CurriculumLoaderCombineTests: XCTestCase {
         let loader = CurriculumLoaderSpy()
         let sut = loader.publisher()
         
+        trackForMemoryLeaks(loader)
+        
         let expectedCurriculum = makeCurriculum()
         
         var receivedCurriculums = [Curriculum]()
@@ -42,6 +44,8 @@ final class CurriculumLoaderCombineTests: XCTestCase {
     func test_publisher_deliversErrorOnLoaderFailure() {
         let loader = CurriculumLoaderSpy()
         let sut = loader.publisher()
+        
+        trackForMemoryLeaks(loader)
         
         let expectedError = NSError(domain: "test", code: 0)
         

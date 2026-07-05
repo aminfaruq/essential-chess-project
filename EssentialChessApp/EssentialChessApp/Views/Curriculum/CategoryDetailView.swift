@@ -9,6 +9,7 @@ import Combine
 import EssentialChess
 import EssentialChessUI
 
+//MARK: - NO LONGER USED
 struct CategoryDetailView: View {
     @EnvironmentObject var viewFactory: ViewFactory
     let section: SectionUIModel
@@ -74,7 +75,7 @@ private struct SubThemeCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
-                Text(subTheme.title)
+                Text(LocalizedStringKey(subTheme.title))
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(AppColors.textPrimary)
                 Spacer()

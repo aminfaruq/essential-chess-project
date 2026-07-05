@@ -8,10 +8,10 @@
 import Foundation
 
 public final class UserDefaultsProgressStore: ProgressStore {
-    private let store: UserDefaults
+    private let store: KeyValueStore
     private let cacheKey = "user_progress_cache"
     
-    public init(store: UserDefaults = .standard) {
+    public init(store: KeyValueStore = UserDefaults.standard) {
         self.store = store
     }
     
@@ -50,6 +50,17 @@ public final class UserDefaultsProgressStore: ProgressStore {
         let examFailureTimes: [String: Date]
         let currentStreak: Int
         let lastActivityDate: Date?
+        let isPro: Bool?
+        let dailyPuzzleMixCount: Int?
+        let lastPuzzleMixDate: Date?
+        let dailyPuzzleStreakCount: Int?
+        let lastPuzzleStreakDate: Date?
+        let activePuzzleStreak: Int?
+        let activePuzzleStreakUsedIDs: Set<String>?
+        let highestPuzzleStreak: Int?
+        let highestPuzzleStorm: Int?
+        let dailyPuzzleStormCount: Int?
+        let lastPuzzleStormDate: Date?
         
         init(from model: UserProgress) {
             self.hiddenRating = model.hiddenRating
@@ -60,6 +71,17 @@ public final class UserDefaultsProgressStore: ProgressStore {
             self.examFailureTimes = model.examFailureTimes
             self.currentStreak = model.currentStreak
             self.lastActivityDate = model.lastActivityDate
+            self.isPro = model.isPro
+            self.dailyPuzzleMixCount = model.dailyPuzzleMixCount
+            self.lastPuzzleMixDate = model.lastPuzzleMixDate
+            self.dailyPuzzleStreakCount = model.dailyPuzzleStreakCount
+            self.lastPuzzleStreakDate = model.lastPuzzleStreakDate
+            self.activePuzzleStreak = model.activePuzzleStreak
+            self.activePuzzleStreakUsedIDs = model.activePuzzleStreakUsedIDs
+            self.highestPuzzleStreak = model.highestPuzzleStreak
+            self.highestPuzzleStorm = model.highestPuzzleStorm
+            self.dailyPuzzleStormCount = model.dailyPuzzleStormCount
+            self.lastPuzzleStormDate = model.lastPuzzleStormDate
         }
         
         func toModel() -> UserProgress {
@@ -71,7 +93,18 @@ public final class UserDefaultsProgressStore: ProgressStore {
                 passedExamIDs: passedExamIDs,
                 examFailureTimes: examFailureTimes,
                 currentStreak: currentStreak,
-                lastActivityDate: lastActivityDate
+                lastActivityDate: lastActivityDate,
+                isPro: isPro ?? false,
+                dailyPuzzleMixCount: dailyPuzzleMixCount ?? 0,
+                lastPuzzleMixDate: lastPuzzleMixDate,
+                dailyPuzzleStreakCount: dailyPuzzleStreakCount ?? 0,
+                lastPuzzleStreakDate: lastPuzzleStreakDate,
+                activePuzzleStreak: activePuzzleStreak ?? 0,
+                activePuzzleStreakUsedIDs: activePuzzleStreakUsedIDs ?? [],
+                highestPuzzleStreak: highestPuzzleStreak ?? 0,
+                highestPuzzleStorm: highestPuzzleStorm ?? 0,
+                dailyPuzzleStormCount: dailyPuzzleStormCount ?? 0,
+                lastPuzzleStormDate: lastPuzzleStormDate
             )
         }
     }

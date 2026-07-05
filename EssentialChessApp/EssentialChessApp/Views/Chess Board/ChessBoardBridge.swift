@@ -9,10 +9,10 @@ import SwiftUI
 import UIKit
 import Combine
 import EssentialChess
-import NativeChessBoard
+import ChessBoard
 
 public class ChessBoardController: ObservableObject {
-    fileprivate(set) weak var boardView: NativeChessBoardView?
+    public internal(set) weak var boardView: PuzzleChessBoardView?
     
     @Published public var userColorName: String = ""
     
@@ -21,11 +21,23 @@ public class ChessBoardController: ObservableObject {
     public func showHint() {
         boardView?.showHint()
     }
+    
+    public func showSolution() {
+        boardView?.showSolution()
+    }
+    
+    public func enableHaptic(_ state: Bool) {
+        boardView?.setHapticEnabled(state)
+    }
+    
+    public func enableSound(_ state: Bool) {
+        boardView?.setSoundEnabled(state)
+    }
 }
 
 // MARK: - UIViewRepresentable Bridge
 
-public struct ChessBoardBridge: UIViewRepresentable {
+public struct ChessBoardBridge: UIViewRepresentable, Equatable {
     public let puzzle: Puzzle
     public let controller: ChessBoardController
     public var onCompleted: () -> Void
@@ -35,6 +47,8 @@ public struct ChessBoardBridge: UIViewRepresentable {
     public var boardThemeLight: Color
     public var boardThemeDark: Color
     public var pieceTheme: String
+    public var isHapticEnabled: Bool
+    public var isSoundEnabled: Bool
     
     public init(
         puzzle: Puzzle,
@@ -44,7 +58,9 @@ public struct ChessBoardBridge: UIViewRepresentable {
         onReady: @escaping (String) -> Void,
         boardThemeLight: Color = AppColors.boardLight,
         boardThemeDark: Color = AppColors.boardDark,
-        pieceTheme: String = "default"
+        pieceTheme: String = "default",
+        isHapticEnabled: Bool = true,
+        isSoundEnabled: Bool = true
     ) {
         self.puzzle = puzzle
         self.controller = controller
@@ -54,12 +70,14 @@ public struct ChessBoardBridge: UIViewRepresentable {
         self.boardThemeLight = boardThemeLight
         self.boardThemeDark = boardThemeDark
         self.pieceTheme = pieceTheme
+        self.isHapticEnabled = isHapticEnabled
+        self.isSoundEnabled = isSoundEnabled
     }
     
     public func makeCoordinator() -> Coordinator { Coordinator() }
     
-    public func makeUIView(context: Context) -> NativeChessBoardView {
-        let view = NativeChessBoardView()
+    public func makeUIView(context: Context) -> PuzzleChessBoardView {
+        let view = PuzzleChessBoardView()
         applyTheme(to: view)
         controller.boardView = view
         
@@ -76,7 +94,7 @@ public struct ChessBoardBridge: UIViewRepresentable {
         return view
     }
     
-    public func updateUIView(_ uiView: NativeChessBoardView, context: Context) {
+    public func updateUIView(_ uiView: PuzzleChessBoardView, context: Context) {
         controller.boardView = uiView
         uiView.onPuzzleCompleted = onCompleted
         uiView.onPuzzleWrong = onWrong
@@ -97,9 +115,20 @@ public struct ChessBoardBridge: UIViewRepresentable {
         var lastPuzzleId: String?
     }
     
-    private func applyTheme(to view: NativeChessBoardView) {
+    private func applyTheme(to view: PuzzleChessBoardView) {
         view.setBoardTheme(light: UIColor(boardThemeLight), dark: UIColor(boardThemeDark))
         view.setHighlightColor(UIColor(AppColors.hint), alpha: 0.45)
         view.setPieceTheme(pieceTheme)
+        view.setHapticEnabled(isHapticEnabled)
+        view.setSoundEnabled(isSoundEnabled)
+    }
+    
+    public static func == (lhs: ChessBoardBridge, rhs: ChessBoardBridge) -> Bool {
+        return lhs.puzzle.id == rhs.puzzle.id &&
+               lhs.boardThemeLight == rhs.boardThemeLight &&
+               lhs.boardThemeDark == rhs.boardThemeDark &&
+               lhs.pieceTheme == rhs.pieceTheme &&
+               lhs.isHapticEnabled == rhs.isHapticEnabled &&
+               lhs.isSoundEnabled == rhs.isSoundEnabled
     }
 }

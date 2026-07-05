@@ -18,6 +18,9 @@ final class MainNavigationViewModelTests: XCTestCase {
         // When
         let sut = MainNavigationViewModel(tabStorage: spy)
         
+        trackForMemoryLeaks(sut)
+        trackForMemoryLeaks(spy)
+        
         // Then
         XCTAssertEqual(sut.selectedTab, .puzzleMix, "ViewModel should load the initial state from the storage port.")
         XCTAssertTrue(spy.savedTabsHistory.isEmpty, "Initialization should use dropFirst() and NOT trigger a save to storage.")
@@ -27,6 +30,9 @@ final class MainNavigationViewModelTests: XCTestCase {
         // Given
         let spy = TabStoragePortSpy(initialTab: .curriculum)
         let sut = MainNavigationViewModel(tabStorage: spy)
+        
+        trackForMemoryLeaks(sut)
+        trackForMemoryLeaks(spy)
         
         // When
         sut.selectedTab = .settings
@@ -40,6 +46,9 @@ final class MainNavigationViewModelTests: XCTestCase {
         // Given
         let spy = TabStoragePortSpy(initialTab: .settings)
         let sut = MainNavigationViewModel(tabStorage: spy)
+        
+        trackForMemoryLeaks(sut)
+        trackForMemoryLeaks(spy)
         
         // When
         sut.resetToCurriculum()

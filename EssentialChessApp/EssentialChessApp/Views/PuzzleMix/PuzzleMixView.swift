@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 import EssentialChess
 import EssentialChessUI
 
@@ -16,26 +17,25 @@ public struct PuzzleMixView: View {
     public init() {}
     
     public var body: some View {
-        NavigationStack {
-            ZStack {
-                AppColors.background.ignoresSafeArea()
-                
-                if let vm = viewModel {
-                    PuzzleMixActiveView(vm: vm)
-                } else {
-                    VStack(spacing: 16) {
-                        ProgressView()
-                            .tint(AppColors.accent)
-                        Text("Loading Puzzles...")
-                            .foregroundColor(AppColors.textSecondary)
-                    }
+        ZStack {
+            AppColors.background.ignoresSafeArea()
+            
+            if let vm = viewModel {
+                PuzzleMixContainerView(vm: vm)
+            } else {
+                VStack(spacing: 16) {
+                    ProgressView()
+                        .tint(AppColors.accent)
+                    Text("Loading Puzzles...")
+                        .foregroundColor(AppColors.textSecondary)
                 }
             }
-            .navigationTitle("Train Tactics")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(AppColors.background, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
         }
+        .navigationTitle("Puzzle Mix")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(AppColors.background, for: .navigationBar)
+        .toolbarColorScheme(.dark, for: .navigationBar)
+        .toolbar(.hidden, for: .tabBar)
         .onAppear {
             if viewModel == nil {
                 composer.viewFactory.fetchPuzzleMixViewModel { fetchedVM in
@@ -48,15 +48,96 @@ public struct PuzzleMixView: View {
 
 // MARK: - Subviews
 
+private struct PuzzleMixContainerView: View {
+    @ObservedObject var vm: PuzzleMixViewModel
+    @EnvironmentObject var container: DependencyContainer
+    
+    var body: some View {
+        Group {
+            if vm.isDailyLimitReached {
+                VStack(spacing: 20) {
+                    Image(systemName: "clock.fill")
+                        .font(.system(size: 60))
+                        .foregroundColor(AppColors.locked)
+                    Text("Daily Limit Reached")
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundColor(AppColors.textPrimary)
+                    Text("You've completed your 7 free puzzles today. Come back tomorrow or upgrade to Pro to play endlessly.")
+                        .font(.system(size: 16))
+                        .foregroundColor(AppColors.textSecondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 32)
+                    
+                    Button {
+                        vm.showPaywall = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "crown.fill")
+                            Text("Unlock Pro")
+                        }
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 24)
+                        .padding(.vertical, 14)
+                        .background(AppColors.gold)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                    .padding(.top, 8)
+                }
+            } else {
+                PuzzleMixActiveView(vm: vm)
+            }
+        }
+        .sheet(isPresented: $vm.showPaywall) {
+            PaywallView()
+        }
+        .onReceive(container.progressAdapter.publisher()) { progress in
+            if progress.isPro && vm.isDailyLimitReached {
+                vm.resumeAfterPurchase()
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+            vm.refreshDailyLimit()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
+            vm.refreshDailyLimit()
+        }
+    }
+}
+
 private struct PuzzleMixActiveView: View {
     @ObservedObject var vm: PuzzleMixViewModel
     @EnvironmentObject var themeAdapter: ThemeAdapter
+    @EnvironmentObject var composer: AppComposer
     @StateObject private var boardController = ChessBoardController()
+    
+    @State private var showHintWarning: Bool = false
+    @State private var pendingAction: (() -> Void)? = nil
     
     var body: some View {
         if let puzzle = vm.currentPuzzle {
             VStack(spacing: 0) {
                 header
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 6) {
+                        ForEach(puzzle.tags, id: \.self) { theme in
+                            Text(PuzzleTagFormatter.format(tag: theme))
+                                .font(.system(size: 10, weight: .bold))
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(AppColors.accent.opacity(0.8))
+                                .cornerRadius(4)
+                        }
+                    }
+                }
+                .opacity(vm.isPuzzleFinished ? 1 : 0)
+                .animation(.easeInOut(duration: 0.3), value: vm.isPuzzleFinished)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 4)
+                .frame(height: 20)
+                
                 Spacer(minLength: 8)
                 
                 boardArea(puzzle: puzzle)
@@ -74,7 +155,7 @@ private struct PuzzleMixActiveView: View {
         }
     }
     
-    private var headerText: String {
+    private var headerText: LocalizedStringKey {
         if vm.isPuzzleFinished {
             if vm.showCorrectMove || vm.hasUsedHint {
                 return "Get it right next time!"
@@ -101,8 +182,10 @@ private struct PuzzleMixActiveView: View {
             Text(headerText)
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundColor(headerColor)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
                 .animation(.easeInOut(duration: 0.3), value: headerText)
-            Spacer()
+            Spacer(minLength: 8)
             if vm.isPuzzleFinished, let change = vm.ratingChange {
                 let oldRating = vm.actualRating - change
                 let isPositive = change >= 0
@@ -112,21 +195,28 @@ private struct PuzzleMixActiveView: View {
                     Text("~\(Int(oldRating))")
                         .font(.system(size: 14, weight: .semibold, design: .monospaced))
                         .foregroundColor(AppColors.gold)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
                     
                     Text(isPositive ? "+\(changeInt)" : "\(changeInt)")
                         .font(.system(size: 11, weight: .light, design: .monospaced))
                         .foregroundColor(isPositive ? AppColors.correct : AppColors.incorrect)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
                 }
                 .padding(8)
             } else {
                 Text("~\(Int(vm.actualRating))")
                     .font(.system(size: 14, weight: .semibold, design: .monospaced))
                     .foregroundColor(AppColors.gold)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
                     .padding(8)
             }
         }
         .padding(.horizontal, 20)
         .padding(.top, 8)
+        .frame(height: 44)
     }
     
     private func boardArea(puzzle: Puzzle) -> some View {
@@ -154,9 +244,12 @@ private struct PuzzleMixActiveView: View {
                 blue: themeAdapter.currentTheme.boardTheme.darkSquareColor.blue,
                 opacity: themeAdapter.currentTheme.boardTheme.darkSquareColor.alpha
             ),
-            pieceTheme: themeAdapter.currentTheme.pieceTheme
+            pieceTheme: themeAdapter.currentTheme.pieceTheme,
+            isHapticEnabled: composer.settingsVM.isHapticEnabled,
+            isSoundEnabled: composer.settingsVM.isSoundEnabled
         )
-        .padding(.horizontal, 16)
+        .equatable()
+        //.padding(.horizontal, 16)
         .aspectRatio(1, contentMode: .fit)
         //        .onChange(of: vm.showCorrectMove) { _, newValue in
         //            if newValue {
@@ -177,31 +270,53 @@ private struct PuzzleMixActiveView: View {
                         .scaledToFit()
                         .frame(width: 42, height: 42)
                     
-                    Text("\(boardController.userColorName) to Move")
+                    let key = "\(boardController.userColorName) to Move"
+                    Text(LocalizedStringKey(key))
                         .font(.system(size: 16, weight: .light))
                         .foregroundColor(AppColors.textPrimary)
                 }
             }
         }
         .padding(.horizontal, 20)
+        .frame(height: 50)
     }
     
     private var controls: some View {
         HStack(spacing: 12) {
+            if !vm.hasUsedHint {
+                Button {
+                    executeWithWarning {
+                        vm.decreaseRating()
+                        boardController.showHint()
+                    }
+                } label: {
+                    Label("Hint", systemImage: "lightbulb")
+                            .font(.system(size: 14))
+                            .foregroundStyle(.gray)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 12)
+                            .background(AppColors.surface)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                }
+                .hoverEffect(.highlight)
+            }
+           
             Button {
-                vm.handleHint()
-                boardController.showHint()
+                executeWithWarning {
+                    vm.decreaseRating()
+                    boardController.showSolution()
+                }
             } label: {
-                Label("Hint", systemImage: "lightbulb")
+                Label("Solution", systemImage: "key.horizontal")
                         .font(.system(size: 14))
                         .foregroundStyle(.gray)
+                        .fixedSize(horizontal: true, vertical: false)
                         .padding(.horizontal, 16)
                         .padding(.vertical, 12)
                         .background(AppColors.surface)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
             }
             .hoverEffect(.highlight)
-            
             
             Spacer()
             
@@ -212,6 +327,7 @@ private struct PuzzleMixActiveView: View {
                     Label("Next", systemImage: "arrow.right")
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(.black)
+                        .fixedSize(horizontal: true, vertical: false)
                         .padding(.horizontal, 24)
                         .padding(.vertical, 12)
                         .background(AppColors.accent)
@@ -223,5 +339,27 @@ private struct PuzzleMixActiveView: View {
         }
         .padding(.horizontal, 20)
         .padding(.bottom, 32)
+        .frame(height: 80)
+        .alert("Rating Penalty", isPresented: $showHintWarning) {
+            Button("Cancel", role: .cancel) {
+                pendingAction = nil
+            }
+            Button("Proceed", role: .destructive) {
+                vm.markHintWarningAsSeen()
+                pendingAction?()
+                pendingAction = nil
+            }
+        } message: {
+            Text("Using a hint or seeing the solution will count this puzzle as incorrect and decrease your rating. Do you want to proceed?")
+        }
+    }
+    
+    private func executeWithWarning(action: @escaping () -> Void) {
+        if vm.hasSeenHintWarning {
+            action()
+        } else {
+            pendingAction = action
+            showHintWarning = true
+        }
     }
 }
