@@ -18,7 +18,7 @@ public final class DependencyContainer: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     public let notificationStorage: NotificationStore
-    public let notificationScheduler: NotificationScheduler
+    public let notificationScheduler: NotificationSchedulerLoader
     public let boardSettingsStorage: BoardSettingsStore
     
     public let curriculumLoader: FileCurriculumLoader?

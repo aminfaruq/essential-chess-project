@@ -109,7 +109,7 @@ class BoardSettingsStoragePortSpy: BoardSettingsStore {
     var isSoundEnabled: Bool = true
 }
 
-class NotificationSchedulerSpy: NotificationScheduler {
+class NotificationSchedulerSpy: NotificationSchedulerLoader {
     var requestPermissionCallCount = 0
     var permissionToGrant = false
     

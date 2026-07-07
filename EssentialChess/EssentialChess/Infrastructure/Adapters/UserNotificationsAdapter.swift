@@ -6,7 +6,7 @@
 import Foundation
 import UserNotifications
 
-public final class UserNotificationsAdapter: NotificationScheduler {
+public final class UserNotificationsAdapter: NotificationSchedulerLoader {
     private let center: UNUserNotificationCenter
     
     public init(center: UNUserNotificationCenter = .current()) {

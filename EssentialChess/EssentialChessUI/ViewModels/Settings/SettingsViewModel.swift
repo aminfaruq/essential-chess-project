@@ -13,12 +13,12 @@ public final class SettingsViewModel: ObservableObject {
     @Published public var isSoundEnabled: Bool = true
     
     private var notificationStorage: NotificationStore
-    private let notificationScheduler: NotificationScheduler
+    private let notificationScheduler: NotificationSchedulerLoader
     private var boardSettingsStorage: BoardSettingsStore
     
     public init(
         notificationStorage: NotificationStore,
-        notificationScheduler: NotificationScheduler,
+        notificationScheduler: NotificationSchedulerLoader,
         boardSettingsStorage: BoardSettingsStore
     ) {
         self.notificationStorage = notificationStorage
