@@ -61,7 +61,7 @@ public final class DependencyContainer: ObservableObject {
             self.beginnerCurriculumLoader = nil
         }
         
-        let languageStorage = UserDefaultsLanguageStorage()
+        let languageStorage = UserDefaultsLanguageStore()
         self.languageAdapter = LanguageAdapter(store: languageStorage)
         
         setupUbiquitousSync()

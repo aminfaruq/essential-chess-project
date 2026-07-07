@@ -1,11 +1,11 @@
 //
-//  UserDefaultsLanguageStorage.swift
+//  UserDefaultsLanguageStore.swift
 //  EssentialChess
 //
 
 import Foundation
 
-public final class UserDefaultsLanguageStorage: LanguageStore {
+public final class UserDefaultsLanguageStore: LanguageStore {
     private let userDefaults: UserDefaults
     private let key = "app_language_code"
     
