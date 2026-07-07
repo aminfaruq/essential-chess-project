@@ -183,13 +183,13 @@ extension SectionUIModel {
     var description: String {
         switch id {
         case "sec_500_800":
-            return "Master the basics. Recognize essential tactical patterns, checkmates, and endgames in simple, clear positions requiring 1 to 2 moves."
+            return "Build your foundation. Spot hanging pieces, count attackers, deliver basic checkmates, and learn fork, pin, and skewer in clear, simple positions."
         case "sec_800_1200":
-            return "Deepen your vision. Apply the exact same tactical motifs in more complex scenarios, requiring longer calculation and fewer obvious clues."
+            return "Sharpen your tactics. Apply forks, pins, skewers, and discovered attacks alongside checkmates and fundamental pawn endgames in more complex scenarios."
         case "sec_1200_1600":
-            return "Find the hidden tactics. The themes remain the same, but you must now uncover them through sacrifices, preliminary moves, and deeper calculation."
+            return "Uncover hidden tactics. Master deflection, decoy, clearance, and interference. Navigate advanced endgames, complex checkmates, and learn to find quiet moves and sacrifices."
         case "sec_1600_2000":
-            return "True mastery. Execute standard tactical patterns hidden within complex variations, deep combinations, and unforgiving endgame positions."
+            return "True mastery. Execute multi-move sacrifices, deep clearance and interference, prophylaxis, and complex endgames. Solve intricate mate patterns and zugzwang positions."
         default:
             return "Start your chess journey. Learn how each piece moves, understand essential board rules, and grasp the absolute fundamentals of safe captures and defense."
         }

@@ -229,6 +229,28 @@
         }
       }
     },
+    "Advanced Checkmates" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skakmat Lanjutan"
+          }
+        }
+      }
+    },
+    "Advanced Pawn Endgames" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permainan Akhir Pion Lanjutan"
+          }
+        }
+      }
+    },
     "Advanced Pawn" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -354,6 +376,17 @@
         }
       }
     },
+    "Basic Checkmates" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skakmat Dasar"
+          }
+        }
+      }
+    },
     "Basic Pawn Endgame" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -366,7 +399,7 @@
       }
     },
     "Basic Rook Ending" : {
-      "extractionState" : "manual",
+      "extractionState" : "stale",
       "localizations" : {
         "id" : {
           "stringUnit" : {
@@ -383,6 +416,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fondasi Pemula"
+          }
+        }
+      }
+    },
+    "Basic Tactics" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taktik Dasar"
           }
         }
       }
@@ -477,6 +521,17 @@
         }
       }
     },
+    "Board Awareness" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kesadaran Papan"
+          }
+        }
+      }
+    },
     "Brown" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -532,6 +587,39 @@
     },
     "Combo" : {
 
+    },
+    "Complex Combinations" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kombinasi Kompleks"
+          }
+        }
+      }
+    },
+    "Complex Mate Patterns" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pola Skakmat Kompleks"
+          }
+        }
+      }
+    },
+    "Complex Rook Endgames" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permainan Akhir Benteng Kompleks"
+          }
+        }
+      }
     },
     "Coming Soon" : {
       "extractionState" : "manual",
@@ -592,6 +680,17 @@
         }
       }
     },
+    "Counting Attackers" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menghitung Penyerang"
+          }
+        }
+      }
+    },
     "Curriculum" : {
       "localizations" : {
         "id" : {
@@ -644,25 +743,36 @@
         }
       }
     },
-    "Deepen your vision. Apply the exact same tactical motifs in more complex scenarios, requiring longer calculation and fewer obvious clues." : {
+    "Sharpen your tactics. Apply forks, pins, skewers, and discovered attacks alongside checkmates and fundamental pawn endgames in more complex scenarios." : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Deepen your vision. Apply the exact same tactical motifs in more complex scenarios, requiring longer calculation and fewer obvious clues."
+            "value" : "Sharpen your tactics. Apply forks, pins, skewers, and discovered attacks alongside checkmates and fundamental pawn endgames in more complex scenarios."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pertajam instingmu. Terapkan motif taktik yang sama di skenario yang lebih rumit. Butuh perhitungan lebih panjang dan minim petunjuk visual."
+            "value" : "Tajamkan taktikmu. Terapkan garpu, pakuan, tusukan, dan serangan tersembunyi bersama skakmat dan permainan akhir pion dasar di skenario yang lebih rumit."
+          }
+        }
+      }
+    },
+    "Deep Clearance/Interference" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pembukaan Ruang/Gangguan Mendalam"
           }
         }
       }
     },
     "Defensive Rook" : {
-      "extractionState" : "manual",
+      "extractionState" : "stale",
       "localizations" : {
         "id" : {
           "stringUnit" : {
@@ -711,6 +821,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Skak Ganda"
+          }
+        }
+      }
+    },
+    "Endgames" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permainan Akhir"
           }
         }
       }
@@ -775,6 +896,9 @@
         }
       }
     },
+    "Failed to Load Curriculum" : {
+
+    },
     "Find the best move" : {
       "localizations" : {
         "id" : {
@@ -785,19 +909,30 @@
         }
       }
     },
-    "Find the hidden tactics. The themes remain the same, but you must now uncover them through sacrifices, preliminary moves, and deeper calculation." : {
+    "Uncover hidden tactics. Master deflection, decoy, clearance, and interference. Navigate advanced endgames, complex checkmates, and learn to find quiet moves and sacrifices." : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Find the hidden tactics. The themes remain the same, but you must now uncover them through sacrifices, preliminary moves, and deeper calculation."
+            "value" : "Uncover hidden tactics. Master deflection, decoy, clearance, and interference. Navigate advanced endgames, complex checkmates, and learn to find quiet moves and sacrifices."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Temukan taktik tersembunyi. Temanya masih sama, tapi sekarang kamu harus menemukannya lewat pengorbanan perwira, langkah persiapan, dan kalkulasi mendalam."
+            "value" : "Temukan taktik tersembunyi. Kuasai pengalihan, pancingan, pembukaan ruang, dan gangguan. Navigasi permainan akhir lanjutan, skakmat rumit, dan pelajari langkah tenang serta pengorbanan."
+          }
+        }
+      }
+    },
+    "Fortress & Stalemate Defense" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benteng & Pertahanan Stalemate"
           }
         }
       }
@@ -814,7 +949,7 @@
       }
     },
     "Fundamental Tactics" : {
-      "extractionState" : "manual",
+      "extractionState" : "stale",
       "localizations" : {
         "id" : {
           "stringUnit" : {
@@ -871,6 +1006,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Getaran"
+          }
+        }
+      }
+    },
+    "Hanging Pieces" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bidak Tak Bertahan"
           }
         }
       }
@@ -1034,19 +1180,19 @@
         }
       }
     },
-    "Master the basics. Recognize essential tactical patterns, checkmates, and endgames in simple, clear positions requiring 1 to 2 moves." : {
+    "Build your foundation. Spot hanging pieces, count attackers, deliver basic checkmates, and learn fork, pin, and skewer in clear, simple positions." : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Master the basics. Recognize essential tactical patterns, checkmates, and endgames in simple, clear positions requiring 1 to 2 moves."
+            "value" : "Build your foundation. Spot hanging pieces, count attackers, deliver basic checkmates, and learn fork, pin, and skewer in clear, simple positions."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kuasai fondasi dasar. Kenali pola taktik penting, skakmat, dan penyelesaian akhir di posisi sederhana yang bisa diselesaikan dalam 1-2 langkah."
+            "value" : "Bangun fondasimu. Temukan bidak tak bertahan, hitung penyerang, berikan skakmat dasar, dan pelajari garpu, pakuan, dan tusukan di posisi sederhana."
           }
         }
       }
@@ -1106,6 +1252,17 @@
         }
       }
     },
+    "Mixed Patterns" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pola Campuran"
+          }
+        }
+      }
+    },
     "Monochrome" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1113,6 +1270,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Monokrom"
+          }
+        }
+      }
+    },
+    "Multi-move Sacrifices" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pengorbanan Multi-Langkah"
           }
         }
       }
@@ -1323,6 +1491,17 @@
         }
       }
     },
+    "Prophylaxis" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Proflaksis"
+          }
+        }
+      }
+    },
     "Puzzle" : {
       "localizations" : {
         "id" : {
@@ -1470,6 +1649,17 @@
         }
       }
     },
+    "Removing the Defender" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menghilangkan Penjaga"
+          }
+        }
+      }
+    },
     "Reset All Progress" : {
       "localizations" : {
         "id" : {
@@ -1490,8 +1680,11 @@
         }
       }
     },
+    "Retry" : {
+
+    },
     "Rook & Passed Pawn" : {
-      "extractionState" : "manual",
+      "extractionState" : "stale",
       "localizations" : {
         "id" : {
           "stringUnit" : {
@@ -1513,7 +1706,7 @@
       }
     },
     "Rook Tactics" : {
-      "extractionState" : "manual",
+      "extractionState" : "stale",
       "localizations" : {
         "id" : {
           "stringUnit" : {
@@ -1523,8 +1716,19 @@
         }
       }
     },
-    "Sacrifice Mastery" : {
+    "Sacrifice" : {
       "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pengorbanan"
+          }
+        }
+      }
+    },
+    "Sacrifice Mastery" : {
+      "extractionState" : "stale",
       "localizations" : {
         "id" : {
           "stringUnit" : {
@@ -1722,6 +1926,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rentetan Berakhir!"
+          }
+        }
+      }
+    },
+    "Tactics" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taktik"
           }
         }
       }
@@ -1929,19 +2144,19 @@
         }
       }
     },
-    "True mastery. Execute standard tactical patterns hidden within complex variations, deep combinations, and unforgiving endgame positions." : {
+    "True mastery. Execute multi-move sacrifices, deep clearance and interference, prophylaxis, and complex endgames. Solve intricate mate patterns and zugzwang positions." : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "True mastery. Execute standard tactical patterns hidden within complex variations, deep combinations, and unforgiving endgame positions."
+            "value" : "True mastery. Execute multi-move sacrifices, deep clearance and interference, prophylaxis, and complex endgames. Solve intricate mate patterns and zugzwang positions."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Level master sesungguhnya. Eksekusi pola taktik standar yang tersembunyi di balik variasi rumit, kombinasi panjang, dan posisi endgame yang sangat mematikan."
+            "value" : "Penguasaan sejati. Eksekusi pengorbanan multi-langkah, pembukaan ruang dan gangguan mendalam, proflaksis, dan permainan akhir rumit. Pecahkan pola skakmat kompleks dan posisi zugzwang."
           }
         }
       }
@@ -2128,6 +2343,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Perkiraan peringkat Anda"
+          }
+        }
+      }
+    },
+    "Zugzwang Mates" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skakmat Zugzwang"
           }
         }
       }
