@@ -2,6 +2,7 @@
 
 A structured, offline-first chess tactics trainer for iOS.
 
+![CI](https://github.com/aminfaruq/essential-chess-project/workflows/CI/badge.svg)
 ![Swift](https://img.shields.io/badge/Swift-5.9+-orange?style=flat-square&logo=swift)
 ![iOS](https://img.shields.io/badge/iOS-16.0+-black?style=flat-square&logo=apple)
 ![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture%20%7C%20MVVM-blue?style=flat-square)
