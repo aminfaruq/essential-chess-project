@@ -10,10 +10,10 @@ import EssentialChess
 import EssentialChessUI
 
 public struct MainTabView: View {
-    @ObservedObject var navigationViewModel: MainNavigationViewModel
+    @ObservedObject var navigationViewModel: TabNavigationViewModel
     @State private var curriculumScrollToTopTrigger: Int = 0
     
-    public init(navigationViewModel: MainNavigationViewModel) {
+    public init(navigationViewModel: TabNavigationViewModel) {
         self.navigationViewModel = navigationViewModel
     }
     

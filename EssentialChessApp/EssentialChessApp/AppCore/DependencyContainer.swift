@@ -17,9 +17,9 @@ public final class DependencyContainer: ObservableObject {
     
     private var cancellables = Set<AnyCancellable>()
     
-    public let notificationStorage: NotificationStoragePort
-    public let notificationScheduler: NotificationScheduler
-    public let boardSettingsStorage: BoardSettingsStoragePort
+    public let notificationStorage: NotificationStore
+    public let notificationScheduler: NotificationSchedulerLoader
+    public let boardSettingsStorage: BoardSettingsStore
     
     public let curriculumLoader: FileCurriculumLoader?
     public let mixPoolLoader: FileMixPoolLoader?
@@ -37,13 +37,13 @@ public final class DependencyContainer: ObservableObject {
         
         self.beginnerProgressStore = UserDefaultsBeginnerProgressStore()
         
-        self.notificationStorage = UserDefaultsNotificationStorage()
+        self.notificationStorage = UserDefaultsNotificationStore()
         self.notificationScheduler = UserNotificationsAdapter()
-        self.boardSettingsStorage = UserDefaultsBoardSettingsStorage()
+        self.boardSettingsStorage = UserDefaultsBoardSettingsStore()
         
         let reader = LocalFileReader()
         
-        if let currUrl = Bundle.main.url(forResource: "curriculum_final", withExtension: "json") {
+        if let currUrl = Bundle.main.url(forResource: "curriculum_final_v2", withExtension: "json") {
             self.curriculumLoader = FileCurriculumLoader(url: currUrl, reader: reader)
         } else {
             self.curriculumLoader = nil
@@ -61,7 +61,7 @@ public final class DependencyContainer: ObservableObject {
             self.beginnerCurriculumLoader = nil
         }
         
-        let languageStorage = UserDefaultsLanguageStorage()
+        let languageStorage = UserDefaultsLanguageStore()
         self.languageAdapter = LanguageAdapter(store: languageStorage)
         
         setupUbiquitousSync()

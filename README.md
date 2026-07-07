@@ -1,30 +1,23 @@
-<p align="center">
-  <img src="EssentialChessApp/essential_chess_demo.gif" width="250" alt="Essential Chess Demo">
-</p>
-
 # ♟️ Essential Chess
 
-A structured, offline-first chess tactics trainer for iOS and macOS Catalyst.
+A structured, offline-first chess tactics trainer for iOS.
 
 ![Swift](https://img.shields.io/badge/Swift-5.9+-orange?style=flat-square&logo=swift)
 ![iOS](https://img.shields.io/badge/iOS-16.0+-black?style=flat-square&logo=apple)
-![macOS](https://img.shields.io/badge/macOS%20Catalyst-Supported-blue?style=flat-square&logo=apple)
 ![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture%20%7C%20MVVM-blue?style=flat-square)
 ![Framework](https://img.shields.io/badge/Framework-SwiftUI%20%7C%20Combine-blueviolet?style=flat-square)
 
 Essential Chess replaces the typical random-puzzle approach with a mastery-based Elo curriculum. Users progress through structured sections, pass high-stakes exams to advance, and train in endless adaptive modes — all running entirely offline from bundled JSON data.
 
-> **Status:** Pre-release. Paywall is implemented as a UI shell (purchase sets `isPro = true` locally); RevenueCat integration is pending. Puzzle Storm mode has a placeholder view.
-
 ---
 
 ## Engineering Highlights
 
-- **Three-target modular architecture** — `EssentialChess` (pure domain), `EssentialChessUI` (framework-free ViewModels), `EssentialChessApp` (SwiftUI composition root). Domain and presentation targets have zero UIKit/SwiftUI imports.
+- **Three-target modular architecture** — `EssentialChess` (domain + infrastructure), `EssentialChessUI` (framework-free ViewModels), `EssentialChessApp` (SwiftUI composition root). Domain and presentation targets have zero UIKit/SwiftUI imports.
 - **All ViewModels tested for memory leaks** — every `makeSUT()` factory in test suites calls `trackForMemoryLeaks()` via `addTeardownBlock` to catch retain cycles automatically.
 - **Elo rating engine** — standard expected-score formula with separate K-factors for placement (K=100) and regular play (K=32), floor-clamped at 100.
 - **iCloud sync with local fallback** — `UbiquitousProgressStore` reads from `NSUbiquitousKeyValueStore`, auto-migrates existing `UserDefaults` data on first launch, and listens for `didChangeExternallyNotification` for cross-device sync.
-- **Native UIKit chess board** via `NativeChessBoard` package, bridged into SwiftUI through `UIViewRepresentable` with `Equatable` conformance to prevent unnecessary redraws.
+- **Native UIKit chess board** via `ChessBoard` package, bridged into SwiftUI through `UIViewRepresentable` with `Equatable` conformance to prevent unnecessary redraws.
 
 ---
 
@@ -43,13 +36,13 @@ Essential Chess replaces the typical random-puzzle approach with a mastery-based
 
 | Layer | What the user sees |
 |---|---|
-| **Section** | Elo rating brackets (e.g., 500–800, 800–1200). Locked by default; unlocked when `hiddenRating >= eloFloor` or the previous section's exam is passed. Sections beyond the first are gated behind the Pro paywall for free users. |
+| **Section** | Elo rating brackets (e.g., 500–800, 800–1200). Locked by default; unlocked when `hiddenRating >= eloFloor` or the previous section's exam is passed. |
 | **Category / Theme** | Tactical themes within a section (e.g., "Checkmates", "Fundamental Tactics"), each containing sub-themes with individual progress bars. |
-| **Puzzle Board** | Interactive board powered by the `NativeChessBoard` UIKit package. Supports FEN-based puzzle loading, move validation, hints, haptic feedback, and sound effects. |
+| **Puzzle Board** | Interactive board powered by the `ChessBoard` UIKit package. Supports FEN-based puzzle loading, move validation, hints, haptic feedback, and sound effects. |
 
 ### The 99% Rule
 
-Section progress is computed by `CurriculumProgressTracker.progress(for:progress:)`. When all non-exam puzzles in a section are completed, progress caps at exactly `0.99` via `min(0.99, completedRatio)`. The final 1% requires passing the section's Mix Puzzle Exam. This is enforced in code and verified by `test_progressForSection_capsAt99PercentIfExamNotPassed`.
+Section progress is computed by `CurriculumProgressCalculator.progress(for:progress:)`. When all non-exam puzzles in a section are completed, progress caps at exactly `0.99` via `min(0.99, completedRatio)`. The final 1% requires passing the section's Mix Puzzle Exam. This is enforced in code and verified by `test_progress_capsAt99PercentIfExamNotPassed`.
 
 ### Mix Puzzle Exam
 
@@ -66,7 +59,6 @@ Each section has one exam category (`isExamMode = true`). The exam engine (`Exam
 - **Puzzle selection:** Filters the bundled pool for puzzles within ±150 of `actualRating`. Falls back to the closest-rated unused puzzle, then cycles the entire pool if exhausted.
 - **Rating initialization:** On first open, `actualRating` is initialized from `hiddenRating` and persisted immediately.
 - **Rating updates:** Uses `RatingCalculator.calculateRegularRating()` (K=32 Elo formula). Using a hint triggers `decreaseRating()`, which scores as an incorrect solve.
-- **Daily limit:** Free users are capped at 7 puzzles per day. Tracked via `dailyPuzzleMixCount` and `lastPuzzleMixDate` on `UserProgress`, reset on day change.
 
 ### Puzzle Streak (Survival Mode)
 
@@ -75,7 +67,6 @@ Each section has one exam category (`isExamMode = true`). The exam engine (`Exam
 - **Scaling difficulty:** Target rating starts at 500 and increases by 50 per correct solve (`500 + (currentStreak * 50)`), with a ±100 tolerance window.
 - **Session persistence:** Active streak count and used puzzle IDs are persisted to `UserProgress` after each puzzle, enabling resume across app launches.
 - **Records:** `highestPuzzleStreak` is tracked and updated on session end if the current run exceeds it.
-- **Daily limit:** Free users get 1 streak session per day.
 
 ### Onboarding & Placement Test
 
@@ -97,21 +88,26 @@ Each section has one exam category (`isExamMode = true`). The exam engine (`Exam
 
 ### Settings & Customization
 
-Managed by `SettingsViewModel` through protocol-based storage ports:
+Managed by `SettingsViewModel` through protocol-based storage:
 
-| Setting | Storage | Details |
-|---|---|---|
-| Board theme | `ThemeStore` (UserDefaults) | Brown (free), Green, Blue, Monochrome (Pro). Pure `RGBAColor` values defined in domain layer, not coupled to UIKit/SwiftUI color types. |
-| Piece style | `ThemeStore` (UserDefaults) | Standard (free), Alpha, Fantasy (Pro). |
-| Haptic feedback | `BoardSettingsStoragePort` | Toggle, passed through to `NativeChessBoardView.setHapticEnabled()`. |
-| Sound effects | `BoardSettingsStoragePort` | Toggle, passed through to `NativeChessBoardView.setSoundEnabled()`. |
-| Daily reminder | `NotificationStoragePort` + `NotificationScheduler` | Schedules a `UNCalendarNotificationTrigger` at 08:00 daily. Tapping the notification deep-links to the Puzzle tab via `NotificationCenter`. |
-| Language | `LanguageStoragePort` | English and Bahasa Indonesia. Applied via `.environment(\.locale)`. |
-| Reset progress | Direct `ProgressAdapter.update` | Clears puzzle IDs, exam IDs, failure times, and sets `onboardingComplete = false`. |
+**Appearance** (persisted via `ThemeLoader` in UserDefaults)
+- Board themes: Brown, Green, Blue, Monochrome
+- Piece styles: Standard, Alpha, Fantasy
+- Theme values are pure `RGBAColor` structs defined in the domain layer — zero UIKit/SwiftUI coupling
 
-### Freemium Model
+**Board behaviour** (persisted via `BoardSettingsStore`)
+- Haptic feedback toggle → `PuzzleChessBoardView.setHapticEnabled()`
+- Sound effects toggle → `PuzzleChessBoardView.setSoundEnabled()`
 
-`isPro` flag on `UserProgress` gates: curriculum sections beyond section 1, non-default themes and piece styles, unlimited Puzzle Mix (>7/day), and unlimited Puzzle Streak (>1 session/day). The Paywall UI is implemented; actual StoreKit/RevenueCat integration is pending (currently sets `isPro = true` in-memory).
+**Notifications** (persisted via `NotificationStore`, scheduled by `NotificationSchedulerLoader`)
+- Daily reminder at 08:00 via `UNCalendarNotificationTrigger`
+- Tapping notification deep-links to Puzzle tab via `NotificationCenter`
+
+**Language** (persisted via `LanguageStore`)
+- English and Bahasa Indonesia, applied via `.environment(\.locale)`
+
+**Reset progress** (via `ProgressAdapter.update`)
+- Clears puzzle IDs, exam IDs, failure times, sets `onboardingComplete = false`
 
 ---
 
@@ -122,51 +118,62 @@ Managed by `SettingsViewModel` through protocol-based storage ports:
 ```
 EssentialChess/                     ← Xcode project with 4 targets
 ├── EssentialChess/                 ← Domain + Infrastructure framework
-│   ├── Chess Feature/              ← Pure domain models, protocols, business logic
-│   │   ├── Curriculum/             ← Curriculum, EloSection, Category, SubTheme, Puzzle
-│   │   ├── Progress/               ← UserProgress, CurriculumProgressTracker, ProgressStore protocol
-│   │   ├── Rating Calculator/      ← RatingCalculator (Elo formula)
-│   │   ├── Mix Pool/               ← MixPool, MixPoolLoader protocol
-│   │   ├── Theme/                  ← ThemeSettings, BoardThemeOption, ThemeStore protocol
-│   │   ├── Settings/               ← BoardSettingsStoragePort protocol
-│   │   ├── Notifications/          ← NotificationScheduler, NotificationStoragePort protocols
-│   │   ├── Language/               ← LanguageStoragePort protocol
-│   │   └── Tabbar/                 ← AppTab enum, TabStoragePort protocol
-│   ├── Chess Cache/                ← Persistence implementations
-│   │   ├── Progress/               ← UserDefaultsProgressStore, UbiquitousProgressStore, KeyValueStore
-│   │   └── Theme/                  ← UserDefaultsThemeStore
-│   └── Chess Infra/                ← Adapters, mappers, loaders
-│       ├── Adapters/               ← ProgressAdapter, ThemeAdapter, LanguageAdapter, etc.
-│       ├── Curriculum/             ← FileCurriculumLoader, CurriculumMapper (private DTOs)
-│       ├── Mix Pool/               ← FileMixPoolLoader, MixPoolMapper
-│       ├── Shared/                 ← LocalFileReader, FileReaderLoader protocol
-│       └── Tabbar/                 ← UserDefaultsTabAdapter
+│   ├── Domain/
+│   │   ├── Models/                 ← Curriculum, UserProgress, MixPool, ThemeSettings, etc.
+│   │   ├── Protocols/              ← ProgressLoader, ThemeLoader, CurriculumLoader, etc.
+│   │   └── UseCases/               ← CurriculumProgressCalculator, RatingCalculator, ECODetector, etc.
+│   └── Infrastructure/
+│       ├── Adapters/               ← ProgressAdapter, ThemeAdapter, LanguageAdapter, Combine bridges
+│       ├── Loaders/                ← FileCurriculumLoader, FileMixPoolLoader, FileECOLoader, CloudEvaluation
+│       ├── Networking/             ← LocalFileReader, URLSessionHTTPClient
+│       └── Persistence/            ← UserDefaultsProgressLoader, UbiquitousProgressStore, theme/board/notification/tab stores
 ├── EssentialChessUI/               ← Presentation framework (ViewModels only)
-│   └── ViewModels/                 ← 10 ViewModels, all import Foundation + Combine only
+│   └── ViewModels/                 ← 13 ViewModels in Curriculum/, Exam/, Onboarding/, Opening/, Puzzle/, Settings/
 ├── EssentialChessTests/            ← Domain + Infrastructure tests
 └── EssentialChessUITests/          ← ViewModel tests
 
 EssentialChessApp/                  ← iOS app target (composition root)
-├── AppCore/                        ← AppComposer, DependencyContainer, ViewFactory, RootView
-├── Views/                          ← SwiftUI views (Curriculum, Exam, PuzzleMix, etc.)
-└── EssentialChessAppTests/         ← Integration tests
+├── AppCore/                        ← AppComposer, DependencyContainer, ViewFactory, EnvironmentConfig, RootView
+├── DesignSystem/                   ← AppColors, ProgressBarView, PuzzleTagFormatter, StreakView
+├── Views/                          ← SwiftUI views (Curriculum, Exam, Puzzle, Settings, Onboarding)
+├── EssentialChessAppTests/         ← Integration tests
+└── EssentialChessAppUITests/       ← UI tests
+
+ChessBoard/                         ← UIKit chess board package
+├── ChessBoard/                     ← ChessEngine, PuzzleValidator, BoardGeometry, iOS board views
+└── ChessBoardTests/                ← Engine, validator, geometry tests
 ```
 
 ### Dependency Direction
 
 ```
 EssentialChessApp → EssentialChessUI → EssentialChess
-                  → NativeChessBoard (UIKit chess board package)
+                   → ChessBoard (UIKit chess board package)
 ```
 
-The domain layer (`Chess Feature/`) defines protocols (`ProgressStore`, `ThemeStore`, `CurriculumLoader`, `NotificationScheduler`, etc.). Infrastructure implementations conform to these protocols. ViewModels depend only on domain types and Combine — they never import SwiftUI or UIKit.
+The domain layer (`Domain/Protocols/`) defines protocols (`ProgressLoader`, `ThemeLoader`, `CurriculumLoader`, `NotificationSchedulerLoader`, etc.). Infrastructure implementations conform to these protocols. ViewModels depend only on domain types and Combine — they never import SwiftUI or UIKit.
+
+### Architecture Diagram
+
+<p align="center">
+  <img src="docs/architecture.svg" alt="Essential Chess Architecture Diagram" width="100%">
+</p>
+
+> Diagram source: [`docs/architecture.d2`](docs/architecture.d2) — rendered with [D2](https://d2lang.com)
+
+| Line Style | Meaning | Example in this project |
+|---|---|---|
+| <span style="color:#EF4444">**Thick solid (red)**</span> | **Strong dependency** — direct framework import between Xcode targets | `EssentialChessApp` imports `EssentialChessUI`, `EssentialChess`, `ChessBoard` |
+| <span style="color:#64748B">**Solid (gray)**</span> | **Direct dependency** — internal data flow or layer dependency within a target | `DependencyContainer` creates `AppComposer`, `UseCases` uses `Models` |
+| <span style="color:#3B82F6">**Dashed (blue)**</span> | **Protocol-based** — conformance or abstraction through protocol | `UserDefaultsProgressLoader` implements `ProgressLoader`, `ViewModels` depend on `Protocols` |
+| <span style="color:#94A3B8">**Thin dashed (gray)**</span> | **External connection** — network or system service | `Loaders` call `Lichess API`, `App` syncs with `iCloud KV Store` |
 
 ### Dependency Injection
 
 Dependencies flow through `DependencyContainer` → `AppComposer` → `ViewFactory`.
 
 - `DependencyContainer` instantiates all infrastructure (stores, adapters, loaders) and owns their lifecycle.
-- `AppComposer` creates the long-lived ViewModels (`CurriculumViewModel`, `StreakViewModel`, `SettingsViewModel`, `MainNavigationViewModel`) and wires them to adapter publishers.
+- `AppComposer` creates the long-lived ViewModels (`CurriculumViewModel`, `StreakViewModel`, `SettingsViewModel`, `TabNavigationViewModel`) and wires them to adapter publishers.
 - `ViewFactory` creates screen-specific ViewModels on demand (exam sessions, puzzle mix, puzzle streak, onboarding) using closure-based callback injection to avoid coupling ViewModels to the persistence layer.
 
 ViewModels receive side-effect closures (e.g., `saveActualRating: (Double) -> Void`, `onPuzzleSolved: () -> Void`) rather than direct adapter references. This keeps them unit-testable with simple mock closures.
@@ -177,11 +184,11 @@ ViewModels receive side-effect closures (e.g., `saveActualRating: (Double) -> Vo
 |---|---|---|
 | User progress | `NSUbiquitousKeyValueStore` (primary), `UserDefaults` (fallback) | JSON-encoded `ProgressCacheDTO` with backward-compatible optional fields. Auto-migration from UserDefaults on first iCloud read. |
 | Theme settings | `UserDefaults` | JSON-encoded `ThemeSettings` via `UserDefaultsThemeStore`. |
-| Board settings | `UserDefaults` | Direct key-value via `UserDefaultsBoardSettingsStorage`. |
-| Tab state | `UserDefaults` | Persisted via `UserDefaultsTabAdapter` so the app reopens on the last-used tab. |
-| Notification prefs | `UserDefaults` | `isDailyReminderEnabled` flag via `UserDefaultsNotificationStorage`. |
+| Board settings | `UserDefaults` | Direct key-value via `UserDefaultsBoardSettingsStore`. |
+| Tab state | `UserDefaults` | Persisted via `UserDefaultsTabStore` so the app reopens on the last-used tab. |
+| Notification prefs | `UserDefaults` | `isDailyReminderEnabled` flag via `UserDefaultsNotificationStore`. |
 
-Both `ProgressStore` implementations use a shared `KeyValueStore` protocol that both `UserDefaults` and `NSUbiquitousKeyValueStore` conform to via extensions — allowing the `MockKeyValueStore` in tests to substitute either.
+Both `ProgressLoader` implementations use a shared `KeyValueStore` protocol that both `UserDefaults` and `NSUbiquitousKeyValueStore` conform to via extensions — allowing the `MockKeyValueStore` in tests to substitute either.
 
 ### Data Loading
 
@@ -195,38 +202,51 @@ Loaders expose a callback-based API (`CurriculumLoader` protocol) and are bridge
 
 ### Test Targets & Coverage
 
-The project has 3 test targets with 26 test files covering domain logic, infrastructure, and ViewModels:
+The project has 3 test targets with 42 test files covering domain logic, infrastructure, and ViewModels:
 
-**`EssentialChessTests`** — Domain & Infrastructure (12 test files):
+**`EssentialChessTests`** — Domain & Infrastructure (28 test files):
 
 | Area | File | What it covers |
 |---|---|---|
-| Progress | `CurriculumProgressTrackerTests` | Section unlock logic, sub-theme/category/section progress calculation, 99% cap rule, exam unlock gate, 3-hour cooldown enforcement |
+| Progress | `CurriculumProgressCalculatorTests` | Section unlock logic, sub-theme/category/section progress calculation, 99% cap rule, exam unlock gate, 3-hour cooldown enforcement |
 | Progress | `UserProgressUpdaterTests` | Immutable progress mutations (complete onboarding, mark puzzle, pass/fail exam, reset) |
 | Progress | `UserProgressDailyStreakTests` | Streak increment on consecutive day, no-change on same day, reset on missed day, first-time initialization |
 | Rating | `RatingCalculatorTests` | Placement K=100 and regular K=32 calculations, minimum rating floor (100), bracket assignment |
+| ECO | `ECODetectorTests` | Opening code detection from move sequences |
+| Beginner | `BeginnerProgressStoreTests` | Beginner progress persistence |
+| Theme | `ThemeSettingsTests` | Theme settings encode/decode |
 | Curriculum | `FileCurriculumLoaderTests` | JSON loading, mapper validation, error handling for invalid data |
 | Mix Pool | `FileMixPoolLoaderTests` | JSON loading, difficulty tier mapping, error handling |
+| ECO | `FileECOLoaderTests` | ECO data loading and mapping |
+| Cloud | `CloudEvaluationMapperTests`, `RemoteCloudEvaluationLoaderTests` | Lichess cloud eval parsing, HTTP integration |
 | Cache | `UserDefaultsProgressStoreTests` | Round-trip encode/decode of `UserProgress` through `ProgressCacheDTO` |
 | Cache | `UbiquitousProgressStoreTests` | iCloud store read/write, UserDefaults→iCloud migration, backward-compatible optional field decoding |
 | Cache | `UserDefaultsThemeStoreTests` | Theme settings persistence |
-| Cache | `LocalFileReaderTests` | File reading from disk |
-| Adapters | `ProgressAdapterTests`, `ThemeAdapterTests`, `LanguageAdapterTests` | Adapter state management, publisher emissions |
+| Cache | `UserDefaultsBoardSettingsStoreTests` | Board settings persistence |
+| Cache | `UserDefaultsLanguageStoreTests` | Language preference persistence |
+| Cache | `UserDefaultsNotificationStoreTests` | Notification preference persistence |
+| Cache | `UserDefaultsTabStoreTests` | Tab state persistence |
+| Networking | `LocalFileReaderTests` | File reading from disk |
+| Networking | `URLSessionHTTPClientTests` | HTTP client with header/callback verification |
+| Adapters | `ProgressAdapterTests`, `ThemeAdapterTests`, `LanguageAdapterTests`, `UserNotificationsAdapterTests` | Adapter state management, publisher emissions |
 | Adapters | `CurriculumLoaderCombineTests`, `MixPoolLoaderCombineTests` | Combine publisher bridge from callback-based loaders |
 
-**`EssentialChessUITests`** — ViewModel Logic (10 test files):
+**`EssentialChessUITests`** — ViewModel Logic (13 test files):
 
 | ViewModel | Key scenarios tested |
 |---|---|
-| `ExamViewModelTests` | Initial state, correct/incorrect handling, hint costs life, 3-life depletion triggers `onFailed`, all-solved triggers `onPassed` |
-| `PuzzleMixViewModelTests` | `actualRating` initialization from `hiddenRating`, ±150 range filtering, rating increase/decrease on solve, hint-as-failure, daily limit at 7, day-change reset, pool cycling on exhaustion, paywall trigger |
-| `PuzzleStreakViewModelTests` | Streak increment, failure ends session, daily limit at 1, new-record detection |
-| `OnboardingViewModelTests` | 15-puzzle assessment flow, rating calibration, completion callback |
-| `CurriculumViewModelTests` | Section/category mapping, premium lock logic, exam state mapping |
+| `BeginnerCurriculumViewModelTests` | Beginner puzzle session flow, piece learning progression |
+| `CurriculumViewModelTests` | Section/category mapping, section lock logic, exam state mapping |
 | `PuzzleBoardViewModelTests` | Linear puzzle progression, frontier-based navigation, theme completion detection |
+| `ExamViewModelTests` | Initial state, correct/incorrect handling, hint costs life, 3-life depletion triggers `onFailed`, all-solved triggers `onPassed` |
+| `PuzzleMixViewModelTests` | `actualRating` initialization from `hiddenRating`, ±150 range filtering, rating increase/decrease on solve, hint-as-failure, pool cycling on exhaustion |
+| `PuzzleStreakViewModelTests` | Streak increment, failure ends session, new-record detection |
+| `PuzzleStormViewModelTests` | Timer-based storm mode mechanics |
+| `OnboardingViewModelTests` | 15-puzzle assessment flow, rating calibration, completion callback |
+| `OpeningRecognitionViewModelTests` | Opening detection from FEN/move sequences |
 | `SettingsViewModelTests` | Haptic/sound toggle persistence, notification scheduling, permission handling |
 | `StreakViewModelTests` | Publisher-driven streak count updates, "active today" detection |
-| `MainNavigationViewModelTests` | Tab persistence, auto-save on change |
+| `TabNavigationViewModelTest` | Tab persistence, auto-save on change |
 | `PuzzleViewModelTests` | Solve/wrong state management, hint delegation |
 
 **`EssentialChessAppTests`** — Composition root integration tests.
@@ -245,11 +265,11 @@ Feature: Section Progress and the 99% Rule
   Scenario: Progress caps at 99% when all puzzles complete but exam not passed
     Given a section with 2 non-exam puzzles
     When the user completes both puzzles
-    Then section progress equals 0.99
+    Then section progress equals 0.99 via CurriculumProgressCalculator
 
   Scenario: Progress reaches 100% after exam is passed
     Given a section with a passed exam ID in the user's progress
-    Then section progress equals 1.0
+    Then section progress equals 1.0 via CurriculumProgressCalculator
 
   Scenario: Exam unlocks only when all non-exam puzzles are completed
     Given 2 puzzles in non-exam categories
@@ -298,7 +318,7 @@ Feature: 3-Hour Exam Cooldown
     Then canStartExam returns true
 ```
 
-#### Puzzle Mix — Rating & Limits
+#### Puzzle Mix — Rating
 
 ```gherkin
 Feature: Endless Puzzle Mix
@@ -320,12 +340,6 @@ Feature: Endless Puzzle Mix
     When the user taps Hint
     Then actualRating decreases as if the solve were incorrect
     And hasUsedHint is set to true
-
-  Scenario: Daily limit blocks free users after 7 puzzles
-    Given a non-Pro user with 7 puzzles solved today
-    When the next puzzle is requested
-    Then showPaywall is true
-    And no puzzle is loaded
 ```
 
 #### Daily Streak
@@ -353,20 +367,30 @@ Feature: Daily Activity Streak
 
 ## 4. Known Limitations & Roadmap
 
+### Current Limitations
+
 | Item | Status |
 |---|---|
-| **In-app purchases** | UI and gating logic implemented. RevenueCat SDK integration is planned but not yet connected — `purchasePro()` currently sets `isPro = true` directly. `EnvironmentConfig` has placeholder API keys for staging/production. |
-| **Puzzle Storm** | Placeholder "Coming Soon" view. `highestPuzzleStorm` field exists on `UserProgress` but no gameplay logic is implemented yet. |
-| **Piece movement validation** | Delegated entirely to the `NativeChessBoard` package. The app layer handles puzzle completion/failure callbacks but does not implement its own move legality engine. |
-| **Localization** | English and Bahasa Indonesia. String catalog (`Localizable.xcstrings`) is present. |
 | **Accessibility** | Not explicitly implemented beyond standard SwiftUI defaults. |
-| **Error handling** | Loader failures fall back to empty arrays (the app still launches). ProgressStore decode failures propagate as errors but are not surfaced to the user. |
+| **macOS Catalyst** | Intentionally disabled (`SUPPORTS_MACCATALYST = NO`). A native macOS version with expanded features is planned. |
+
+### Roadmap
+
+| Feature | Platform | Status |
+|---|---|---|
+| **Chess Analysis** | iOS, macOS | Next implementation. Cloud engine evaluation via Lichess API + local Stockfish engine. |
+| **Opening Training** | iOS, macOS | Planned. Structured opening repertoire drilling with spaced repetition. |
+| **Matchmaking** | macOS | Planned. Player-vs-player matchmaking via Lichess API. |
+| **Chess Database Management** | macOS | Planned. Browse, search, and analyze master games. |
+| **Native macOS App** | macOS | Planned. Full-featured native Mac app with all iOS features plus Mac-exclusive additions above. |
 
 ---
 
 ## Screenshots & Demo
 
-> \[TODO: Add App Store screenshots and demo video after release\]
+<p align="center">
+  <img src="EssentialChessApp/essential_chess_demo.gif" width="250" alt="Essential Chess Demo">
+</p>
 
 ---
 

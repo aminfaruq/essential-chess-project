@@ -9,7 +9,7 @@ public final class AnalysisChessBoardView: UIView {
     // MARK: - Callbacks
     public var onUserMoved: ((String) -> Void)?
     public var onGameStateChanged: ((String) -> Void)?
-    public var onStateChanged: (([BoardPGNElement], String?) -> Void)?
+    public var onStateChanged: (([PGNAnnotation], String?) -> Void)?
     
     // MARK: - Internal Dependencies & State
     var userColor: EngineColor = .white

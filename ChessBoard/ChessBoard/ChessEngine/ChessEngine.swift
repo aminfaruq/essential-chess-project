@@ -359,11 +359,11 @@ public final class ChessEngine {
     }
     
     /// Exposes the PGN elements without leaking internal ChessKit types.
-    public var boardPGNElements: [BoardPGNElement] {
+    public var boardPGNElements: [PGNAnnotation] {
         var newMap: [String: MoveTree.Index] = [:]
         var newReverseMap: [MoveTree.Index: String] = [:]
         var counter = 0
-        let elements = game.moves.pgnRepresentation.map { element -> BoardPGNElement in
+        let elements = game.moves.pgnRepresentation.map { element -> PGNAnnotation in
             switch element {
             case let .whiteNumber(number):
                 return .whiteNumber(number)

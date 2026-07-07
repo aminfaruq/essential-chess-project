@@ -14,8 +14,6 @@ public struct SettingsView: View {
     @EnvironmentObject var themeAdapter: ThemeAdapter
     @EnvironmentObject var languageAdapter: LanguageAdapter
     @State private var showingResetAlert = false
-    @State private var showPaywall = false
-    @State private var isPro = false
     @State private var isDailyReminderEnabled = false
     @State private var isHapticEnabled = true
     @State private var isSoundEnabled = true
@@ -34,22 +32,6 @@ public struct SettingsView: View {
             ZStack {
                 AppColors.background.ignoresSafeArea()
                 List {
-                    if !isPro {
-                        Section {
-                            Button {
-                                showPaywall = true
-                            } label: {
-                                HStack {
-                                    Image(systemName: "crown.fill")
-                                        .foregroundColor(AppColors.gold)
-                                    Text("Upgrade to Essential Chess Pro")
-                                        .fontWeight(.semibold)
-                                        .foregroundColor(AppColors.gold)
-                                }
-                            }
-                            .hoverEffect(.highlight)
-                        }
-                    }
                     
                     Section {
                         ForEach(BoardThemeOption.allCases, id: \.self) { option in
@@ -176,18 +158,11 @@ public struct SettingsView: View {
             } message: {
                 Text("This action cannot be undone.")
             }
-            .sheet(isPresented: $showPaywall) {
-                PaywallView()
-            }
         }
         .onAppear {
-            self.isPro = composer.container.progressAdapter.currentProgress.isPro
             self.isDailyReminderEnabled = composer.settingsVM.isDailyReminderEnabled
             self.isHapticEnabled = composer.settingsVM.isHapticEnabled
             self.isSoundEnabled = composer.settingsVM.isSoundEnabled
-        }
-        .onReceive(composer.container.progressAdapter.publisher()) { progress in
-            self.isPro = progress.isPro
         }
         .onReceive(composer.settingsVM.$isDailyReminderEnabled) { enabled in
             self.isDailyReminderEnabled = enabled
@@ -202,15 +177,10 @@ public struct SettingsView: View {
     
     private func boardThemeRow(_ option: BoardThemeOption) -> some View {
         let isSelected = themeAdapter.currentTheme.boardTheme == option
-        let isPremium = option != .brown // only brown is the default free one
         
         return Button {
-            if isPremium && !isPro {
-                showPaywall = true
-            } else {
-                themeAdapter.update { current in
-                    current = ThemeSettings(boardTheme: option, pieceTheme: current.pieceTheme)
-                }
+            themeAdapter.update { current in
+                current = ThemeSettings(boardTheme: option, pieceTheme: current.pieceTheme)
             }
         } label: {
             HStack(spacing: 14) {
@@ -223,10 +193,6 @@ public struct SettingsView: View {
                     Image(systemName: "checkmark")
                         .foregroundColor(AppColors.accent)
                         .font(.system(size: 14, weight: .semibold))
-                } else if isPremium && !isPro {
-                    Image(systemName: "crown.fill")
-                        .foregroundColor(AppColors.gold)
-                        .font(.system(size: 14))
                 }
             }
             .padding(.vertical, 4)
@@ -237,15 +203,10 @@ public struct SettingsView: View {
     
     private func pieceThemeRow(_ theme: (id: String, label: String)) -> some View {
         let isSelected = themeAdapter.currentTheme.pieceTheme == theme.id
-        let isPremium = theme.id != "default"
         
         return Button {
-            if isPremium && !isPro {
-                showPaywall = true
-            } else {
-                themeAdapter.update { current in
-                    current = ThemeSettings(boardTheme: current.boardTheme, pieceTheme: theme.id)
-                }
+            themeAdapter.update { current in
+                current = ThemeSettings(boardTheme: current.boardTheme, pieceTheme: theme.id)
             }
         } label: {
             HStack(spacing: 14) {
@@ -262,10 +223,6 @@ public struct SettingsView: View {
                     Image(systemName: "checkmark")
                         .foregroundColor(AppColors.accent)
                         .font(.system(size: 14, weight: .semibold))
-                } else if isPremium && !isPro {
-                    Image(systemName: "crown.fill")
-                        .foregroundColor(AppColors.gold)
-                        .font(.system(size: 14))
                 }
             }
             .padding(.vertical, 4)

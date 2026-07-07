@@ -16,7 +16,7 @@ public final class AppComposer: ObservableObject {
     /// ViewModels
     public let curriculumVM: CurriculumViewModel
     public let beginnerVM: BeginnerCurriculumViewModel
-    public let navigationVM: MainNavigationViewModel
+    public let navigationVM: TabNavigationViewModel
     public let streakVM: StreakViewModel
     public let settingsVM: SettingsViewModel
     
@@ -64,8 +64,8 @@ public final class AppComposer: ObservableObject {
         
         self.streakVM = StreakViewModel(progressPublisher: adapter.publisher())
         
-        let tabAdapter = UserDefaultsTabAdapter()
-        self.navigationVM = MainNavigationViewModel(tabStorage: tabAdapter)
+        let tabAdapter = UserDefaultsTabStore()
+        self.navigationVM = TabNavigationViewModel(tabStorage: tabAdapter)
         
         self.settingsVM = SettingsViewModel(
             notificationStorage: container.notificationStorage,

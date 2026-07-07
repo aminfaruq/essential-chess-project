@@ -15,6 +15,8 @@ public final class ViewFactory: ObservableObject {
     private let container: DependencyContainer
     private var cachedCurriculum: Curriculum?
     
+    @Published public var loadError: String?
+    
     public init(container: DependencyContainer) {
         self.container = container
     }
@@ -29,19 +31,25 @@ public final class ViewFactory: ObservableObject {
         onFinishedTest: @escaping (Double) -> Void,
         onReady: @escaping (OnboardingViewModel) -> Void
     ) {
-        guard let loader = container.mixPoolLoader else { return }
+        guard let loader = container.mixPoolLoader else {
+            loadError = "Puzzle data not found. Please reinstall the app."
+            return
+        }
+        
+        loadError = nil
         
         loader.load {  [weak self] result in
             DispatchQueue.main.async {
-                guard self != nil else { return }
+                guard let self = self else { return }
                 
                 let allPuzzles: [Puzzle]
                 
                 switch result {
                 case .success(let mixPool):
                     allPuzzles = mixPool.difficultyTiers.flatMap { $0.puzzles }
-                case .failure(_):
-                    allPuzzles = [] // Fallback to empty if reading fails
+                case .failure(let error):
+                    self.loadError = "Failed to load puzzles: \(error.localizedDescription)"
+                    allPuzzles = []
                 }
                 
                 let viewModel = OnboardingViewModel(
@@ -68,7 +76,12 @@ public final class ViewFactory: ObservableObject {
     public func fetchPuzzleMixViewModel(
         onReady: @escaping (PuzzleMixViewModel) -> Void
     ) {
-        guard let loader = container.mixPoolLoader else { return }
+        guard let loader = container.mixPoolLoader else {
+            loadError = "Puzzle data not found. Please reinstall the app."
+            return
+        }
+        
+        loadError = nil
         
         loader.load { [weak self] result in
             DispatchQueue.main.async {
@@ -78,7 +91,8 @@ public final class ViewFactory: ObservableObject {
                 switch result {
                 case .success(let mixPool):
                     pool = mixPool.difficultyTiers.flatMap { $0.puzzles }
-                case .failure(_):
+                case .failure(let error):
+                    self.loadError = "Failed to load puzzles: \(error.localizedDescription)"
                     pool = []
                 }
                 
@@ -88,11 +102,12 @@ public final class ViewFactory: ObservableObject {
                     pool: pool,
                     hiddenRating: progress.hiddenRating,
                     actualRating: progress.actualRating,
-                    checkIsPro: { [weak self] in
-                        self?.container.progressAdapter.currentProgress.isPro ?? false
-                    },
-                    dailyPuzzleMixCount: progress.dailyPuzzleMixCount,
-                    lastPuzzleMixDate: progress.lastPuzzleMixDate,
+                    // MARK: - Freemium params (commented out — app is now fully free)
+                    // checkIsPro: { [weak self] in
+                    //     self?.container.progressAdapter.currentProgress.unlockedFeatures.contains(.openingStudy) ?? false
+                    // },
+                    // dailyPuzzleMixCount: progress.dailyPuzzleMixCount,
+                    // lastPuzzleMixDate: progress.lastPuzzleMixDate,
                     hasSeenHintWarning: UserDefaults.standard.bool(forKey: "hasSeenHintWarning"),
                     calculateRating: { currentRating, puzzleRating, isCorrect in
                         return RatingCalculator().calculateRegularRating(
@@ -115,12 +130,14 @@ public final class ViewFactory: ObservableObject {
                             progress.recordActivity()
                         }
                     },
-                    updateDailyLimits: { count, date in
-                        self.container.progressAdapter.update { progress in
-                            progress.dailyPuzzleMixCount = count
-                            progress.lastPuzzleMixDate = date
-                        }
-                    }
+                    // MARK: - Freemium daily limits (commented out — app is now fully free)
+                    // updateDailyLimits: { count, date in
+                    //     self.container.progressAdapter.update { progress in
+                    //         progress.dailyPuzzleMixCount = count
+                    //         progress.lastPuzzleMixDate = date
+                    //     }
+                    // }
+                    // updateDailyLimits: { _, _ in }
                 )
                 
                 onReady(viewModel)
@@ -133,7 +150,12 @@ public final class ViewFactory: ObservableObject {
     public func fetchPuzzleStreakViewModel(
         onReady: @escaping (PuzzleStreakViewModel) -> Void
     ) {
-        guard let loader = container.mixPoolLoader else { return }
+        guard let loader = container.mixPoolLoader else {
+            loadError = "Puzzle data not found. Please reinstall the app."
+            return
+        }
+        
+        loadError = nil
         
         loader.load { [weak self] result in
             DispatchQueue.main.async {
@@ -143,7 +165,8 @@ public final class ViewFactory: ObservableObject {
                 switch result {
                 case .success(let mixPool):
                     pool = mixPool.difficultyTiers.flatMap { $0.puzzles }
-                case .failure(_):
+                case .failure(let error):
+                    self.loadError = "Failed to load puzzles: \(error.localizedDescription)"
                     pool = []
                 }
                 
@@ -151,11 +174,12 @@ public final class ViewFactory: ObservableObject {
                 
                 let viewModel = PuzzleStreakViewModel(
                     pool: pool,
-                    checkIsPro: { [weak self] in
-                        self?.container.progressAdapter.currentProgress.isPro ?? false
-                    },
-                    dailyPuzzleStreakCount: progress.dailyPuzzleStreakCount,
-                    lastPuzzleStreakDate: progress.lastPuzzleStreakDate,
+                    // MARK: - Freemium params (commented out — app is now fully free)
+                    // checkIsPro: { [weak self] in
+                    //     self?.container.progressAdapter.currentProgress.unlockedFeatures.contains(.openingStudy) ?? false
+                    // },
+                    // dailyPuzzleStreakCount: progress.dailyPuzzleStreakCount,
+                    // lastPuzzleStreakDate: progress.lastPuzzleStreakDate,
                     activeStreak: progress.activePuzzleStreak,
                     activeUsedIDs: progress.activePuzzleStreakUsedIDs,
                     highestStreak: progress.highestPuzzleStreak,
@@ -172,12 +196,14 @@ public final class ViewFactory: ObservableObject {
                             }
                         }
                     },
-                    updateDailyLimits: { count, date in
-                        self.container.progressAdapter.update { progress in
-                            progress.dailyPuzzleStreakCount = count
-                            progress.lastPuzzleStreakDate = date
-                        }
-                    },
+                    // MARK: - Freemium daily limits (commented out — app is now fully free)
+                    // updateDailyLimits: { count, date in
+                    //     self.container.progressAdapter.update { progress in
+                    //         progress.dailyPuzzleStreakCount = count
+                    //         progress.lastPuzzleStreakDate = date
+                    //     }
+                    // }
+                    updateDailyLimits: { _, _ in },
                     onPuzzleSolved: {
                         //MARK: Daily streak
                         self.container.progressAdapter.update { progress in
@@ -196,7 +222,12 @@ public final class ViewFactory: ObservableObject {
     public func fetchPuzzleStormViewModel(
         onReady: @escaping (PuzzleStormViewModel) -> Void
     ) {
-        guard let loader = container.mixPoolLoader else { return }
+        guard let loader = container.mixPoolLoader else {
+            loadError = "Puzzle data not found. Please reinstall the app."
+            return
+        }
+        
+        loadError = nil
         
         loader.load { [weak self] result in
             DispatchQueue.main.async {
@@ -206,7 +237,8 @@ public final class ViewFactory: ObservableObject {
                 switch result {
                 case .success(let mixPool):
                     pool = mixPool.difficultyTiers.flatMap { $0.puzzles }
-                case .failure(_):
+                case .failure(let error):
+                    self.loadError = "Failed to load puzzles: \(error.localizedDescription)"
                     pool = []
                 }
                 
@@ -214,11 +246,12 @@ public final class ViewFactory: ObservableObject {
                 
                 let viewModel = PuzzleStormViewModel(
                     pool: pool,
-                    checkIsPro: { [weak self] in
-                        self?.container.progressAdapter.currentProgress.isPro ?? false
-                    },
-                    dailyPuzzleStormCount: progress.dailyPuzzleStormCount,
-                    lastPuzzleStormDate: progress.lastPuzzleStormDate,
+                    // MARK: - Freemium params (commented out — app is now fully free)
+                    // checkIsPro: { [weak self] in
+                    //     self?.container.progressAdapter.currentProgress.unlockedFeatures.contains(.openingStudy) ?? false
+                    // },
+                    // dailyPuzzleStormCount: progress.dailyPuzzleStormCount,
+                    // lastPuzzleStormDate: progress.lastPuzzleStormDate,
                     highestScore: progress.highestPuzzleStorm,
                     onScoreUpdated: { newHighestScore in
                         self.container.progressAdapter.update { progress in
@@ -228,12 +261,14 @@ public final class ViewFactory: ObservableObject {
                     onSessionFinished: { _ in
                         // Handled via onScoreUpdated for now, but could be useful for analytics
                     },
-                    updateDailyLimits: { count, date in
-                        self.container.progressAdapter.update { progress in
-                            progress.dailyPuzzleStormCount = count
-                            progress.lastPuzzleStormDate = date
-                        }
-                    },
+                    // MARK: - Freemium daily limits (commented out — app is now fully free)
+                    // updateDailyLimits: { count, date in
+                    //     self.container.progressAdapter.update { progress in
+                    //         progress.dailyPuzzleStormCount = count
+                    //         progress.lastPuzzleStormDate = date
+                    //     }
+                    // }
+                    updateDailyLimits: { _, _ in },
                     onPuzzleSolved: {
                         //MARK: Daily streak
                         self.container.progressAdapter.update { progress in
