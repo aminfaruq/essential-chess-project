@@ -42,11 +42,10 @@ jobs:
     
     - name: Run ChessBoard Tests
       run: |
-        cd ChessBoard && xcodebuild test \
-          -project ChessBoard.xcodeproj \
+        xcodebuild test \
+          -project ChessBoard/ChessBoard.xcodeproj \
           -scheme ChessBoard \
           -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
-          -testPlan ChessBoard.xctestplan \
           -enableCodeCoverage YES \
           CODE_SIGN_IDENTITY="" \
           CODE_SIGNING_REQUIRED=NO \
