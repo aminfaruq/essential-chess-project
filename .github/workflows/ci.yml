@@ -58,7 +58,6 @@ jobs:
           -project EssentialChess/EssentialChess.xcodeproj \
           -scheme EssentialChess \
           -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
-          -testPlan EssentialChess.xctestplan \
           -enableCodeCoverage YES \
           CODE_SIGN_IDENTITY="" \
           CODE_SIGNING_REQUIRED=NO \
@@ -71,7 +70,6 @@ jobs:
           -project EssentialChess/EssentialChess.xcodeproj \
           -scheme EssentialChessUI \
           -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
-          -testPlan EssentialChessUI.xctestplan \
           -enableCodeCoverage YES \
           CODE_SIGN_IDENTITY="" \
           CODE_SIGNING_REQUIRED=NO \
