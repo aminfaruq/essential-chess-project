@@ -44,11 +44,11 @@ final class UserDefaultsTabAdapterTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: UserDefaultsTabAdapter, testDefaults: UserDefaults) {
+    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: UserDefaultsTabStore, testDefaults: UserDefaults) {
         let testDefaults = UserDefaults(suiteName: testSuiteName)!
         testDefaults.removePersistentDomain(forName: testSuiteName) // Clean slate
         
-        let sut = UserDefaultsTabAdapter(defaults: testDefaults)
+        let sut = UserDefaultsTabStore(defaults: testDefaults)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         

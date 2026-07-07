@@ -1,12 +1,12 @@
 //
-//  UserDefaultsTabAdapter.swift
+//  UserDefaultsTabStore.swift
 //  EssentialChess
 //
 //  Created by Amin faruq on 14/06/26.
 //
 import Foundation
 
-public final class UserDefaultsTabAdapter: TabStore {
+public final class UserDefaultsTabStore: TabStore {
     private let storageKey = "selectedAppTab"
     private let defaults: UserDefaults
     

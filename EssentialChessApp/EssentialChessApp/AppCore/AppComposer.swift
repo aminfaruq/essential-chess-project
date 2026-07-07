@@ -64,7 +64,7 @@ public final class AppComposer: ObservableObject {
         
         self.streakVM = StreakViewModel(progressPublisher: adapter.publisher())
         
-        let tabAdapter = UserDefaultsTabAdapter()
+        let tabAdapter = UserDefaultsTabStore()
         self.navigationVM = MainNavigationViewModel(tabStorage: tabAdapter)
         
         self.settingsVM = SettingsViewModel(
