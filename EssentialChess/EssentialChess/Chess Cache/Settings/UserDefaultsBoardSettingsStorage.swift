@@ -5,7 +5,7 @@
 
 import Foundation
 
-public final class UserDefaultsBoardSettingsStorage: BoardSettingsStoragePort {
+public final class UserDefaultsBoardSettingsStorage: BoardSettingsStore {
     private let userDefaults: UserDefaults
     private let hapticKey = "isHapticEnabled"
     private let soundKey = "isSoundEnabled"

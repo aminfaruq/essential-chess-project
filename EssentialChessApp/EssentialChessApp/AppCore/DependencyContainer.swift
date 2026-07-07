@@ -19,7 +19,7 @@ public final class DependencyContainer: ObservableObject {
     
     public let notificationStorage: NotificationStoragePort
     public let notificationScheduler: NotificationScheduler
-    public let boardSettingsStorage: BoardSettingsStoragePort
+    public let boardSettingsStorage: BoardSettingsStore
     
     public let curriculumLoader: FileCurriculumLoader?
     public let mixPoolLoader: FileMixPoolLoader?
@@ -43,7 +43,7 @@ public final class DependencyContainer: ObservableObject {
         
         let reader = LocalFileReader()
         
-        if let currUrl = Bundle.main.url(forResource: "curriculum_final", withExtension: "json") {
+        if let currUrl = Bundle.main.url(forResource: "curriculum_final_v2", withExtension: "json") {
             self.curriculumLoader = FileCurriculumLoader(url: currUrl, reader: reader)
         } else {
             self.curriculumLoader = nil

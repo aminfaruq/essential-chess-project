@@ -14,12 +14,12 @@ public final class SettingsViewModel: ObservableObject {
     
     private var notificationStorage: NotificationStoragePort
     private let notificationScheduler: NotificationScheduler
-    private var boardSettingsStorage: BoardSettingsStoragePort
+    private var boardSettingsStorage: BoardSettingsStore
     
     public init(
         notificationStorage: NotificationStoragePort,
         notificationScheduler: NotificationScheduler,
-        boardSettingsStorage: BoardSettingsStoragePort
+        boardSettingsStorage: BoardSettingsStore
     ) {
         self.notificationStorage = notificationStorage
         self.notificationScheduler = notificationScheduler

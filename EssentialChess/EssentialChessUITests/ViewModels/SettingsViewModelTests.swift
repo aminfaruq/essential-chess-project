@@ -104,7 +104,7 @@ class NotificationStoragePortSpy: NotificationStoragePort {
     var isDailyReminderEnabled: Bool = false
 }
 
-class BoardSettingsStoragePortSpy: BoardSettingsStoragePort {
+class BoardSettingsStoragePortSpy: BoardSettingsStore {
     var isHapticEnabled: Bool = true
     var isSoundEnabled: Bool = true
 }
