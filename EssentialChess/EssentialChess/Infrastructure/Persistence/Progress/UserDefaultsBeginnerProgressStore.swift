@@ -1,22 +1,6 @@
 import Foundation
 import Combine
 
-public struct BeginnerProgress: Equatable {
-    public let completedPuzzleIDs: Set<String>
-    
-    public init(completedPuzzleIDs: Set<String> = []) {
-        self.completedPuzzleIDs = completedPuzzleIDs
-    }
-}
-
-public protocol BeginnerProgressStore {
-    var progressPublisher: AnyPublisher<BeginnerProgress, Never> { get }
-    var currentProgress: BeginnerProgress { get }
-    
-    func markCompleted(puzzleID: String)
-    func clearProgress()
-}
-
 public final class UserDefaultsBeginnerProgressStore: BeginnerProgressStore {
     private let userDefaults: UserDefaults
     private let key: String
