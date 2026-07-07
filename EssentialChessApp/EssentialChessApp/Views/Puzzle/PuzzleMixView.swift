@@ -53,58 +53,7 @@ private struct PuzzleMixContainerView: View {
     @EnvironmentObject var container: DependencyContainer
     
     var body: some View {
-        // MARK: - Freemium daily limit UI (commented out — app is now fully free)
-        // Group {
-        //     if vm.isDailyLimitReached {
-        //         VStack(spacing: 20) {
-        //             Image(systemName: "clock.fill")
-        //                 .font(.system(size: 60))
-        //                 .foregroundColor(AppColors.locked)
-        //             Text("Daily Limit Reached")
-        //                 .font(.system(size: 24, weight: .bold))
-        //                 .foregroundColor(AppColors.textPrimary)
-        //             Text("You've completed your 7 free puzzles today. Come back tomorrow or upgrade to Pro to play endlessly.")
-        //                 .font(.system(size: 16))
-        //                 .foregroundColor(AppColors.textSecondary)
-        //                 .multilineTextAlignment(.center)
-        //                 .padding(.horizontal, 32)
-        //
-        //             Button {
-        //                 vm.showPaywall = true
-        //             } label: {
-        //                 HStack {
-        //                     Image(systemName: "crown.fill")
-        //                     Text("Unlock Pro")
-        //                 }
-        //                 .font(.system(size: 16, weight: .semibold))
-        //                 .foregroundColor(.white)
-        //                 .padding(.horizontal, 24)
-        //                 .padding(.vertical, 14)
-        //                 .background(AppColors.gold)
-        //                 .clipShape(RoundedRectangle(cornerRadius: 12))
-        //             }
-        //             .padding(.top, 8)
-        //         }
-        //     } else {
-                PuzzleMixActiveView(vm: vm)
-        //     }
-        // }
-        // .sheet(isPresented: $vm.showPaywall) {
-        //     PaywallView()
-        // }
-        // .onReceive(container.progressAdapter.publisher()) { progress in
-        //     if progress.unlockedFeatures.contains(.openingStudy) && vm.isDailyLimitReached {
-        //         vm.resumeAfterPurchase()
-        //     }
-        // }
-        // .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-            // MARK: - Freemium refresh (commented out — app is now fully free)
-            // vm.refreshDailyLimit()
-        // }
-        // .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
-            // MARK: - Freemium refresh (commented out — app is now fully free)
-            // vm.refreshDailyLimit()
-        // }
+        PuzzleMixActiveView(vm: vm)
     }
 }
 

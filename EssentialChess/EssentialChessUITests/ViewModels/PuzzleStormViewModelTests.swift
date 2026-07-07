@@ -106,44 +106,9 @@ final class PuzzleStormViewModelTests: XCTestCase {
         XCTAssertEqual(sut.lastBonusAmount, 3)
     }
     
-    // MARK: - Freemium daily limit tests (commented out — app is now fully free)
-    // func test_dailyLimit_preventsStartingForFreeUserWhenLimitReached() {
-    //     let (sut, _) = makeSUT(isPro: false, dailyCount: 1, lastDate: Date())
-    //
-    //     sut.onStartTapped()
-    //
-    //     XCTAssertFalse(sut.isGameActive)
-    //     XCTAssertTrue(sut.showPaywall)
-    //     XCTAssertTrue(sut.isDailyLimitReached)
-    // }
-    //
-    // func test_dailyLimit_allowsStartingForFreeUserOnNewDay() {
-    //     let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
-    //     let (sut, _) = makeSUT(isPro: false, dailyCount: 1, lastDate: yesterday)
-    //
-    //     sut.onStartTapped()
-    //
-    //     XCTAssertTrue(sut.isGameActive)
-    //     XCTAssertFalse(sut.showPaywall)
-    //     XCTAssertFalse(sut.isDailyLimitReached)
-    // }
-    //
-    // func test_dailyLimit_allowsStartingForProUserEvenWhenLimitReached() {
-    //     let (sut, _) = makeSUT(isPro: true, dailyCount: 5, lastDate: Date())
-    //
-    //     sut.onStartTapped()
-    //
-    //     XCTAssertTrue(sut.isGameActive)
-    //     XCTAssertFalse(sut.showPaywall)
-    // }
-    
     // MARK: - Helpers
     
     private func makeSUT(
-        // MARK: - Freemium params (commented out — app is now fully free)
-        // isPro: Bool = true,
-        // dailyCount: Int = 0,
-        // lastDate: Date? = nil,
         highestScore: Int = 0,
         file: StaticString = #filePath,
         line: UInt = #line
@@ -175,9 +140,6 @@ final class PuzzleStormViewModelTests: XCTestCase {
         let spy = DelegateSpy()
         let sut = PuzzleStormViewModel(
             pool: pool,
-            // checkIsPro: { isPro },
-            // dailyPuzzleStormCount: dailyCount,
-            // lastPuzzleStormDate: lastDate,
             highestScore: highestScore,
             onScoreUpdated: { spy.scoreUpdates.append($0) },
             onSessionFinished: { spy.sessionFinishedScores.append($0) },
