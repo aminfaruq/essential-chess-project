@@ -1,11 +1,11 @@
 //
-//  UserDefaultsBoardSettingsStorage.swift
+//  UserDefaultsBoardSettingsStore.swift
 //  EssentialChess
 //
 
 import Foundation
 
-public final class UserDefaultsBoardSettingsStorage: BoardSettingsStore {
+public final class UserDefaultsBoardSettingsStore: BoardSettingsStore {
     private let userDefaults: UserDefaults
     private let hapticKey = "isHapticEnabled"
     private let soundKey = "isSoundEnabled"

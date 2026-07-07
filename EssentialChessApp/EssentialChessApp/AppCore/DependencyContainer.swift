@@ -39,7 +39,7 @@ public final class DependencyContainer: ObservableObject {
         
         self.notificationStorage = UserDefaultsNotificationStorage()
         self.notificationScheduler = UserNotificationsAdapter()
-        self.boardSettingsStorage = UserDefaultsBoardSettingsStorage()
+        self.boardSettingsStorage = UserDefaultsBoardSettingsStore()
         
         let reader = LocalFileReader()
         
