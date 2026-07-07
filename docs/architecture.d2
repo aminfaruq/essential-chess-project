@@ -1,0 +1,99 @@
+direction: down
+
+root: {
+  EssentialChessApp: {
+    shape: rectangle
+    style: {
+      fill: "#F8FAFC"
+      stroke: "#94A3B8"
+      stroke-width: 2
+      bold: true
+      font-color: "#1E293B"
+    }
+    SwiftUI Views
+    DI Composition Root
+  }
+
+  EssentialChessUI: {
+    shape: rectangle
+    style: {
+      fill: "#F1F5F9"
+      stroke: "#6366F1"
+      stroke-width: 2
+      bold: true
+      font-color: "#312E81"
+    }
+    13 ViewModels
+  }
+
+  EssentialChess: {
+    shape: rectangle
+    style: {
+      fill: "#ECFDF5"
+      stroke: "#059669"
+      stroke-width: 2
+      bold: true
+      font-color: "#064E3B"
+    }
+
+    Domain: {
+      shape: rectangle
+      style: { fill: "#FFFFFF"; stroke: "#6EE7B7" }
+      Models • Protocols • UseCases
+    }
+
+    Infrastructure: {
+      shape: rectangle
+      style: { fill: "#FFF7ED"; stroke: "#EA580C" }
+      Adapters • Loaders • Persistence
+    }
+  }
+
+  ChessBoard: {
+    shape: rectangle
+    style: {
+      fill: "#F5F3FF"
+      stroke: "#7C3AED"
+      stroke-width: 2
+      bold: true
+      font-color: "#4C1D95"
+    }
+    Engine + Board Views
+  }
+
+  External: {
+    shape: rectangle
+    style: {
+      fill: "#FEF3C7"
+      stroke: "#D97706"
+      stroke-width: 2
+      bold: true
+    }
+    Lichess API
+    iCloud KV Store
+  }
+
+  # Framework imports
+  root.EssentialChessApp.EssentialChessUI: {
+    style: { stroke: "#EF4444"; stroke-width: 3; bold: true }
+  }
+  root.EssentialChessApp.EssentialChess: {
+    style: { stroke: "#EF4444"; stroke-width: 3; bold: true }
+  }
+  root.EssentialChessApp.ChessBoard: {
+    style: { stroke: "#EF4444"; stroke-width: 3; bold: true }
+  }
+  root.EssentialChessUI.EssentialChess: {
+    style: { stroke: "#EF4444"; stroke-width: 3; bold: true }
+  }
+
+  # Protocol: Infra implements Domain
+  root.EssentialChess.Infrastructure.root.EssentialChess.Domain: {
+    style: { stroke: "#3B82F6"; stroke-width: 2; stroke-dash: 6 }
+  }
+
+  # External
+  root.EssentialChess.External: {
+    style: { stroke: "#D97706"; stroke-width: 2; stroke-dash: 4 }
+  }
+}

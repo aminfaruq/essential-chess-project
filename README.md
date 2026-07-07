@@ -157,6 +157,21 @@ EssentialChessApp → EssentialChessUI → EssentialChess
 
 The domain layer (`Domain/Protocols/`) defines protocols (`ProgressLoader`, `ThemeLoader`, `CurriculumLoader`, `NotificationSchedulerLoader`, etc.). Infrastructure implementations conform to these protocols. ViewModels depend only on domain types and Combine — they never import SwiftUI or UIKit.
 
+### Architecture Diagram
+
+<p align="center">
+  <img src="docs/architecture.svg" alt="Essential Chess Architecture Diagram" width="100%">
+</p>
+
+> Diagram source: [`docs/architecture.d2`](docs/architecture.d2) — rendered with [D2](https://d2lang.com)
+
+| Line Style | Meaning | Example in this project |
+|---|---|---|
+| <span style="color:#EF4444">**Thick solid (red)**</span> | **Strong dependency** — direct framework import between Xcode targets | `EssentialChessApp` imports `EssentialChessUI`, `EssentialChess`, `ChessBoard` |
+| <span style="color:#64748B">**Solid (gray)**</span> | **Direct dependency** — internal data flow or layer dependency within a target | `DependencyContainer` creates `AppComposer`, `UseCases` uses `Models` |
+| <span style="color:#3B82F6">**Dashed (blue)**</span> | **Protocol-based** — conformance or abstraction through protocol | `UserDefaultsProgressLoader` implements `ProgressLoader`, `ViewModels` depend on `Protocols` |
+| <span style="color:#94A3B8">**Thin dashed (gray)**</span> | **External connection** — network or system service | `Loaders` call `Lichess API`, `App` syncs with `iCloud KV Store` |
+
 ### Dependency Injection
 
 Dependencies flow through `DependencyContainer` → `AppComposer` → `ViewFactory`.
