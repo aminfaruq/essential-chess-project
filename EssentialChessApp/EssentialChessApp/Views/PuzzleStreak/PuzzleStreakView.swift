@@ -183,7 +183,7 @@ private struct PuzzleStreakActiveView: View {
     }
     
     private func boardArea(puzzle: Puzzle) -> some View {
-        ChessBoardBridge(
+        PuzzleBoardBridge(
             puzzle: puzzle,
             controller: boardController,
             onCompleted: {

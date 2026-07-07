@@ -35,7 +35,7 @@ public struct PlacementTestView: View {
                         .padding(.horizontal, 24)
                     Spacer(minLength: 12)
                     
-                    ChessBoardBridge(
+                    PuzzleBoardBridge(
                         puzzle: puzzle,
                         controller: boardController,
                         onCompleted: {

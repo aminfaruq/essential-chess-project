@@ -1,5 +1,5 @@
 //
-//  ChessBoardBridge.swift
+//  PuzzleBoardBridge.swift
 //  EssentialChessApp
 //
 //  Created by Amin faruq on 11/06/26.
@@ -37,7 +37,7 @@ public class ChessBoardController: ObservableObject {
 
 // MARK: - UIViewRepresentable Bridge
 
-public struct ChessBoardBridge: UIViewRepresentable, Equatable {
+public struct PuzzleBoardBridge: UIViewRepresentable, Equatable {
     public let puzzle: Puzzle
     public let controller: ChessBoardController
     public var onCompleted: () -> Void
@@ -123,7 +123,7 @@ public struct ChessBoardBridge: UIViewRepresentable, Equatable {
         view.setSoundEnabled(isSoundEnabled)
     }
     
-    public static func == (lhs: ChessBoardBridge, rhs: ChessBoardBridge) -> Bool {
+    public static func == (lhs: PuzzleBoardBridge, rhs: PuzzleBoardBridge) -> Bool {
         return lhs.puzzle.id == rhs.puzzle.id &&
                lhs.boardThemeLight == rhs.boardThemeLight &&
                lhs.boardThemeDark == rhs.boardThemeDark &&

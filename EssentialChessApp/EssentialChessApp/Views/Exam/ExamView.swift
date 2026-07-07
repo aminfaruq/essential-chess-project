@@ -61,7 +61,7 @@ public struct ExamView: View {
             
             Spacer(minLength: 8)
             
-            ChessBoardBridge(
+            PuzzleBoardBridge(
                 puzzle: puzzle,
                 controller: boardController,
                 onCompleted: {

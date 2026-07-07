@@ -83,7 +83,7 @@ public struct PuzzleSessionView: View {
         .padding(.top, 8)
     }
     private func boardArea(puzzle: Puzzle) -> some View {
-        ChessBoardBridge(
+        PuzzleBoardBridge(
             puzzle: puzzle,
             controller: boardController,
             onCompleted: {
