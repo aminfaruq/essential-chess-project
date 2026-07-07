@@ -23,14 +23,57 @@ Essential Chess replaces the typical random-puzzle approach with a mastery-based
 
 ## Table of Contents
 
-1. [App Features](#1-app-features)
-2. [Architecture](#2-architecture)
-3. [Testing](#3-testing)
-4. [Known Limitations & Roadmap](#4-known-limitations--roadmap)
+1. [Getting Started](#1-getting-started)
+2. [App Features](#2-app-features)
+3. [Architecture](#3-architecture)
+4. [Testing](#4-testing)
+5. [Known Limitations & Roadmap](#5-known-limitations--roadmap)
 
 ---
 
-## 1. App Features
+## 1. Getting Started
+
+### Prerequisites
+
+- macOS 13.0 or later
+- Xcode 15.0 or later
+- iOS 16.0+ device or simulator
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/aminfaruq/essential-chess-project.git
+   cd essential-chess-project
+   ```
+
+2. Open the workspace:
+   ```bash
+   open EssentialChessApp/EssentialChessApp.xcworkspace
+   ```
+
+3. Configure code signing:
+   - Select the `EssentialChessApp` target in Xcode
+   - Go to **Signing & Capabilities**
+   - Select your development team from the dropdown
+   - Repeat for all targets: `EssentialChess`, `EssentialChessUI`, `ChessBoard`
+
+4. Build and run:
+   - Select your target device or simulator
+   - Press `Cmd+R` or click the Run button
+
+### Project Structure
+
+The repository contains three Xcode projects:
+
+- **EssentialChess/** — Domain and infrastructure framework
+- **EssentialChessUI/** — Presentation layer (ViewModels)
+- **EssentialChessApp/** — iOS app composition root (opens this workspace)
+- **ChessBoard/** — Standalone UIKit chess board package
+
+---
+
+## 2. App Features
 
 ### Curriculum (3-Layer Hierarchy)
 
@@ -111,7 +154,7 @@ Managed by `SettingsViewModel` through protocol-based storage:
 
 ---
 
-## 2. Architecture
+## 3. Architecture
 
 ### Module Structure
 
@@ -191,7 +234,7 @@ Loaders expose a callback-based API (`CurriculumLoader` protocol) and are bridge
 
 ---
 
-## 3. Testing
+## 4. Testing
 
 ### Test Targets & Coverage
 
@@ -358,7 +401,7 @@ Feature: Daily Activity Streak
 
 ---
 
-## 4. Known Limitations & Roadmap
+## 5. Known Limitations & Roadmap
 
 ### Current Limitations
 

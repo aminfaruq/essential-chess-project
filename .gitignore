@@ -1,0 +1,36 @@
+# Xcode
+xcuserdata/
+DerivedData/
+*.xcworkspace/xcuserdata/
+*.xcuserstate
+*.xcbkptlist
+xcshareddata/IDEFindNavigatorScopes.plist
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Build artifacts
+build/
+*.build/
+
+# CocoaPods
+Pods/
+
+# Swift Package Manager
+.swiftpm/
+Package.resolved
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# Misc
+*.diff
+*.patch
+
+# Configuration files with secrets
+*.xcconfig
+!Sample.xcconfig
