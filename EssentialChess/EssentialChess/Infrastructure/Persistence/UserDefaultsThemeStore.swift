@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class UserDefaultsThemeStore: ThemeStore {
+public final class UserDefaultsThemeStore: ThemeLoader {
     private let store: UserDefaults
     private let cacheKey = "theme_settings_cache"
     
@@ -15,7 +15,7 @@ public final class UserDefaultsThemeStore: ThemeStore {
         self.store = store
     }
     
-    public func retrieve(completion: @escaping (ThemeStore.RetrievalResult) -> Void) {
+    public func retrieve(completion: @escaping (ThemeLoader.RetrievalResult) -> Void) {
         guard let data = store.data(forKey: cacheKey) else {
             return completion(.success(nil))
         }
@@ -28,7 +28,7 @@ public final class UserDefaultsThemeStore: ThemeStore {
         }
     }
     
-    public func insert(_ settings: ThemeSettings, completion: @escaping (ThemeStore.InsertionResult) -> Void) {
+    public func insert(_ settings: ThemeSettings, completion: @escaping (ThemeLoader.InsertionResult) -> Void) {
         do {
             let data = try JSONEncoder().encode(settings)
             store.set(data, forKey: cacheKey)

@@ -10,13 +10,13 @@ import Combine
 
 public final class ThemeAdapter: ObservableObject {
     
-    private let store: ThemeStore
+    private let store: ThemeLoader
     private let subject: CurrentValueSubject<ThemeSettings, Never>
     
     // For direct SwiftUI usage if injected as an EnvironmentObject
     @Published public private(set) var currentTheme: ThemeSettings
     
-    public init(store: ThemeStore) {
+    public init(store: ThemeLoader) {
         self.store = store
         
         // Initialize with default theme settings to prevent crashes

@@ -1,5 +1,5 @@
 //
-//  UserDefaultsProgressStore.swift
+//  UserDefaultsProgressLoader.swift
 //  EssentialChess
 //
 //  Created by Amin faruq on 10/06/26.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class UserDefaultsProgressStore: ProgressStore {
+public final class UserDefaultsProgressLoader: ProgressLoader {
     private let store: KeyValueStore
     private let cacheKey = "user_progress_cache"
     
@@ -15,7 +15,7 @@ public final class UserDefaultsProgressStore: ProgressStore {
         self.store = store
     }
     
-    public func retrieve(completion: @escaping (ProgressStore.RetrievalResult) -> Void) {
+    public func retrieve(completion: @escaping (ProgressLoader.RetrievalResult) -> Void) {
         guard let data = store.data(forKey: cacheKey) else {
             return completion(.success(nil))
         }
@@ -28,7 +28,7 @@ public final class UserDefaultsProgressStore: ProgressStore {
         }
     }
     
-    public func insert(_ progress: UserProgress, completion: @escaping (ProgressStore.InsertionResult) -> Void) {
+    public func insert(_ progress: UserProgress, completion: @escaping (ProgressLoader.InsertionResult) -> Void) {
         do {
             let cache = ProgressCacheDTO(from: progress)
             let data = try JSONEncoder().encode(cache)

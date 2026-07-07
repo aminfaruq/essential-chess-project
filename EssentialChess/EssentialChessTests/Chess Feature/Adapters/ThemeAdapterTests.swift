@@ -74,17 +74,17 @@ final class ThemeAdapterTests: XCTestCase {
         return (sut, store)
     }
     
-    private class ThemeStoreSpy: ThemeStore {
+    private class ThemeStoreSpy: ThemeLoader {
         enum Message: Equatable {
             case retrieve
             case insert(ThemeSettings)
         }
         
         private(set) var messages = [Message]()
-        private var retrievalCompletions = [(ThemeStore.RetrievalResult) -> Void]()
-        private var insertionCompletions = [(ThemeStore.InsertionResult) -> Void]()
+        private var retrievalCompletions = [(ThemeLoader.RetrievalResult) -> Void]()
+        private var insertionCompletions = [(ThemeLoader.InsertionResult) -> Void]()
         
-        func retrieve(completion: @escaping (ThemeStore.RetrievalResult) -> Void) {
+        func retrieve(completion: @escaping (ThemeLoader.RetrievalResult) -> Void) {
             messages.append(.retrieve)
             retrievalCompletions.append(completion)
         }
@@ -97,7 +97,7 @@ final class ThemeAdapterTests: XCTestCase {
             retrievalCompletions[index](.failure(error))
         }
         
-        func insert(_ settings: ThemeSettings, completion: @escaping (ThemeStore.InsertionResult) -> Void) {
+        func insert(_ settings: ThemeSettings, completion: @escaping (ThemeLoader.InsertionResult) -> Void) {
             messages.append(.insert(settings))
             insertionCompletions.append(completion)
         }

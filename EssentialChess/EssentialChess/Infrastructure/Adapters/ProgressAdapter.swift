@@ -9,10 +9,10 @@ import Foundation
 import Combine
 
 public final class ProgressAdapter {
-    private let store: ProgressStore
+    private let store: ProgressLoader
     private let subject: CurrentValueSubject<UserProgress, Never>
     
-    public init(store: ProgressStore) {
+    public init(store: ProgressLoader) {
         self.store = store
         // Initialize with default progress to prevent crashes
         self.subject = CurrentValueSubject<UserProgress, Never>(

@@ -5,7 +5,7 @@
 
 import Foundation
 
-public final class UbiquitousProgressStore: ProgressStore {
+public final class UbiquitousProgressStore: ProgressLoader {
     private let store: KeyValueStore
     private let localStore: KeyValueStore
     private let cacheKey = "user_progress_cache"
@@ -15,7 +15,7 @@ public final class UbiquitousProgressStore: ProgressStore {
         self.localStore = localStore
     }
     
-    public func retrieve(completion: @escaping (ProgressStore.RetrievalResult) -> Void) {
+    public func retrieve(completion: @escaping (ProgressLoader.RetrievalResult) -> Void) {
         if let data = store.data(forKey: cacheKey) {
             decode(data, completion: completion)
         } else {
@@ -35,7 +35,7 @@ public final class UbiquitousProgressStore: ProgressStore {
         }
     }
     
-    public func insert(_ progress: UserProgress, completion: @escaping (ProgressStore.InsertionResult) -> Void) {
+    public func insert(_ progress: UserProgress, completion: @escaping (ProgressLoader.InsertionResult) -> Void) {
         do {
             let cache = ProgressCacheDTO(from: progress)
             let data = try JSONEncoder().encode(cache)
@@ -47,7 +47,7 @@ public final class UbiquitousProgressStore: ProgressStore {
         }
     }
     
-    private func decode(_ data: Data, completion: @escaping (ProgressStore.RetrievalResult) -> Void) {
+    private func decode(_ data: Data, completion: @escaping (ProgressLoader.RetrievalResult) -> Void) {
         do {
             let cache = try JSONDecoder().decode(ProgressCacheDTO.self, from: data)
             completion(.success(cache.toModel()))

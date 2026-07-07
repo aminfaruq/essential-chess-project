@@ -78,17 +78,17 @@ final class ProgressAdapterTests: XCTestCase {
         return (sut, store)
     }
     
-    private class ProgressStoreSpy: ProgressStore {
+    private class ProgressStoreSpy: ProgressLoader {
         enum Message: Equatable {
             case retrieve
             case insert(UserProgress)
         }
         
         private(set) var messages = [Message]()
-        private var retrievalCompletions = [(ProgressStore.RetrievalResult) -> Void]()
-        private var insertionCompletions = [(ProgressStore.InsertionResult) -> Void]()
+        private var retrievalCompletions = [(ProgressLoader.RetrievalResult) -> Void]()
+        private var insertionCompletions = [(ProgressLoader.InsertionResult) -> Void]()
         
-        func retrieve(completion: @escaping (ProgressStore.RetrievalResult) -> Void) {
+        func retrieve(completion: @escaping (ProgressLoader.RetrievalResult) -> Void) {
             messages.append(.retrieve)
             retrievalCompletions.append(completion)
         }
@@ -101,7 +101,7 @@ final class ProgressAdapterTests: XCTestCase {
             retrievalCompletions[index](.failure(error))
         }
         
-        func insert(_ progress: UserProgress, completion: @escaping (ProgressStore.InsertionResult) -> Void) {
+        func insert(_ progress: UserProgress, completion: @escaping (ProgressLoader.InsertionResult) -> Void) {
             messages.append(.insert(progress))
             insertionCompletions.append(completion)
         }

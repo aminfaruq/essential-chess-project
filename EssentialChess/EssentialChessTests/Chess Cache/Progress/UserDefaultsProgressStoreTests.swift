@@ -82,9 +82,9 @@ final class UserDefaultsProgressStoreTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ProgressStore, store: MockKeyValueStore) {
+    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ProgressLoader, store: MockKeyValueStore) {
         let store = MockKeyValueStore()
-        let sut = UserDefaultsProgressStore(store: store)
+        let sut = UserDefaultsProgressLoader(store: store)
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, store)
     }

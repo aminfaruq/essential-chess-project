@@ -88,7 +88,7 @@ final class UbiquitousProgressStoreTests: XCTestCase {
         
         let progress = makeProgress()
         // Simulate data existing only in localStore
-        let oldStore = UserDefaultsProgressStore(store: localStore)
+        let oldStore = UserDefaultsProgressLoader(store: localStore)
         let oldInsertionExpectation = expectation(description: "Wait for old store insertion")
         oldStore.insert(progress) { _ in
             oldInsertionExpectation.fulfill()
@@ -136,7 +136,7 @@ final class UbiquitousProgressStoreTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ProgressStore, stores: (cloud: MockKeyValueStore, local: MockKeyValueStore)) {
+    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ProgressLoader, stores: (cloud: MockKeyValueStore, local: MockKeyValueStore)) {
         let cloudStore = MockKeyValueStore()
         let localStore = MockKeyValueStore()
         let sut = UbiquitousProgressStore(store: cloudStore, localStore: localStore)

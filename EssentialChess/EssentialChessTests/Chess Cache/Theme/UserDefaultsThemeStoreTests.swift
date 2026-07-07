@@ -66,7 +66,7 @@ final class UserDefaultsThemeStoreTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> ThemeStore {
+    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> ThemeLoader {
         let testDefaults = UserDefaults(suiteName: testSuiteName)!
         let sut = UserDefaultsThemeStore(store: testDefaults)
         trackForMemoryLeaks(sut, file: file, line: line)
