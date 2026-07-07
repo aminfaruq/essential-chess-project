@@ -58,7 +58,7 @@ final class MainNavigationViewModelTests: XCTestCase {
         XCTAssertEqual(spy.savedTabsHistory, [.curriculum], "The reset action should also trigger a save to storage.")
     }
     
-    private final class TabStoragePortSpy: TabStoragePort {
+    private final class TabStoragePortSpy: TabStore {
         // Array to record all tabs that the ViewModel attempts to save
         var savedTabsHistory: [AppTab] = []
         

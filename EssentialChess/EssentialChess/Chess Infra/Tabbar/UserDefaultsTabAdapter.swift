@@ -6,7 +6,7 @@
 //
 import Foundation
 
-public final class UserDefaultsTabAdapter: TabStoragePort {
+public final class UserDefaultsTabAdapter: TabStore {
     private let storageKey = "selectedAppTab"
     private let defaults: UserDefaults
     

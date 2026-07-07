@@ -10,10 +10,10 @@ import Combine
 public final class MainNavigationViewModel: ObservableObject {
     @Published public var selectedTab: AppTab
     
-    private var tabStorage: TabStoragePort
+    private var tabStorage: TabStore
     private var cancellables = Set<AnyCancellable>()
     
-    public init(tabStorage: TabStoragePort) {
+    public init(tabStorage: TabStore) {
         self.tabStorage = tabStorage
         // Load initial state from storage
         self.selectedTab = tabStorage.savedTab

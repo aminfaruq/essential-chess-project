@@ -1,5 +1,5 @@
 //
-//  TabStoragePort.swift
+//  TabStore.swift
 //  EssentialChess
 //
 //  Created by Amin faruq on 14/06/26.
@@ -14,6 +14,6 @@ public enum AppTab: String, Hashable {
 }
 
 // MARK: - Domain / Abstraction Layer
-public protocol TabStoragePort {
+public protocol TabStore {
     var savedTab: AppTab { get set }
 }
