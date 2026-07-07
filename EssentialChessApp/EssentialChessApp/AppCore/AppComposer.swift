@@ -39,13 +39,13 @@ public final class AppComposer: ObservableObject {
                 if let loader = validCurrLoader {
                     return loader.publisher()
                 }
-                return Fail(error: FileCurriculumLoader.Error.invalidData).eraseToAnyPublisher()
+                return Fail(error: FileCurriculumLoader.Error.invalidData()).eraseToAnyPublisher()
             },
             mixPoolPublisher: {
                 if let loader = validMixLoader {
                     return loader.publisher()
                 }
-                return Fail(error: FileMixPoolLoader.Error.invalidData).eraseToAnyPublisher()
+                return Fail(error: FileMixPoolLoader.Error.invalidData()).eraseToAnyPublisher()
             },
             progressPublisher: { [adapter] in adapter.publisher() }
         )
@@ -57,7 +57,7 @@ public final class AppComposer: ObservableObject {
                 if let loader = validBegLoader {
                     return loader.publisher()
                 }
-                return Fail(error: FileCurriculumLoader.Error.invalidData).eraseToAnyPublisher()
+                return Fail(error: FileCurriculumLoader.Error.invalidData()).eraseToAnyPublisher()
             },
             progressPublisher: { [container] in container.beginnerProgressStore.progressPublisher }
         )
