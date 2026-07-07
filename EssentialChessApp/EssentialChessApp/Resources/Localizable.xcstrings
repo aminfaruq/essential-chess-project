@@ -603,6 +603,7 @@
       }
     },
     "Daily Limit Reached" : {
+      "extractionState" : "stale",
       "localizations" : {
         "id" : {
           "stringUnit" : {
@@ -1554,6 +1555,7 @@
       }
     },
     "Session ended. Final Score: %lld" : {
+      "extractionState" : "stale",
       "localizations" : {
         "id" : {
           "stringUnit" : {
@@ -1564,6 +1566,7 @@
       }
     },
     "Session ended. Final Streak: %lld" : {
+      "extractionState" : "stale",
       "localizations" : {
         "id" : {
           "stringUnit" : {
@@ -1965,6 +1968,7 @@
       }
     },
     "Unlock Pro" : {
+      "extractionState" : "stale",
       "localizations" : {
         "id" : {
           "stringUnit" : {
@@ -1992,6 +1996,7 @@
       }
     },
     "Upgrade to Essential Chess Pro" : {
+      "extractionState" : "stale",
       "localizations" : {
         "id" : {
           "stringUnit" : {
@@ -2065,6 +2070,7 @@
       }
     },
     "You've completed your 7 free puzzles today. Come back tomorrow or upgrade to Pro to play endlessly." : {
+      "extractionState" : "stale",
       "localizations" : {
         "id" : {
           "stringUnit" : {
@@ -2095,6 +2101,7 @@
       }
     },
     "You've used your free Puzzle Storm today. Come back tomorrow or upgrade to Pro to play endlessly." : {
+      "extractionState" : "stale",
       "localizations" : {
         "id" : {
           "stringUnit" : {
@@ -2105,6 +2112,7 @@
       }
     },
     "You've used your free Puzzle Streak today. Come back tomorrow or upgrade to Pro to play endlessly." : {
+      "extractionState" : "stale",
       "localizations" : {
         "id" : {
           "stringUnit" : {
