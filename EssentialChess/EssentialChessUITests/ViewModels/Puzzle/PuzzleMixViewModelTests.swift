@@ -167,15 +167,10 @@ final class PuzzleMixViewModelTests: XCTestCase {
         pool: [Puzzle]? = nil,
         hiddenRating: Double = 500.0,
         actualRating: Double? = nil,
-        // MARK: - Freemium params (commented out — app is now fully free)
-        // checkIsPro: @escaping () -> Bool = { false },
-        // dailyPuzzleMixCount: Int = 0,
-        // lastPuzzleMixDate: Date? = nil,
         hasSeenHintWarning: Bool = false,
         calculateRating: @escaping (Double, Double, Bool) -> Double = { rating, _, _ in rating },
         saveActualRating: @escaping (Double) -> Void = { _ in },
         saveHasSeenHintWarning: @escaping (Bool) -> Void = { _ in },
-        // updateDailyLimits: @escaping (Int, Date) -> Void = { _, _ in },
         file: StaticString = #filePath,
         line: UInt = #line
     ) -> PuzzleMixViewModel {
@@ -190,8 +185,7 @@ final class PuzzleMixViewModelTests: XCTestCase {
             calculateRating: calculateRating,
             saveActualRating: saveActualRating,
             saveHasSeenHintWarning: saveHasSeenHintWarning,
-            onPuzzleSolved: {},
-            // updateDailyLimits: { _, _ in }
+            onPuzzleSolved: {}
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
