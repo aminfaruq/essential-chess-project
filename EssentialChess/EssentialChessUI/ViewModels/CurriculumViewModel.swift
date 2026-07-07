@@ -159,7 +159,7 @@ public final class CurriculumViewModel: ObservableObject {
     private func mapToUIModels(curriculum: Curriculum, progress: UserProgress) -> [SectionUIModel] {
         return curriculum.sections.enumerated().map { index, section in
             let isUnlocked = isSectionUnlocked(section, at: index, in: curriculum, progress: progress)
-            let sectionProgress = CurriculumProgressTracker.progress(for: section, progress: progress)
+            let sectionProgress = CurriculumProgressCalculator.progress(for: section, progress: progress)
             
             let categories = section.categories.map { category in
                 mapCategory(category, sectionProgress: sectionProgress, isSectionUnlocked: isUnlocked, progress: progress)
@@ -189,7 +189,7 @@ public final class CurriculumViewModel: ObservableObject {
     }
     
     private func mapCategory(_ category: EssentialChess.Category, sectionProgress: Double, isSectionUnlocked: Bool, progress: UserProgress) -> CategoryUIModel {
-        let categoryProgress = CurriculumProgressTracker.progress(for: category, progress: progress)
+        let categoryProgress = CurriculumProgressCalculator.progress(for: category, progress: progress)
         let examState = mapExamState(for: category, sectionProgress: sectionProgress, isSectionUnlocked: isSectionUnlocked, progress: progress)
         
         let puzzleToUI: (Puzzle) -> PuzzleUIModel = { p in

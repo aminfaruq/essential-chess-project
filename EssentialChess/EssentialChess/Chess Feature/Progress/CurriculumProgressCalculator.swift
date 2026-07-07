@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct CurriculumProgressTracker {
+public struct CurriculumProgressCalculator {
     // MARK: - Constants
     
     private static let examCooldown: TimeInterval = 3 * 3600 // 3 hours
