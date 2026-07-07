@@ -1,10 +1,10 @@
 //
-//  LanguageStoragePort.swift
+//  LanguageStore.swift
 //  EssentialChess
 //
 
 import Foundation
 
-public protocol LanguageStoragePort {
+public protocol LanguageStore {
     var languageCode: String { get set }
 }

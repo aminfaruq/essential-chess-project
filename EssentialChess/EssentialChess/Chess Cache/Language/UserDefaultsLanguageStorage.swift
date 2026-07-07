@@ -5,7 +5,7 @@
 
 import Foundation
 
-public final class UserDefaultsLanguageStorage: LanguageStoragePort {
+public final class UserDefaultsLanguageStorage: LanguageStore {
     private let userDefaults: UserDefaults
     private let key = "app_language_code"
     

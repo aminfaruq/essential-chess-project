@@ -75,7 +75,7 @@ final class LanguageAdapterTests: XCTestCase {
         return (sut, store)
     }
     
-    private class LanguageStoragePortSpy: LanguageStoragePort {
+    private class LanguageStoragePortSpy: LanguageStore {
         var languageCode: String {
             didSet {
                 setCallCount += 1

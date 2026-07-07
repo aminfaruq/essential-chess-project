@@ -7,11 +7,11 @@ import Foundation
 import Combine
 
 public final class LanguageAdapter: ObservableObject {
-    private var store: LanguageStoragePort
+    private var store: LanguageStore
     
     @Published public private(set) var currentLanguage: String
     
-    public init(store: LanguageStoragePort) {
+    public init(store: LanguageStore) {
         self.store = store
         self.currentLanguage = store.languageCode
     }
