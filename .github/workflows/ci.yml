@@ -9,14 +9,14 @@ on:
 jobs:
   test:
     name: Run Tests
-    runs-on: macos-14
+    runs-on: macos-15
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
     
     - name: Select Xcode version
-      run: sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer
+      run: sudo xcode-select -s /Applications/Xcode_16.0.app/Contents/Developer
     
     - name: Show Xcode version
       run: xcodebuild -version
@@ -85,7 +85,7 @@ jobs:
 
   build:
     name: Build App
-    runs-on: macos-14
+    runs-on: macos-15
     needs: test
     
     steps:
@@ -93,7 +93,7 @@ jobs:
       uses: actions/checkout@v4
     
     - name: Select Xcode version
-      run: sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer
+      run: sudo xcode-select -s /Applications/Xcode_16.0.app/Contents/Developer
     
     - name: Cache derived data
       uses: actions/cache@v4
