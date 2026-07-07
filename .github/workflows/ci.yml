@@ -21,12 +21,16 @@ jobs:
     - name: Show Xcode version
       run: xcodebuild -version
     
+    - name: List available runtimes
+      run: xcrun simctl list runtimes
+    
+    - name: Download and install iOS 18.0 runtime
+      run: |
+        sudo xcodebuild -runFirstLaunch
+        xcodebuild -downloadPlatform iOS
+    
     - name: List available simulators
       run: xcrun simctl list devices available
-    
-    - name: Install iOS 17.5 runtime
-      run: |
-        xcodebuild -downloadPlatform iOS -buildVersion 17.5 || echo "Runtime might already be installed"
     
     - name: Cache derived data
       uses: actions/cache@v4
