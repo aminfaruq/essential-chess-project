@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="EssentialChessApp/essential_chess_demo.gif" width="250" alt="Essential Chess Demo">
-</p>
-
 # ♟️ Essential Chess
 
 A structured, offline-first chess tactics trainer for iOS.
@@ -392,7 +388,9 @@ Feature: Daily Activity Streak
 
 ## Screenshots & Demo
 
-> \[TODO: Add App Store screenshots and demo video after release\]
+<p align="center">
+  <img src="EssentialChessApp/essential_chess_demo.gif" width="250" alt="Essential Chess Demo">
+</p>
 
 ---
 
