@@ -13,7 +13,15 @@ public final class URLSessionHTTPClient: HTTPClient {
     }
     
     public func get(from url: URL, headers: [String: String]?, completion: @escaping (HTTPClient.Result) -> Void) {
-        session.dataTask(with: url) { data, response, error in
+        var request = URLRequest(url: url)
+        
+        if let headers = headers {
+            for (key, value) in headers {
+                request.addValue(value, forHTTPHeaderField: key)
+            }
+        }
+        
+        session.dataTask(with: request) { data, response, error in
             if let error = error {
                 completion(.failure(error))
             } else if let data = data, let response = response as? HTTPURLResponse {
