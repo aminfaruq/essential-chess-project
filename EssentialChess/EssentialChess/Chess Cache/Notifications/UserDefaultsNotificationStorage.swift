@@ -5,7 +5,7 @@
 
 import Foundation
 
-public final class UserDefaultsNotificationStorage: NotificationStoragePort {
+public final class UserDefaultsNotificationStorage: NotificationStore {
     private let userDefaults: UserDefaults
     private let key = "isDailyReminderEnabled"
     

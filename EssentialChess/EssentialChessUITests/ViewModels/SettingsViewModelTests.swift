@@ -100,7 +100,7 @@ final class SettingsViewModelTests: XCTestCase {
 
 // MARK: - Spies
 
-class NotificationStoragePortSpy: NotificationStoragePort {
+class NotificationStoragePortSpy: NotificationStore {
     var isDailyReminderEnabled: Bool = false
 }
 

@@ -12,12 +12,12 @@ public final class SettingsViewModel: ObservableObject {
     @Published public var isHapticEnabled: Bool = true
     @Published public var isSoundEnabled: Bool = true
     
-    private var notificationStorage: NotificationStoragePort
+    private var notificationStorage: NotificationStore
     private let notificationScheduler: NotificationScheduler
     private var boardSettingsStorage: BoardSettingsStore
     
     public init(
-        notificationStorage: NotificationStoragePort,
+        notificationStorage: NotificationStore,
         notificationScheduler: NotificationScheduler,
         boardSettingsStorage: BoardSettingsStore
     ) {
