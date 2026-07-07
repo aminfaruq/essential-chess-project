@@ -41,7 +41,7 @@ public final class PuzzleMixViewModel: ObservableObject, Identifiable {
         calculateRating: @escaping (Double, Double, Bool) -> Double,
         saveActualRating: @escaping (Double) -> Void,
         saveHasSeenHintWarning: @escaping (Bool) -> Void,
-        onPuzzleSolved: @escaping () -> Void,
+        onPuzzleSolved: @escaping () -> Void
     ) {
         self.pool = pool
         self.hasSeenHintWarning = hasSeenHintWarning
