@@ -1,0 +1,35 @@
+{
+  "configurations" : [
+    {
+      "id" : "0212D162-EAF3-45DC-97FA-9EC4D8787366",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:ChessBoard.xcodeproj",
+          "identifier" : "83CA9C9F2FECF3DF00F0031B",
+          "name" : "ChessBoard"
+        }
+      ]
+    },
+    "performanceAntipatternCheckerEnabled" : true,
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:ChessBoard.xcodeproj",
+        "identifier" : "83CA9CA82FECF3DF00F0031B",
+        "name" : "ChessBoardTests"
+      }
+    }
+  ],
+  "version" : 1
+}
