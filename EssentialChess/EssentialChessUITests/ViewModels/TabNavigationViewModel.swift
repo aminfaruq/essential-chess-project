@@ -1,5 +1,5 @@
 //
-//  MainNavigationViewModelTests.swift
+//  TabNavigationViewModel.swift
 //  EssentialChess
 //
 //  Created by Amin faruq on 14/06/26.
@@ -9,14 +9,14 @@ import XCTest
 import EssentialChess
 @testable import EssentialChessUI
 
-final class MainNavigationViewModelTests: XCTestCase {
+final class TabNavigationViewModelTest: XCTestCase {
     
     func test_init_loadsInitialStateFromStorageAndDoesNotSave() {
         // Given
         let spy = TabStoragePortSpy(initialTab: .puzzleMix)
         
         // When
-        let sut = MainNavigationViewModel(tabStorage: spy)
+        let sut = TabNavigationViewModel(tabStorage: spy)
         
         trackForMemoryLeaks(sut)
         trackForMemoryLeaks(spy)
@@ -29,7 +29,7 @@ final class MainNavigationViewModelTests: XCTestCase {
     func test_selectedTabChange_automaticallySavesToStorage() {
         // Given
         let spy = TabStoragePortSpy(initialTab: .curriculum)
-        let sut = MainNavigationViewModel(tabStorage: spy)
+        let sut = TabNavigationViewModel(tabStorage: spy)
         
         trackForMemoryLeaks(sut)
         trackForMemoryLeaks(spy)
@@ -45,7 +45,7 @@ final class MainNavigationViewModelTests: XCTestCase {
     func test_resetToCurriculum_setsTabToCurriculumAndSaves() {
         // Given
         let spy = TabStoragePortSpy(initialTab: .settings)
-        let sut = MainNavigationViewModel(tabStorage: spy)
+        let sut = TabNavigationViewModel(tabStorage: spy)
         
         trackForMemoryLeaks(sut)
         trackForMemoryLeaks(spy)

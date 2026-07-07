@@ -7,7 +7,7 @@
 import EssentialChess
 import Combine
 
-public final class MainNavigationViewModel: ObservableObject {
+public final class TabNavigationViewModel: ObservableObject {
     @Published public var selectedTab: AppTab
     
     private var tabStorage: TabStore
