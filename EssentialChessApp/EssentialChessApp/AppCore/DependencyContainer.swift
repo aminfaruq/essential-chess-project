@@ -37,7 +37,7 @@ public final class DependencyContainer: ObservableObject {
         
         self.beginnerProgressStore = UserDefaultsBeginnerProgressStore()
         
-        self.notificationStorage = UserDefaultsNotificationStorage()
+        self.notificationStorage = UserDefaultsNotificationStore()
         self.notificationScheduler = UserNotificationsAdapter()
         self.boardSettingsStorage = UserDefaultsBoardSettingsStore()
         

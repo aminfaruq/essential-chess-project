@@ -1,11 +1,11 @@
 //
-//  UserDefaultsNotificationStorage.swift
+//  UserDefaultsNotificationStore.swift
 //  EssentialChess
 //
 
 import Foundation
 
-public final class UserDefaultsNotificationStorage: NotificationStore {
+public final class UserDefaultsNotificationStore: NotificationStore {
     private let userDefaults: UserDefaults
     private let key = "isDailyReminderEnabled"
     
