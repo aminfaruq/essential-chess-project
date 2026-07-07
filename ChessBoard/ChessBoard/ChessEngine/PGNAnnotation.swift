@@ -1,6 +1,6 @@
 import Foundation
 
-public enum BoardPGNElement: Hashable, Sendable {
+public enum PGNAnnotation: Hashable, Sendable {
     case whiteNumber(Int)
     case blackNumber(Int)
     case move(san: String, moveId: String)
