@@ -8,7 +8,7 @@
 import XCTest
 @testable import EssentialChess
 
-final class UserDefaultsTabAdapterTests: XCTestCase {
+final class UserDefaultsTabStoreTests: XCTestCase {
     
     private let testSuiteName = "com.essentialchess.test.tabadapter"
     private let storageKey = "selectedAppTab"

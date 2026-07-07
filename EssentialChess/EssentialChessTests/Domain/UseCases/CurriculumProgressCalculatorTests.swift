@@ -8,7 +8,7 @@
 import XCTest
 import EssentialChess
 
-final class CurriculumProgressCalculatorTrackerTests: XCTestCase {
+final class CurriculumProgressCalculatorTests: XCTestCase {
     
     // MARK: - Section Unlock Logic
     
