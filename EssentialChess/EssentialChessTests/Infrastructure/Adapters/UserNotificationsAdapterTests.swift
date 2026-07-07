@@ -69,7 +69,7 @@ final class UserNotificationsAdapterTests: XCTestCase {
     func test_scheduleDailyReminder_createsNotificationWithCorrectContent() {
         let (sut, center) = makeSUT()
 
-        sut.scheduleDailyReminder(hour: 8, minute: 30, title: "Practice", body: "Time to play!")
+        sut.scheduleDailyReminder(hour: 8, minute: 30, title: "Practice", body: "Time to play!") { _ in }
 
         XCTAssertEqual(center.addCallCount, 1)
         let request = center.addedRequests.first
@@ -81,7 +81,7 @@ final class UserNotificationsAdapterTests: XCTestCase {
     func test_scheduleDailyReminder_usesCorrectIdentifier() {
         let (sut, center) = makeSUT()
 
-        sut.scheduleDailyReminder(hour: 8, minute: 30, title: "Practice", body: "Time!")
+        sut.scheduleDailyReminder(hour: 8, minute: 30, title: "Practice", body: "Time!") { _ in }
 
         let request = center.addedRequests.first
         XCTAssertEqual(request?.identifier, "dailyPracticeReminder")
@@ -90,7 +90,7 @@ final class UserNotificationsAdapterTests: XCTestCase {
     func test_scheduleDailyReminder_setsCorrectTriggerHourAndMinute() {
         let (sut, center) = makeSUT()
 
-        sut.scheduleDailyReminder(hour: 9, minute: 15, title: "Practice", body: "Time!")
+        sut.scheduleDailyReminder(hour: 9, minute: 15, title: "Practice", body: "Time!") { _ in }
 
         let request = center.addedRequests.first
         let trigger = request?.trigger as? UNCalendarNotificationTrigger

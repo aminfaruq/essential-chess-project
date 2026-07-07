@@ -15,6 +15,8 @@ public final class ViewFactory: ObservableObject {
     private let container: DependencyContainer
     private var cachedCurriculum: Curriculum?
     
+    @Published public var loadError: String?
+    
     public init(container: DependencyContainer) {
         self.container = container
     }
@@ -29,19 +31,25 @@ public final class ViewFactory: ObservableObject {
         onFinishedTest: @escaping (Double) -> Void,
         onReady: @escaping (OnboardingViewModel) -> Void
     ) {
-        guard let loader = container.mixPoolLoader else { return }
+        guard let loader = container.mixPoolLoader else {
+            loadError = "Puzzle data not found. Please reinstall the app."
+            return
+        }
+        
+        loadError = nil
         
         loader.load {  [weak self] result in
             DispatchQueue.main.async {
-                guard self != nil else { return }
+                guard let self = self else { return }
                 
                 let allPuzzles: [Puzzle]
                 
                 switch result {
                 case .success(let mixPool):
                     allPuzzles = mixPool.difficultyTiers.flatMap { $0.puzzles }
-                case .failure(_):
-                    allPuzzles = [] // Fallback to empty if reading fails
+                case .failure(let error):
+                    self.loadError = "Failed to load puzzles: \(error.localizedDescription)"
+                    allPuzzles = []
                 }
                 
                 let viewModel = OnboardingViewModel(
@@ -68,7 +76,12 @@ public final class ViewFactory: ObservableObject {
     public func fetchPuzzleMixViewModel(
         onReady: @escaping (PuzzleMixViewModel) -> Void
     ) {
-        guard let loader = container.mixPoolLoader else { return }
+        guard let loader = container.mixPoolLoader else {
+            loadError = "Puzzle data not found. Please reinstall the app."
+            return
+        }
+        
+        loadError = nil
         
         loader.load { [weak self] result in
             DispatchQueue.main.async {
@@ -78,7 +91,8 @@ public final class ViewFactory: ObservableObject {
                 switch result {
                 case .success(let mixPool):
                     pool = mixPool.difficultyTiers.flatMap { $0.puzzles }
-                case .failure(_):
+                case .failure(let error):
+                    self.loadError = "Failed to load puzzles: \(error.localizedDescription)"
                     pool = []
                 }
                 
@@ -136,7 +150,12 @@ public final class ViewFactory: ObservableObject {
     public func fetchPuzzleStreakViewModel(
         onReady: @escaping (PuzzleStreakViewModel) -> Void
     ) {
-        guard let loader = container.mixPoolLoader else { return }
+        guard let loader = container.mixPoolLoader else {
+            loadError = "Puzzle data not found. Please reinstall the app."
+            return
+        }
+        
+        loadError = nil
         
         loader.load { [weak self] result in
             DispatchQueue.main.async {
@@ -146,7 +165,8 @@ public final class ViewFactory: ObservableObject {
                 switch result {
                 case .success(let mixPool):
                     pool = mixPool.difficultyTiers.flatMap { $0.puzzles }
-                case .failure(_):
+                case .failure(let error):
+                    self.loadError = "Failed to load puzzles: \(error.localizedDescription)"
                     pool = []
                 }
                 
@@ -202,7 +222,12 @@ public final class ViewFactory: ObservableObject {
     public func fetchPuzzleStormViewModel(
         onReady: @escaping (PuzzleStormViewModel) -> Void
     ) {
-        guard let loader = container.mixPoolLoader else { return }
+        guard let loader = container.mixPoolLoader else {
+            loadError = "Puzzle data not found. Please reinstall the app."
+            return
+        }
+        
+        loadError = nil
         
         loader.load { [weak self] result in
             DispatchQueue.main.async {
@@ -212,7 +237,8 @@ public final class ViewFactory: ObservableObject {
                 switch result {
                 case .success(let mixPool):
                     pool = mixPool.difficultyTiers.flatMap { $0.puzzles }
-                case .failure(_):
+                case .failure(let error):
+                    self.loadError = "Failed to load puzzles: \(error.localizedDescription)"
                     pool = []
                 }
                 

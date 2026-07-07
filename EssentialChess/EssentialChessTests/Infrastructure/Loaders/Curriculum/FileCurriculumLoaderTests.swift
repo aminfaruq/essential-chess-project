@@ -70,7 +70,7 @@ final class FileCurriculumLoaderTests: XCTestCase {
         let invalidData = Data("Not JSON".utf8)
         reader.complete(with: invalidData)
         
-        XCTAssertEqual(capturedErrors, [.invalidData])
+        XCTAssertEqual(capturedErrors, [.invalidData()])
     }
     
     func test_load_deliversSuccesOnValidJsonData() {

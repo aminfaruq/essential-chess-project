@@ -70,7 +70,7 @@ final class FileMixPoolLoaderTests: XCTestCase {
         let invalidData = Data("not JSON".utf8)
         reader.complete(with: invalidData)
         
-        XCTAssertEqual(capturedErrors, [.invalidData])
+        XCTAssertEqual(capturedErrors, [.invalidData()])
     }
     
     func test_load_deliversSuccessOnValidJSONData() {

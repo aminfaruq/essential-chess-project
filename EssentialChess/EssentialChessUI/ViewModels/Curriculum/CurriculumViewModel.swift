@@ -154,6 +154,10 @@ public final class CurriculumViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
+    public func clearError() {
+        errorMessage = nil
+    }
+    
     // MARK: - Mapping Logic
     
     private func mapToUIModels(curriculum: Curriculum, progress: UserProgress) -> [SectionUIModel] {

@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import OSLog
 
 public final class ProgressAdapter {
     private let store: ProgressLoader
@@ -31,8 +32,13 @@ public final class ProgressAdapter {
     public func load(completion: @escaping () -> Void) {
         store.retrieve { [weak self] result in
             DispatchQueue.main.async {
-                if let progress = (try? result.get()) ?? nil {
-                    self?.subject.send(progress)
+                switch result {
+                case .success(let progress):
+                    if let progress = progress {
+                        self?.subject.send(progress)
+                    }
+                case .failure(let error):
+                    os_log(.error, "ProgressAdapter: Failed to load progress: %{public}@", error.localizedDescription)
                 }
                 completion()
             }

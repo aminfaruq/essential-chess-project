@@ -231,8 +231,9 @@ class NotificationSchedulerSpy: NotificationSchedulerLoader {
         completion(permissionToGrant)
     }
 
-    func scheduleDailyReminder(hour: Int, minute: Int, title: String, body: String) {
+    func scheduleDailyReminder(hour: Int, minute: Int, title: String, body: String, completion: @escaping (Error?) -> Void) {
         scheduledReminders.append(ScheduledReminder(hour: hour, minute: minute, title: title, body: body))
+        completion(nil)
     }
 
     func cancelDailyReminder() {

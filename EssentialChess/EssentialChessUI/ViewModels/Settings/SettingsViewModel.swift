@@ -61,7 +61,15 @@ public final class SettingsViewModel: ObservableObject {
                     minute: 0,
                     title: "Time to Practice! ♟️",
                     body: "Complete your daily puzzles and maintain your learning streak."
-                )
+                ) { error in
+                    if error != nil {
+                        // Scheduling failed — revert toggle state
+                        DispatchQueue.main.async {
+                            self.updateStorage(enabled: false)
+                            self.isDailyReminderEnabled = false
+                        }
+                    }
+                }
                 self.updateStorage(enabled: true)
             } else {
                 self.updateStorage(enabled: false)

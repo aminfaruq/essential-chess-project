@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import OSLog
 
 public final class ThemeAdapter: ObservableObject {
     
@@ -32,9 +33,14 @@ public final class ThemeAdapter: ObservableObject {
             DispatchQueue.main.async {
                 guard let self = self else { return }
 
-                if let settings = (try? result.get()) ?? nil {
-                    self.subject.send(settings)
-                    self.currentTheme = settings
+                switch result {
+                case .success(let settings):
+                    if let settings = settings {
+                        self.subject.send(settings)
+                        self.currentTheme = settings
+                    }
+                case .failure(let error):
+                    os_log(.error, "ThemeAdapter: Failed to load theme: %{public}@", error.localizedDescription)
                 }
                 completion()
             }

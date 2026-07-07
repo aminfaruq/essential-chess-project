@@ -65,6 +65,23 @@ public struct CurriculumView: View {
                 beginnerVM.load()
             }*/
         }
+        .alert("Failed to Load Curriculum", isPresented: isShowingError) {
+            Button("Retry") {
+                curriculumVM.load()
+            }
+            Button("OK", role: .cancel) { }
+        } message: {
+            if let error = curriculumVM.errorMessage {
+                Text(error)
+            }
+        }
+    }
+    
+    private var isShowingError: Binding<Bool> {
+        Binding(
+            get: { curriculumVM.errorMessage != nil },
+            set: { if !$0 { curriculumVM.clearError() } }
+        )
     }
 }
 
