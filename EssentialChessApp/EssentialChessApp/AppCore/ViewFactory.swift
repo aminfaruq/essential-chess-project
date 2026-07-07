@@ -102,12 +102,6 @@ public final class ViewFactory: ObservableObject {
                     pool: pool,
                     hiddenRating: progress.hiddenRating,
                     actualRating: progress.actualRating,
-                    // MARK: - Freemium params (commented out — app is now fully free)
-                    // checkIsPro: { [weak self] in
-                    //     self?.container.progressAdapter.currentProgress.unlockedFeatures.contains(.openingStudy) ?? false
-                    // },
-                    // dailyPuzzleMixCount: progress.dailyPuzzleMixCount,
-                    // lastPuzzleMixDate: progress.lastPuzzleMixDate,
                     hasSeenHintWarning: UserDefaults.standard.bool(forKey: "hasSeenHintWarning"),
                     calculateRating: { currentRating, puzzleRating, isCorrect in
                         return RatingCalculator().calculateRegularRating(
@@ -129,15 +123,7 @@ public final class ViewFactory: ObservableObject {
                         self.container.progressAdapter.update { progress in
                             progress.recordActivity()
                         }
-                    },
-                    // MARK: - Freemium daily limits (commented out — app is now fully free)
-                    // updateDailyLimits: { count, date in
-                    //     self.container.progressAdapter.update { progress in
-                    //         progress.dailyPuzzleMixCount = count
-                    //         progress.lastPuzzleMixDate = date
-                    //     }
-                    // }
-                    // updateDailyLimits: { _, _ in }
+                    }
                 )
                 
                 onReady(viewModel)
@@ -174,12 +160,6 @@ public final class ViewFactory: ObservableObject {
                 
                 let viewModel = PuzzleStreakViewModel(
                     pool: pool,
-                    // MARK: - Freemium params (commented out — app is now fully free)
-                    // checkIsPro: { [weak self] in
-                    //     self?.container.progressAdapter.currentProgress.unlockedFeatures.contains(.openingStudy) ?? false
-                    // },
-                    // dailyPuzzleStreakCount: progress.dailyPuzzleStreakCount,
-                    // lastPuzzleStreakDate: progress.lastPuzzleStreakDate,
                     activeStreak: progress.activePuzzleStreak,
                     activeUsedIDs: progress.activePuzzleStreakUsedIDs,
                     highestStreak: progress.highestPuzzleStreak,
@@ -196,13 +176,6 @@ public final class ViewFactory: ObservableObject {
                             }
                         }
                     },
-                    // MARK: - Freemium daily limits (commented out — app is now fully free)
-                    // updateDailyLimits: { count, date in
-                    //     self.container.progressAdapter.update { progress in
-                    //         progress.dailyPuzzleStreakCount = count
-                    //         progress.lastPuzzleStreakDate = date
-                    //     }
-                    // }
                     updateDailyLimits: { _, _ in },
                     onPuzzleSolved: {
                         //MARK: Daily streak
@@ -246,12 +219,6 @@ public final class ViewFactory: ObservableObject {
                 
                 let viewModel = PuzzleStormViewModel(
                     pool: pool,
-                    // MARK: - Freemium params (commented out — app is now fully free)
-                    // checkIsPro: { [weak self] in
-                    //     self?.container.progressAdapter.currentProgress.unlockedFeatures.contains(.openingStudy) ?? false
-                    // },
-                    // dailyPuzzleStormCount: progress.dailyPuzzleStormCount,
-                    // lastPuzzleStormDate: progress.lastPuzzleStormDate,
                     highestScore: progress.highestPuzzleStorm,
                     onScoreUpdated: { newHighestScore in
                         self.container.progressAdapter.update { progress in
@@ -261,13 +228,6 @@ public final class ViewFactory: ObservableObject {
                     onSessionFinished: { _ in
                         // Handled via onScoreUpdated for now, but could be useful for analytics
                     },
-                    // MARK: - Freemium daily limits (commented out — app is now fully free)
-                    // updateDailyLimits: { count, date in
-                    //     self.container.progressAdapter.update { progress in
-                    //         progress.dailyPuzzleStormCount = count
-                    //         progress.lastPuzzleStormDate = date
-                    //     }
-                    // }
                     updateDailyLimits: { _, _ in },
                     onPuzzleSolved: {
                         //MARK: Daily streak
