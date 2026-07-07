@@ -6,10 +6,18 @@
 import Foundation
 import UserNotifications
 
+public protocol UserNotificationCenterProtocol {
+    func requestAuthorization(options: UNAuthorizationOptions, completionHandler: @escaping @Sendable (Bool, Error?) -> Void)
+    func add(_ request: UNNotificationRequest, withCompletionHandler completionHandler: (@Sendable (Error?) -> Void)?)
+    func removePendingNotificationRequests(withIdentifiers identifiers: [String])
+}
+
+extension UNUserNotificationCenter: UserNotificationCenterProtocol {}
+
 public final class UserNotificationsAdapter: NotificationSchedulerLoader {
-    private let center: UNUserNotificationCenter
-    
-    public init(center: UNUserNotificationCenter = .current()) {
+    private let center: UserNotificationCenterProtocol
+
+    public init(center: UserNotificationCenterProtocol = UNUserNotificationCenter.current()) {
         self.center = center
     }
     
