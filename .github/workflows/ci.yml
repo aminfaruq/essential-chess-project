@@ -42,8 +42,8 @@ jobs:
     
     - name: Run ChessBoard Tests
       run: |
-        xcodebuild test \
-          -project ChessBoard/ChessBoard.xcodeproj \
+        cd ChessBoard && xcodebuild test \
+          -project ChessBoard.xcodeproj \
           -scheme ChessBoard \
           -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
           -testPlan ChessBoard.xctestplan \
