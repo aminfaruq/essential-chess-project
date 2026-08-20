@@ -82,9 +82,7 @@ final class PuzzleValidatorTests: XCTestCase {
 
     private func makeSUT(moves: [String], file: StaticString = #filePath, line: UInt = #line) -> PuzzleValidator {
         let sut = PuzzleValidator(expectedMoves: moves)
-        addTeardownBlock { [weak sut] in
-            XCTAssertNil(sut, "Memory leak", file: file, line: line)
-        }
+        trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
 }

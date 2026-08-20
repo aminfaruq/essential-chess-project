@@ -61,10 +61,16 @@ final class BoardGeometryTests: XCTestCase {
     }
 
     func test_squareString_outOfBounds_returnsNil() {
-        let sut = BoardGeometry(bounds: CGSize(width: 400, height: 400), isFlipped: false)
+        let sut = makeSUT(bounds: CGSize(width: 400, height: 400), isFlipped: false)
 
         XCTAssertNil(sut.squareString(at: CGPoint(x: -100, y: 200)))
         XCTAssertNil(sut.squareString(at: CGPoint(x: 500, y: 200)))
         XCTAssertNil(sut.squareString(at: CGPoint(x: 200, y: -100)))
+    }
+
+    // MARK: - Helpers
+
+    private func makeSUT(bounds: CGSize, isFlipped: Bool) -> BoardGeometry {
+        return BoardGeometry(bounds: bounds, isFlipped: isFlipped)
     }
 }

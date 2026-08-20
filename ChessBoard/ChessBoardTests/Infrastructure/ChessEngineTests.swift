@@ -370,9 +370,7 @@ final class ChessEngineTests: XCTestCase {
 
     private func makeSUT(fen: String, file: StaticString = #filePath, line: UInt = #line) -> ChessEngine {
         let sut = ChessEngine(fen: fen)
-        addTeardownBlock { [weak sut] in
-            XCTAssertNil(sut, "Instance should have been deallocated. Potential memory leak.", file: file, line: line)
-        }
+        trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
 }
