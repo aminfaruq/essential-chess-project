@@ -25,6 +25,7 @@ public final class DependencyContainer: ObservableObject {
     public let mixPoolLoader: FileMixPoolLoader?
     public let beginnerCurriculumLoader: FileCurriculumLoader?
     public let beginnerProgressStore: UserDefaultsBeginnerProgressStore
+    public let beginnerProgressAdapter: BeginnerProgressAdapter
     
     public let languageAdapter: LanguageAdapter
     
@@ -36,6 +37,7 @@ public final class DependencyContainer: ObservableObject {
         self.progressAdapter = ProgressAdapter(store: progressStore)
         
         self.beginnerProgressStore = UserDefaultsBeginnerProgressStore()
+        self.beginnerProgressAdapter = BeginnerProgressAdapter(store: self.beginnerProgressStore)
         
         self.notificationStorage = UserDefaultsNotificationStore()
         self.notificationScheduler = UserNotificationsAdapter()

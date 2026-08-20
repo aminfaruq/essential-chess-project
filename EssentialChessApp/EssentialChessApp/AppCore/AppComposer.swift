@@ -59,7 +59,7 @@ public final class AppComposer: ObservableObject {
                 }
                 return Fail(error: FileCurriculumLoader.Error.invalidData()).eraseToAnyPublisher()
             },
-            progressPublisher: { [container] in container.beginnerProgressStore.progressPublisher }
+            progressPublisher: { [container] in container.beginnerProgressAdapter.publisher() }
         )
         
         self.streakVM = StreakViewModel(progressPublisher: adapter.publisher())
