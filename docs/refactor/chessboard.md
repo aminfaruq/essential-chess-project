@@ -4,7 +4,7 @@ This document is the working plan for refactoring the `ChessBoard/` module to al
 with the project conventions defined in `.agents/skills/*/SKILL.md` (domain,
 infrastructure, composition, navigation, mvvm-swiftui, tdd).
 
-Status: **Draft** — updated as work progresses.
+Status: **Draft** — updated as work progresses. Phase 1 and Phase 2 are complete.
 
 ## 0. Decisions
 
@@ -171,6 +171,23 @@ Exit criteria: same behavior, all existing `ChessBoardTests` pass, and only
 8. Views accept the engine through `ChessGameEngine` and a factory closure, so tests can
    inject a spy.
 9. Remove the unused `internal import ChessKit` from Analysis view files.
+
+Done. `ChessBoardView` base + `+Setup`/`+Interaction`/`+Rendering` extensions; the six
+Puzzle/Analysis `+Setup`/`+Interaction`/`+Rendering` files and the two singletons are deleted
+(net −1165 lines). Views now route moves through the `handleMove(from:to:promotionChar:)`
+override hook and render via the `alternativePieceImage(for:at:)` hook (used by
+Learn-The-Pieces stars). Injection point: `init(frame:feedback:engineFactory:)` with
+`@testable` internal access (immutable feedback/engineFactory after init).
+
+Deviations from this plan (documented):
+- No separate `BoardArrowRenderer`; `drawArrow(from:to:color:isPersistent:)` lives in
+  `ChessBoardView+Rendering.swift`.
+- `BoardInteractionHandler` and `PromotionOverlayView` remain under `iOS/Components/`.
+- Castling move animations are still mode-specific in each subclass's `+Logic` (the pieces
+  move, highlight, and state handling differ enough that a shared helper adds little).
+- `SystemBoardFeedback.playVictory()` plays the rigid-impact haptic (previously
+  `HapticManager.moveCapture`) together with the victory sound — this reproduces the old
+  checkmate/win feedback exactly and adds the haptic to puzzle completion flows.
 
 Exit criteria: no duplicated UI code between Puzzle and Analysis; no `*Manager.shared`
 references from views; views compile against domain protocols only.

@@ -1,18 +1,18 @@
 import UIKit
 
-extension AnalysisChessBoardView {
-    
+extension ChessBoardView {
+
     func processTap(on clickedSquareStr: String) {
-        guard !isBoardLocked, let engine = engine else { return }
-        
+        guard !interactionLocked, let engine = engine else { return }
+
         if let sourceStr = selectedSquareString {
             if sourceStr == clickedSquareStr {
                 selectedSquareString = nil
                 clearLegalMoveHints(); clearHighlights(); return
             }
-            
-            // If the clicked square has the current side's piece, switch selection
-            if let clickedPiece = engine.piece(at: clickedSquareStr), clickedPiece.color == engine.sideToMove {
+
+            if switchesSelectionOnOwnPieceTap,
+               let clickedPiece = engine.piece(at: clickedSquareStr), clickedPiece.color == engine.sideToMove {
                 selectedSquareString = clickedSquareStr
                 clearLegalMoveHints()
                 clearHighlights()
@@ -20,15 +20,15 @@ extension AnalysisChessBoardView {
                 showLegalMoveHints(for: clickedSquareStr)
                 return
             }
-            
+
             if isPromotionMove(from: sourceStr, to: clickedSquareStr) {
                 showPromotionDialog(from: sourceStr, to: clickedSquareStr) { [weak self] choice in
                     if let choice = choice {
-                        self?.processUserMove(from: sourceStr, to: clickedSquareStr, promotionChar: choice)
+                        self?.handleMove(from: sourceStr, to: clickedSquareStr, promotionChar: choice)
                     }
                 }
             } else {
-                processUserMove(from: sourceStr, to: clickedSquareStr)
+                handleMove(from: sourceStr, to: clickedSquareStr)
             }
         } else {
             if let piece = engine.piece(at: clickedSquareStr), piece.color == engine.sideToMove {
@@ -39,35 +39,35 @@ extension AnalysisChessBoardView {
             }
         }
     }
-    
+
     func processDragBegan(at startSquareStr: String) -> Bool {
-        guard !isBoardLocked, let engine = engine else { return false }
+        guard !interactionLocked, let engine = engine else { return false }
         guard let piece = engine.piece(at: startSquareStr), piece.color == engine.sideToMove,
               let originalPieceView = pieceImageViews[startSquareStr] else { return false }
-        
+
         showLegalMoveHints(for: startSquareStr)
-        
+
         let ghost = UIImageView(image: originalPieceView.image)
         ghost.contentMode = .scaleAspectFit
         ghost.frame = originalPieceView.convert(originalPieceView.bounds, to: overlayView)
         overlayView.addSubview(ghost)
         ghostPieceView = ghost
         dragStartOriginalCenter = ghost.center
-        
+
         originalPieceView.isHidden = true
         UIView.animate(withDuration: 0.1) { ghost.transform = CGAffineTransform(scaleX: 1.3, y: 1.3) }
-        
+
         selectedSquareString = nil
         clearHighlights()
         highlightViews[startSquareStr]?.isHidden = false
-        HapticManager.shared.piecePickUp()
+        feedback.piecePickUp()
         return true
     }
-    
+
     func processDragChanged(translation: CGPoint) {
         ghostPieceView?.center = CGPoint(x: dragStartOriginalCenter.x + translation.x, y: dragStartOriginalCenter.y + translation.y)
     }
-    
+
     func processDragEnded(from sourceStr: String, to targetStr: String) {
         clearLegalMoveHints()
         if isPromotionMove(from: sourceStr, to: targetStr) {
@@ -76,11 +76,11 @@ extension AnalysisChessBoardView {
             }
             showPromotionDialog(from: sourceStr, to: targetStr) { [weak self] choice in
                 if let choice = choice {
-                    self?.processUserMove(from: sourceStr, to: targetStr, promotionChar: choice)
+                    self?.handleMove(from: sourceStr, to: targetStr, promotionChar: choice)
                 } else { self?.animateSnapback { self?.clearHighlights() } }
             }
         } else {
-            processUserMove(from: sourceStr, to: targetStr)
+            handleMove(from: sourceStr, to: targetStr)
         }
     }
 }
