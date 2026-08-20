@@ -25,12 +25,7 @@ public final class FileECOLoader: ECOLoader {
             
             switch result {
             case let .success(data):
-                do {
-                    let dict = try JSONDecoder().decode([String: ECOOpening].self, from: data)
-                    completion(.success(dict))
-                } catch {
-                    completion(.failure(Error.invalidData))
-                }
+                completion(ECOOpeningMapper.map(data))
             case .failure:
                 completion(.failure(Error.readError))
             }
