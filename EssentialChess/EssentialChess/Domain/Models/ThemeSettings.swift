@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - Pure Color Representation
-public struct RGBAColor: Equatable, Codable {
+public struct RGBAColor: Equatable {
     public let red: Double
     public let green: Double
     public let blue: Double
@@ -23,7 +23,7 @@ public struct RGBAColor: Equatable, Codable {
 }
 
 // MARK: - Theme Option
-public enum BoardThemeOption: String, CaseIterable, Codable {
+public enum BoardThemeOption: String, CaseIterable, Hashable {
     case brown = "Brown"
     case green = "Green"
     case blue  = "Blue"
@@ -54,7 +54,7 @@ public enum BoardThemeOption: String, CaseIterable, Codable {
 }
 
 // MARK: - Theme Settings Entity
-public struct ThemeSettings: Equatable, Codable {
+public struct ThemeSettings: Equatable {
     public let boardTheme: BoardThemeOption
     public let pieceTheme: String
     
@@ -63,3 +63,5 @@ public struct ThemeSettings: Equatable, Codable {
         self.pieceTheme = pieceTheme
     }
 }
+
+extension ThemeSettings: Hashable {}

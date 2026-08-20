@@ -17,7 +17,7 @@ public struct ProgressCacheDTO: Codable {
     private let currentStreak: Int
     private let lastActivityDate: Date?
     private let isPro: Bool?
-    private let unlockedFeatures: Set<ProFeature>?
+    private let unlockedFeatures: Set<String>?
     private let dailyPuzzleMixCount: Int?
     private let lastPuzzleMixDate: Date?
     private let dailyPuzzleStreakCount: Int?
@@ -39,7 +39,7 @@ public struct ProgressCacheDTO: Codable {
         self.currentStreak = model.currentStreak
         self.lastActivityDate = model.lastActivityDate
         self.isPro = nil
-        self.unlockedFeatures = model.unlockedFeatures
+        self.unlockedFeatures = Set(model.unlockedFeatures.map(\.rawValue))
         self.dailyPuzzleMixCount = model.dailyPuzzleMixCount
         self.lastPuzzleMixDate = model.lastPuzzleMixDate
         self.dailyPuzzleStreakCount = model.dailyPuzzleStreakCount
@@ -62,7 +62,7 @@ public struct ProgressCacheDTO: Codable {
             examFailureTimes: examFailureTimes,
             currentStreak: currentStreak,
             lastActivityDate: lastActivityDate,
-            unlockedFeatures: unlockedFeatures ?? [],
+            unlockedFeatures: unlockedFeatures.map { Set($0.compactMap(ProFeature.init(rawValue:))) } ?? [],
             dailyPuzzleMixCount: dailyPuzzleMixCount ?? 0,
             lastPuzzleMixDate: lastPuzzleMixDate,
             dailyPuzzleStreakCount: dailyPuzzleStreakCount ?? 0,
