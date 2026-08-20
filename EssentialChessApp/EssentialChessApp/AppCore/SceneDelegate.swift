@@ -10,6 +10,7 @@ import EssentialChess
 import EssentialChessUI
 import SwiftUI
 
+@MainActor
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?

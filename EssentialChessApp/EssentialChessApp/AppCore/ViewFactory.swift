@@ -11,6 +11,7 @@ import EssentialChess
 import EssentialChessUI
 
 /// Handles routing and creating complex sub-views, completely decoupling navigation from AppComposer.
+@MainActor
 public final class ViewFactory: ObservableObject {
     private let container: DependencyContainer
     private var cachedCurriculum: Curriculum?

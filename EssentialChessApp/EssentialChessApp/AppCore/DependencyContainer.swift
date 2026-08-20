@@ -11,6 +11,7 @@ import EssentialChessUI
 import Combine
 
 /// Holds all pure infrastructure adapters, loaders, and stores.
+@MainActor
 public final class DependencyContainer: ObservableObject {
     public let progressAdapter: ProgressAdapter
     public let themeAdapter: ThemeAdapter

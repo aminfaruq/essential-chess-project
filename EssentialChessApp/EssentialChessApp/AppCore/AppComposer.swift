@@ -10,6 +10,7 @@ import Combine
 import EssentialChess
 import EssentialChessUI
 
+@MainActor
 public final class AppComposer: ObservableObject {
     @Published public private(set) var isReady: Bool = false
     
