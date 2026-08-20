@@ -7,6 +7,7 @@ import XCTest
 import Combine
 import EssentialChess
 
+@MainActor
 final class BeginnerProgressAdapterTests: XCTestCase {
     
     func test_init_publishesCurrentStoreProgress() {
