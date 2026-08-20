@@ -5,37 +5,13 @@
 //  Created by Amin faruq on 08/06/26.
 //
 import Foundation
-internal import ChessKit
-
-// MARK: - Domain Primitives
-
-/// Represents the color of a chess piece or player turn.
-public enum EngineColor: Equatable {
-    case white
-    case black
-}
-
-/// Represents the type of a chess piece.
-public enum EnginePieceKind: Equatable {
-    case pawn, knight, bishop, rook, queen, king
-}
-
-/// A simplified representation of a chess piece to be consumed by the View layer.
-public struct EnginePiece: Equatable {
-    public let kind: EnginePieceKind
-    public let color: EngineColor
-    
-    public init(kind: EnginePieceKind, color: EngineColor) {
-        self.kind = kind
-        self.color = color
-    }
-}
+import ChessKit
 
 // MARK: - Core Engine Adapter
 
 /// An adapter class that encapsulates the third-party chess logic (ChessKit),
 /// providing a clean, decoupled interface for the View layer.
-public final class ChessEngine {
+public final class ChessEngine: ChessGameEngine {
     
     private var game: Game
     private var currentIndex: MoveTree.Index
@@ -278,17 +254,9 @@ public final class ChessEngine {
     }
     
     // MARK: - Game State Detection
-    
-    /// Represents the current state of the game.
-    public enum GameState: Equatable {
-        case inProgress
-        case check(EngineColor)
-        case checkmate(EngineColor)
-        case stalemate
-    }
-    
+
     /// Returns the current game state after the last move.
-    public var gameState: GameState {
+    public var gameState: EngineGameState {
         guard let position = game.positions[currentIndex] else { return .inProgress }
         let board = Board(position: position)
         switch board.state {

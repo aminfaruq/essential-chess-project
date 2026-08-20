@@ -184,7 +184,7 @@ extension AnalysisChessBoardView {
     // MARK: - Private Helpers
     
     /// Plays the appropriate sound effect based on the move type and resulting game state.
-    private func playSoundForMove(isCapture: Bool, gameState: ChessEngine.GameState) {
+    private func playSoundForMove(isCapture: Bool, gameState: EngineGameState) {
         switch gameState {
         case .checkmate:
             HapticManager.shared.moveCapture()
