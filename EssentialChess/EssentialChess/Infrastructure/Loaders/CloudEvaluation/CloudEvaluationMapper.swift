@@ -16,8 +16,6 @@ public final class CloudEvaluationMapper {
         }
     }
     
-    public init() {}
-    
     private struct PVNode: Decodable {
         let moves: String
         let cp: Int?
