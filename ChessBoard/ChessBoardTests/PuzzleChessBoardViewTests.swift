@@ -150,6 +150,119 @@ final class PuzzleChessBoardViewTests: XCTestCase {
         XCTAssertFalse(sut.isBoardLocked)
     }
 
+    // MARK: - Learn The Pieces Tests
+
+    func test_startLearnThePiecesPuzzle_setsModeAndUnlocksBoard() {
+        let (sut, engine, _) = makeSUT()
+        engine.stubbedSideToMove = .white
+
+        sut.startLearnThePiecesPuzzle(fen: startingFEN)
+
+        XCTAssertEqual(sut.userColor, .white)
+        XCTAssertEqual(sut.puzzleMode, .learnThePieces)
+        XCTAssertFalse(sut.isBoardLocked)
+    }
+
+    func test_learnThePiecesProcessUserMove_validMove_commitsMoveAndUnlocks() {
+        let (sut, engine, feedback) = makeSUT()
+        engine.stubbedPieces["e2"] = EnginePiece(kind: .pawn, color: .white)
+        engine.stubbedPieces["a7"] = EnginePiece(kind: .pawn, color: .black)
+        engine.stubbedLegalMoves["e2"] = ["e4"]
+        sut.startLearnThePiecesPuzzle(fen: startingFEN)
+
+        sut.processUserMoveForLearnPieces(from: "e2", to: "e4", promotionChar: nil)
+
+        XCTAssertTrue(engine.receivedMessages.contains(.move("e2", "e4", nil)))
+        XCTAssertTrue(feedback.receivedMessages.contains(.playMove))
+        XCTAssertFalse(sut.isPuzzleCompleted)
+        XCTAssertFalse(sut.isBoardLocked)
+    }
+
+    func test_learnThePiecesProcessUserMove_whenOpponentsRemain_forcesTurnBackToUser() {
+        let (sut, engine, _) = makeSUT()
+        engine.stubbedPieces["e2"] = EnginePiece(kind: .pawn, color: .white)
+        engine.stubbedPieces["a7"] = EnginePiece(kind: .pawn, color: .black)
+        engine.stubbedLegalMoves["e2"] = ["e4"]
+        sut.startLearnThePiecesPuzzle(fen: startingFEN)
+        XCTAssertEqual(sut.userColor, .white)
+
+        sut.processUserMoveForLearnPieces(from: "e2", to: "e4", promotionChar: nil)
+
+        XCTAssertTrue(engine.receivedMessages.contains(.forceTurn(.white)))
+        XCTAssertFalse(sut.isPuzzleCompleted)
+        XCTAssertFalse(sut.isBoardLocked)
+    }
+
+    func test_learnThePiecesProcessUserMove_whenNoOpponentsRemain_completesPuzzle() {
+        let (sut, engine, feedback) = makeSUT()
+        engine.stubbedPieces["e2"] = EnginePiece(kind: .pawn, color: .white)
+        engine.stubbedLegalMoves["e2"] = ["e4"]
+        sut.startLearnThePiecesPuzzle(fen: startingFEN)
+        var completedCount = 0
+        sut.onPuzzleCompleted = { completedCount += 1 }
+
+        sut.processUserMoveForLearnPieces(from: "e2", to: "e4", promotionChar: nil)
+
+        XCTAssertTrue(sut.isPuzzleCompleted)
+        XCTAssertEqual(completedCount, 1)
+        XCTAssertTrue(feedback.receivedMessages.contains(.playVictory))
+        XCTAssertFalse(engine.receivedMessages.contains(.forceTurn(.white)))
+    }
+
+    func test_learnThePiecesProcessUserMove_illegalMove_playsIllegalAndStaysUnlocked() {
+        let (sut, engine, feedback) = makeSUT()
+        engine.stubbedPieces["e2"] = EnginePiece(kind: .pawn, color: .white)
+        engine.stubbedLegalMoves["e2"] = []
+        sut.startLearnThePiecesPuzzle(fen: startingFEN)
+
+        sut.processUserMoveForLearnPieces(from: "e2", to: "e5", promotionChar: nil)
+
+        XCTAssertTrue(feedback.receivedMessages.contains(.moveIllegal))
+        XCTAssertFalse(engine.receivedMessages.contains(.move("e2", "e5", nil)))
+        XCTAssertFalse(sut.isPuzzleCompleted)
+        XCTAssertFalse(sut.isBoardLocked)
+    }
+
+    // MARK: - Hint & Solution Tests
+
+    func test_showHint_highlightsExpectedMoveSquare() {
+        let (sut, _, _) = makeSUT()
+        sut.startPuzzle(fen: startingFEN, moves: ["e2e4", "e7e5"])
+
+        sut.showHint()
+
+        XCTAssertEqual(sut.squareViews["e2"]?.layer.borderWidth, 4)
+    }
+
+    func test_showHint_whenPuzzleCompleted_doesNotHighlight() {
+        let (sut, _, _) = makeSUT()
+        sut.startPuzzle(fen: startingFEN, moves: ["e2e4", "e7e5"])
+        sut.isPuzzleCompleted = true
+
+        sut.showHint()
+
+        XCTAssertEqual(sut.squareViews["e2"]?.layer.borderWidth, 0)
+    }
+
+    func test_showSolution_drawsPersistentSolutionArrow() {
+        let (sut, _, _) = makeSUT()
+        sut.startPuzzle(fen: startingFEN, moves: ["g1f3", "g8f6"])
+
+        sut.showSolution()
+
+        XCTAssertNotNil(sut.solutionArrowContainer)
+    }
+
+    func test_showSolution_whenPuzzleCompleted_doesNotDrawArrow() {
+        let (sut, _, _) = makeSUT()
+        sut.startPuzzle(fen: startingFEN, moves: ["g1f3", "g8f6"])
+        sut.isPuzzleCompleted = true
+
+        sut.showSolution()
+
+        XCTAssertNil(sut.solutionArrowContainer)
+    }
+
     // MARK: - Helpers
 
     @discardableResult
