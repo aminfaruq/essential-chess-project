@@ -193,6 +193,122 @@ final class ChessEngineTests: XCTestCase {
         XCTAssertFalse(isEP)
     }
 
+    // MARK: - Castling Tests
+
+    func test_move_castling_kingsideWhite_movesKingAndRook() {
+        let sut = makeSUT(fen: "4k3/8/8/8/8/8/8/4K2R w K - 0 1")
+
+        let success = sut.move(from: "e1", to: "g1")
+
+        XCTAssertTrue(success)
+        XCTAssertNil(sut.piece(at: "e1"))
+        XCTAssertNil(sut.piece(at: "h1"))
+        XCTAssertEqual(sut.piece(at: "g1")?.kind, .king)
+        XCTAssertEqual(sut.piece(at: "f1")?.kind, .rook)
+        XCTAssertEqual(sut.sideToMove, .black)
+    }
+
+    func test_move_castling_queensideWhite_movesKingAndRook() {
+        let sut = makeSUT(fen: "4k3/8/8/8/8/8/8/R3K3 w Q - 0 1")
+
+        let success = sut.move(from: "e1", to: "c1")
+
+        XCTAssertTrue(success)
+        XCTAssertNil(sut.piece(at: "e1"))
+        XCTAssertNil(sut.piece(at: "a1"))
+        XCTAssertEqual(sut.piece(at: "c1")?.kind, .king)
+        XCTAssertEqual(sut.piece(at: "d1")?.kind, .rook)
+        XCTAssertEqual(sut.sideToMove, .black)
+    }
+
+    func test_move_castling_kingsideBlack_movesKingAndRook() {
+        let sut = makeSUT(fen: "4k2r/8/8/8/8/8/8/4K3 b k - 0 1")
+
+        let success = sut.move(from: "e8", to: "g8")
+
+        XCTAssertTrue(success)
+        XCTAssertNil(sut.piece(at: "e8"))
+        XCTAssertNil(sut.piece(at: "h8"))
+        XCTAssertEqual(sut.piece(at: "g8")?.kind, .king)
+        XCTAssertEqual(sut.piece(at: "f8")?.kind, .rook)
+        XCTAssertEqual(sut.sideToMove, .white)
+    }
+
+    func test_move_castling_queensideBlack_movesKingAndRook() {
+        let sut = makeSUT(fen: "r3k3/8/8/8/8/8/8/4K3 b q - 0 1")
+
+        let success = sut.move(from: "e8", to: "c8")
+
+        XCTAssertTrue(success)
+        XCTAssertNil(sut.piece(at: "e8"))
+        XCTAssertNil(sut.piece(at: "a8"))
+        XCTAssertEqual(sut.piece(at: "c8")?.kind, .king)
+        XCTAssertEqual(sut.piece(at: "d8")?.kind, .rook)
+        XCTAssertEqual(sut.sideToMove, .white)
+    }
+
+    func test_move_castling_whenKingAlreadyMoved_returnsFalse() {
+        let sut = makeSUT(fen: "4k3/8/8/8/8/8/8/4K2R w - - 0 1")
+
+        let success = sut.move(from: "e1", to: "g1")
+
+        XCTAssertFalse(success)
+        XCTAssertNotNil(sut.piece(at: "e1"))
+        XCTAssertEqual(sut.sideToMove, .white)
+    }
+
+    // MARK: - En Passant Execution Tests
+
+    func test_move_enPassantCapture_removesCapturedPawnAndLandsOnTarget() {
+        let sut = makeSUT(fen: startingFEN)
+        _ = sut.move(from: "e2", to: "e4")
+        _ = sut.move(from: "a7", to: "a6")
+        _ = sut.move(from: "e4", to: "e5")
+        _ = sut.move(from: "d7", to: "d5")
+
+        let success = sut.move(from: "e5", to: "d6")
+
+        XCTAssertTrue(success)
+        XCTAssertEqual(sut.piece(at: "d6")?.kind, .pawn)
+        XCTAssertEqual(sut.piece(at: "d6")?.color, .white)
+        XCTAssertNil(sut.piece(at: "d5"))
+        XCTAssertEqual(sut.sideToMove, .black)
+    }
+
+    // MARK: - Promotion Kinds Tests
+
+    func test_move_promotion_toRook_promotesToRook() {
+        let sut = makeSUT(fen: "8/4P3/8/8/8/8/8/4K2k w - - 0 1")
+
+        _ = sut.move(from: "e7", to: "e8", promotion: "r")
+
+        XCTAssertEqual(sut.piece(at: "e8")?.kind, .rook)
+    }
+
+    func test_move_promotion_toBishop_promotesToBishop() {
+        let sut = makeSUT(fen: "8/4P3/8/8/8/8/8/4K2k w - - 0 1")
+
+        _ = sut.move(from: "e7", to: "e8", promotion: "b")
+
+        XCTAssertEqual(sut.piece(at: "e8")?.kind, .bishop)
+    }
+
+    func test_move_promotion_toKnight_promotesToKnight() {
+        let sut = makeSUT(fen: "8/4P3/8/8/8/8/8/4K2k w - - 0 1")
+
+        _ = sut.move(from: "e7", to: "e8", promotion: "n")
+
+        XCTAssertEqual(sut.piece(at: "e8")?.kind, .knight)
+    }
+
+    func test_move_promotion_withUnknownCharacter_promotesToQueen() {
+        let sut = makeSUT(fen: "8/4P3/8/8/8/8/8/4K2k w - - 0 1")
+
+        _ = sut.move(from: "e7", to: "e8", promotion: "x")
+
+        XCTAssertEqual(sut.piece(at: "e8")?.kind, .queen)
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(fen: String, file: StaticString = #filePath, line: UInt = #line) -> ChessEngine {
