@@ -194,15 +194,37 @@ references from views; views compile against domain protocols only.
 
 ### Phase 3 — Test coverage (tdd)
 
-10. Add `ChessGameEngineSpy` and `BoardFeedbackSpy` helpers; unit-test the views'
-    interaction logic through the spies.
-11. Complete `ChessEngineTests` sad paths: invalid FEN fallback, castling moves,
-    en passant capture, all four promotions, `jump`, `boardPGNElements`.
-12. Normalize test structure: `makeSUT` factories with memory-leak tracking across all
-    feature test files, shared `TestFactories` + `any*`/`unique*` helpers.
+Split into small sub-phases (3.1–3.5), each shipped as one or more **tiny commits** —
+never batched into a single commit. Every sub-phase keeps the branch buildable and green.
 
-Exit criteria: every phase introduces or covers tested behavior; no untested move paths
-remain in the engine.
+#### 3.1 — Test helpers
+- Add `ChessGameEngineSpy`, `BoardFeedbackSpy`, `XCTestCase+MemoryLeakTracking`, and
+  `TestFactories` (`makeSUT` + `any*`/`unique*`) under `ChessBoardTests/Helpers/`.
+- Commit: helpers only, no tests yet — branch stays green.
+
+#### 3.2 — Engine sad-path tests
+- 3.2a (one commit): castling moves, en passant capture, all four promotions.
+- 3.2b (one commit): invalid FEN fallback, `jump(to:)`, `boardPGNElements`.
+
+#### 3.3 — PuzzleChessBoardView tests (via spies)
+- 3.3a (one commit): standard mode — valid/mismatched user move, opponent move,
+  completion/wrong callbacks.
+- 3.3b (one commit): learn-the-pieces mode, promotion dialog, `showHint`/`showSolution`,
+  `BoardFeedback` calls.
+
+#### 3.4 — AnalysisChessBoardView tests (via spies)
+- 3.4a (one commit): public API — `setPosition`, `flipBoard`, `undoLastMove`,
+  `resetToStart`, `jump`, `broadcastState`.
+- 3.4b (one commit): move handling — tap/drag move, castling, promotion,
+  `onGameStateChanged`, `BoardFeedback` calls.
+
+#### 3.5 — Normalize test structure
+- Move existing test files into `Domain/` / `Infrastructure/` / `Presenters/`; apply
+  `makeSUT` + memory-leak tracking and shared `TestFactories` across all feature tests.
+- One commit for the file moves, one for the reusability refactor.
+
+Exit criteria: every sub-phase introduces or covers tested behavior and keeps tests
+green; no untested engine move paths remain.
 
 ## 5. Constraints / Notes
 
