@@ -309,6 +309,63 @@ final class ChessEngineTests: XCTestCase {
         XCTAssertEqual(sut.piece(at: "e8")?.kind, .queen)
     }
 
+    // MARK: - Invalid FEN Tests
+
+    func test_init_withInvalidFEN_fallsBackToStartingPosition() {
+        let sut = makeSUT(fen: "not a fen")
+
+        XCTAssertEqual(sut.sideToMove, .white)
+        XCTAssertEqual(sut.piece(at: "e2")?.kind, .pawn)
+        XCTAssertEqual(sut.legalMoveCount(), 20)
+    }
+
+    // MARK: - Jump Tests
+
+    func test_jump_afterBoardPGNElements_movesToRequestedMove() {
+        let sut = makeSUT(fen: startingFEN)
+        _ = sut.move(from: "e2", to: "e4")
+        _ = sut.move(from: "a7", to: "a6")
+        _ = sut.boardPGNElements
+
+        sut.jump(to: "m1")
+
+        XCTAssertEqual(sut.currentMoveId, "m1")
+        XCTAssertEqual(sut.sideToMove, .white)
+        XCTAssertNil(sut.piece(at: "e2"))
+        XCTAssertEqual(sut.piece(at: "e4")?.kind, .pawn)
+        XCTAssertEqual(sut.piece(at: "a6")?.color, .black)
+    }
+
+    func test_jump_toUnknownMoveId_leavesPositionUnchanged() {
+        let sut = makeSUT(fen: startingFEN)
+        _ = sut.move(from: "e2", to: "e4")
+
+        sut.jump(to: "unknown")
+
+        XCTAssertEqual(sut.sideToMove, .black)
+        XCTAssertEqual(sut.piece(at: "e4")?.kind, .pawn)
+    }
+
+    // MARK: - PGN Elements Tests
+
+    func test_boardPGNElements_withoutMoves_returnsEmpty() {
+        let sut = makeSUT(fen: startingFEN)
+
+        XCTAssertEqual(sut.boardPGNElements, [])
+    }
+
+    func test_boardPGNElements_afterMoves_returnsNumberedAnnotationsWithIds() {
+        let sut = makeSUT(fen: startingFEN)
+        _ = sut.move(from: "e2", to: "e4")
+        _ = sut.move(from: "a7", to: "a6")
+
+        XCTAssertEqual(sut.boardPGNElements, [
+            .whiteNumber(1),
+            .move(san: "e4", moveId: "m0"),
+            .move(san: "a6", moveId: "m1")
+        ])
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(fen: String, file: StaticString = #filePath, line: UInt = #line) -> ChessEngine {
