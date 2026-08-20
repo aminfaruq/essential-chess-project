@@ -9,8 +9,8 @@ Status: **Draft** — updated as work progresses.
 
 ## Status Checklist
 
-Progress: **8 / 12 sub-phases** done. Test suites green (`EssentialChess` 143 tests,
-`EssentialChessUI` 186 tests, `platform=macOS`); app build verified with
+Progress: **9 / 12 sub-phases** done. Test suites green (`EssentialChess` 143 tests,
+`EssentialChessUI` 187 tests, `platform=macOS`); app build verified with
 `CODE_SIGNING_ALLOWED=NO`.
 
 - Phase 0 — Baseline verification
@@ -26,7 +26,7 @@ Progress: **8 / 12 sub-phases** done. Test suites green (`EssentialChess` 143 te
   - [x] 2c: unused `init() {}` removed from mappers
 - Phase 3 — Presentation hygiene (`mvvm-swiftui`)
   - [x] 3a: adapters `@MainActor`, `DispatchQueue` hops removed
-  - [ ] 3b: injectable `currentDate` in `CurriculumViewModel` + deterministic cooldown test
+  - [x] 3b: injectable `currentDate` in `CurriculumViewModel` + deterministic cooldown test
 - Phase 4 — Composable DI (`composition`)
   - [ ] 4a: convenience init on `DependencyContainer` / `AppComposer` + wiring tests
 
@@ -322,11 +322,13 @@ Deviations from this plan (documented):
 - Shipped as four commits (protocol+adapters / adapter tests / AppCore / VM+tests).
 - Committed with no `DispatchQueue` hops remaining in adapters.
 
-#### 3b — Injectable clock in CurriculumViewModel — pending
-- Add `currentDate: () -> Date = { Date() }` to `CurriculumViewModel` init and use it in
-  the cooldown check (replacing line 239's direct `Date()`).
-- Add a test: a fixed `currentDate` > 3h after the recorded failure allows the exam; a
-  recent failure blocks it deterministically.
+#### 3b — Injectable clock in CurriculumViewModel — done
+- Added `currentDate: () -> Date = { Date() }` to `CurriculumViewModel` init, used in the
+  cooldown check (replacing line 239's direct `Date()`).
+- Cooldown tests now deterministic: `test_load_examOnCooldown_showsCooldownState_deterministically`
+  (failure 30 min ago → `.onCooldown`) and
+  `test_load_examAfterCooldownExpired_showsUnlockedState_deterministically` (failure 4 h ago →
+  `.unlocked`), both with a fixed injected clock via `makeSUT(now:)`.
 
 Exit criteria: no `DispatchQueue.main.async` in adapters; cooldown logic is
 deterministic under test.
