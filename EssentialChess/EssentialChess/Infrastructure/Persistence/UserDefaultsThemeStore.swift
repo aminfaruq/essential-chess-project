@@ -21,8 +21,8 @@ public final class UserDefaultsThemeStore: ThemeLoader {
         }
         
         do {
-            let settings = try JSONDecoder().decode(ThemeSettings.self, from: data)
-            completion(.success(settings))
+            let settings = try JSONDecoder().decode(ThemeSettingsDTO.self, from: data)
+            completion(.success(settings.toModel()))
         } catch {
             completion(.failure(error))
         }
@@ -30,7 +30,7 @@ public final class UserDefaultsThemeStore: ThemeLoader {
     
     public func insert(_ settings: ThemeSettings, completion: @escaping (ThemeLoader.InsertionResult) -> Void) {
         do {
-            let data = try JSONEncoder().encode(settings)
+            let data = try JSONEncoder().encode(ThemeSettingsDTO(settings: settings))
             store.set(data, forKey: cacheKey)
             completion(.success(()))
         } catch {
