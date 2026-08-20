@@ -34,3 +34,5 @@ fastlane/test_output
 # Configuration files with secrets
 *.xcconfig
 !Sample.xcconfig
+.agents/
+docs/refactor/
