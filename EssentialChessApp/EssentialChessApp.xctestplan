@@ -9,16 +9,26 @@
     }
   ],
   "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:EssentialChessApp.xcodeproj",
+          "identifier" : "832B0D022FD919F00009FCFE",
+          "name" : "EssentialChessApp"
+        }
+      ]
+    },
     "performanceAntipatternCheckerEnabled" : true,
     "targetForVariableExpansion" : {
       "containerPath" : "container:EssentialChessApp.xcodeproj",
       "identifier" : "832B0D022FD919F00009FCFE",
       "name" : "EssentialChessApp"
-    }
+    },
+    "testExecutionOrdering" : "random"
   },
   "testTargets" : [
     {
-      "parallelizable" : true,
+      "parallelizable" : false,
       "target" : {
         "containerPath" : "container:EssentialChessApp.xcodeproj",
         "identifier" : "832B0D182FD919F20009FCFE",
@@ -26,6 +36,7 @@
       }
     },
     {
+      "enabled" : false,
       "parallelizable" : true,
       "target" : {
         "containerPath" : "container:EssentialChessApp.xcodeproj",

@@ -10,4 +10,7 @@
    <FileRef
       location = "group:EssentialChessApp.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:EssentialChessApp.xctestplan">
+   </FileRef>
 </Workspace>
