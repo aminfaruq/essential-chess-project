@@ -7,6 +7,7 @@ import XCTest
 import EssentialChess
 @testable import EssentialChessUI
 
+@MainActor
 final class SettingsViewModelTests: XCTestCase {
 
     // MARK: - Init Tests
@@ -212,6 +213,7 @@ class BoardSettingsStoragePortSpy: BoardSettingsStore {
     var soundWriteCount = 0
 }
 
+@MainActor
 class NotificationSchedulerSpy: NotificationSchedulerLoader {
     var requestPermissionCallCount = 0
     var permissionToGrant = false
@@ -226,12 +228,12 @@ class NotificationSchedulerSpy: NotificationSchedulerLoader {
 
     var cancelDailyReminderCallCount = 0
 
-    func requestPermission(completion: @escaping (Bool) -> Void) {
+    func requestPermission(completion: @escaping @MainActor (Bool) -> Void) {
         requestPermissionCallCount += 1
         completion(permissionToGrant)
     }
 
-    func scheduleDailyReminder(hour: Int, minute: Int, title: String, body: String, completion: @escaping (Error?) -> Void) {
+    func scheduleDailyReminder(hour: Int, minute: Int, title: String, body: String, completion: @escaping @MainActor (Error?) -> Void) {
         scheduledReminders.append(ScheduledReminder(hour: hour, minute: minute, title: title, body: body))
         completion(nil)
     }

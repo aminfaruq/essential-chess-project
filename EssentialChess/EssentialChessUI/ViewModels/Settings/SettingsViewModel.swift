@@ -7,6 +7,7 @@ import Foundation
 import EssentialChess
 import Combine
 
+@MainActor
 public final class SettingsViewModel: ObservableObject {
     @Published public var isDailyReminderEnabled: Bool = false
     @Published public var isHapticEnabled: Bool = true
@@ -64,10 +65,8 @@ public final class SettingsViewModel: ObservableObject {
                 ) { error in
                     if error != nil {
                         // Scheduling failed — revert toggle state
-                        DispatchQueue.main.async {
-                            self.updateStorage(enabled: false)
-                            self.isDailyReminderEnabled = false
-                        }
+                        self.updateStorage(enabled: false)
+                        self.isDailyReminderEnabled = false
                     }
                 }
                 self.updateStorage(enabled: true)
@@ -83,9 +82,7 @@ public final class SettingsViewModel: ObservableObject {
     }
     
     private func updateStorage(enabled: Bool) {
-        DispatchQueue.main.async {
-            self.isDailyReminderEnabled = enabled
-            self.notificationStorage.isDailyReminderEnabled = enabled
-        }
+        self.isDailyReminderEnabled = enabled
+        self.notificationStorage.isDailyReminderEnabled = enabled
     }
 }
