@@ -4,7 +4,7 @@ A structured, offline-first chess tactics trainer for iOS.
 
 ![CI](https://github.com/aminfaruq/essential-chess-project/workflows/CI/badge.svg)
 ![Swift](https://img.shields.io/badge/Swift-5.9+-orange?style=flat-square&logo=swift)
-![iOS](https://img.shields.io/badge/iOS-16.0+-black?style=flat-square&logo=apple)
+![iOS](https://img.shields.io/badge/iOS-17.6+-black?style=flat-square&logo=apple)
 ![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture%20%7C%20MVVM-blue?style=flat-square)
 ![Framework](https://img.shields.io/badge/Framework-SwiftUI%20%7C%20Combine-blueviolet?style=flat-square)
 
@@ -37,8 +37,8 @@ Essential Chess replaces the typical random-puzzle approach with a mastery-based
 ### Prerequisites
 
 - macOS 13.0 or later
-- Xcode 15.0 or later
-- iOS 16.0+ device or simulator
+- Xcode 15.0 or later (developed with Xcode 26 / Swift 5 mode)
+- iOS 17.6+ device or simulator
 
 ### Installation
 
@@ -180,7 +180,7 @@ EssentialChessApp/                  ← iOS app target (composition root)
 ├── AppCore/                        ← AppComposer, DependencyContainer, ViewFactory, EnvironmentConfig, RootView
 ├── DesignSystem/                   ← AppColors, ProgressBarView, PuzzleTagFormatter, StreakView
 ├── Views/                          ← SwiftUI views (Curriculum, Exam, Puzzle, Settings, Onboarding)
-├── EssentialChessAppTests/         ← Integration tests
+├── EssentialChessAppTests/         ← Wiring tests (container/composer injection)
 └── EssentialChessAppUITests/       ← UI tests
 
 ChessBoard/                         ← UIKit chess board package
@@ -209,27 +209,28 @@ The domain layer (`Domain/Protocols/`) defines protocols (`ProgressLoader`, `The
 
 Dependencies flow through `DependencyContainer` → `AppComposer` → `ViewFactory`.
 
-- `DependencyContainer` instantiates all infrastructure (stores, adapters, loaders) and owns their lifecycle.
-- `AppComposer` creates the long-lived ViewModels (`CurriculumViewModel`, `StreakViewModel`, `SettingsViewModel`, `TabNavigationViewModel`) and wires them to adapter publishers.
+- `DependencyContainer` instantiates all infrastructure (stores, adapters, loaders) and owns their lifecycle. It has an injectable designated init (stores/loaders/URLs with defaults) plus a zero-arg `convenience init` for production — so tests build it with isolated `UserDefaults` suites instead of the real ones.
+- `AppComposer` creates the long-lived ViewModels (`CurriculumViewModel`, `StreakViewModel`, `SettingsViewModel`, `TabNavigationViewModel`) and wires them to adapter publishers. `init(container:)` accepts an injected container; `init()` builds the production one.
 - `ViewFactory` creates screen-specific ViewModels on demand (exam sessions, puzzle mix, puzzle streak, onboarding) using closure-based callback injection to avoid coupling ViewModels to the persistence layer.
+- The whole composition root (`DependencyContainer`, `AppComposer`, `ViewFactory`, `SceneDelegate`), the infrastructure adapters, and `SettingsViewModel` are `@MainActor`-isolated, and `NotificationSchedulerLoader` completion handlers are `@MainActor` — no `DispatchQueue.main` hops anywhere in the adapters.
 
-ViewModels receive side-effect closures (e.g., `saveActualRating: (Double) -> Void`, `onPuzzleSolved: () -> Void`) rather than direct adapter references. This keeps them unit-testable with simple mock closures.
+ViewModels receive side-effect closures (e.g., `saveActualRating: (Double) -> Void`, `onPuzzleSolved: () -> Void`) rather than direct adapter references. This keeps them unit-testable with simple mock closures. Time-dependent logic (e.g., the 3-hour exam cooldown in `CurriculumViewModel`) is injectable via a `currentDate: () -> Date` closure so it is fully deterministic under test.
 
 ### Persistence
 
 | Data | Storage | Mechanism |
 |---|---|---|
 | User progress | `NSUbiquitousKeyValueStore` (primary), `UserDefaults` (fallback) | JSON-encoded `ProgressCacheDTO` with backward-compatible optional fields. Auto-migration from UserDefaults on first iCloud read. |
-| Theme settings | `UserDefaults` | JSON-encoded `ThemeSettings` via `UserDefaultsThemeStore`. |
+| Theme settings | `UserDefaults` | JSON-encoded `ThemeSettingsDTO` via `UserDefaultsThemeStore` (auto-migrated from the legacy `ThemeSettings` key). |
 | Board settings | `UserDefaults` | Direct key-value via `UserDefaultsBoardSettingsStore`. |
 | Tab state | `UserDefaults` | Persisted via `UserDefaultsTabStore` so the app reopens on the last-used tab. |
 | Notification prefs | `UserDefaults` | `isDailyReminderEnabled` flag via `UserDefaultsNotificationStore`. |
 
-Both `ProgressLoader` implementations use a shared `KeyValueStore` protocol that both `UserDefaults` and `NSUbiquitousKeyValueStore` conform to via extensions — allowing the `MockKeyValueStore` in tests to substitute either.
+Both `ProgressLoader` implementations use a shared `KeyValueStore` protocol that both `UserDefaults` and `NSUbiquitousKeyValueStore` conform to via extensions in the Infrastructure layer (`KeyValueStore+UserDefaults`, `KeyValueStore+Ubiquitous`) — allowing the `MockKeyValueStore` in tests to substitute either.
 
 ### Data Loading
 
-The curriculum (~844KB) and mix pool (~8MB) are bundled JSON files, loaded via `FileCurriculumLoader` and `FileMixPoolLoader` respectively. Each uses a `FileReaderLoader` protocol (implemented by `LocalFileReader`) and a private `Mapper` class that keeps `Decodable` DTOs with `snake_case` keys encapsulated — domain models are never `Codable`.
+The curriculum (~844KB) and mix pool (~8MB) are bundled JSON files, loaded via `FileCurriculumLoader` and `FileMixPoolLoader` respectively. Each uses a `FileReaderLoader` protocol (implemented by `LocalFileReader`) and a private `Mapper` class that keeps `Decodable` DTOs with `snake_case` keys encapsulated — the same DTO pattern is used for ECO openings (`ECOOpeningMapper`), theme settings (`ThemeSettingsDTO`), and the progress cache (`ProgressCacheDTO`). Domain models are never `Codable`.
 
 Loaders expose a callback-based API (`CurriculumLoader` protocol) and are bridged to Combine publishers via `Deferred { Future { } }` extensions for use in `CurriculumViewModel`.
 
@@ -239,9 +240,9 @@ Loaders expose a callback-based API (`CurriculumLoader` protocol) and are bridge
 
 ### Test Targets & Coverage
 
-The project has 3 test targets with 42 test files covering domain logic, infrastructure, and ViewModels:
+The project has 4 test targets (55 test files) covering domain logic, infrastructure, ViewModels, and the composition root. `EssentialChess` and `EssentialChessUI` support a macOS "My Mac" destination for fast test runs; the app's wiring tests run on the iOS Simulator via the `EssentialChessApp` test plan.
 
-**`EssentialChessTests`** — Domain & Infrastructure (28 test files):
+**`EssentialChessTests`** — Domain & Infrastructure (30 test files):
 
 | Area | File | What it covers |
 |---|---|---|
@@ -265,7 +266,7 @@ The project has 3 test targets with 42 test files covering domain logic, infrast
 | Cache | `UserDefaultsTabStoreTests` | Tab state persistence |
 | Networking | `LocalFileReaderTests` | File reading from disk |
 | Networking | `URLSessionHTTPClientTests` | HTTP client with header/callback verification |
-| Adapters | `ProgressAdapterTests`, `ThemeAdapterTests`, `LanguageAdapterTests`, `UserNotificationsAdapterTests` | Adapter state management, publisher emissions |
+| Adapters | `ProgressAdapterTests`, `ThemeAdapterTests`, `LanguageAdapterTests`, `UserNotificationsAdapterTests`, `BeginnerProgressAdapterTests` | Adapter state management, publisher emissions |
 | Adapters | `CurriculumLoaderCombineTests`, `MixPoolLoaderCombineTests` | Combine publisher bridge from callback-based loaders |
 
 **`EssentialChessUITests`** — ViewModel Logic (13 test files):
@@ -286,7 +287,11 @@ The project has 3 test targets with 42 test files covering domain logic, infrast
 | `TabNavigationViewModelTest` | Tab persistence, auto-save on change |
 | `PuzzleViewModelTests` | Solve/wrong state management, hint delegation |
 
-**`EssentialChessAppTests`** — Composition root integration tests.
+**`EssentialChessAppTests`** — Composition root wiring (3 test files):
+- `DependencyContainerWiringTests` — injects isolated stores/loaders and asserts the container builds adapters, stores, and file loaders without touching `Bundle.main` resources or launching the app.
+- `AppComposerWiringTests` — asserts `AppComposer(container:)` reuses the injected container and wires every long-lived ViewModel.
+
+These tests construct `@MainActor` container/composer objects and are declared `async` to dodge a Swift runtime deinit bug in synchronous XCTest (swiftlang/swift#87316 — SIGABRT "pointer being freed was not allocated" on simulator).
 
 All ViewModel tests use a shared `trackForMemoryLeaks()` helper in `addTeardownBlock` to catch retain cycles.
 
