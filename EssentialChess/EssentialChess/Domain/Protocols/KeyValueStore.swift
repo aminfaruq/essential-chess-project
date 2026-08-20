@@ -11,7 +11,3 @@ public protocol KeyValueStore {
     func removeObject(forKey defaultName: String)
     @discardableResult func synchronize() -> Bool
 }
-
-extension UserDefaults: KeyValueStore {}
-
-extension NSUbiquitousKeyValueStore: KeyValueStore {}
