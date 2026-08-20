@@ -9,9 +9,9 @@ Status: **Draft** — updated as work progresses.
 
 ## Status Checklist
 
-Progress: **9 / 12 sub-phases** done. Test suites green (`EssentialChess` 143 tests,
-`EssentialChessUI` 187 tests, `platform=macOS`); app build verified with
-`CODE_SIGNING_ALLOWED=NO`.
+Progress: **10 / 12 sub-phases** done. Test suites green (`EssentialChess` 143 tests,
+`EssentialChessUI` 187 tests, `platform=macOS`; `EssentialChessAppTests` 8 tests on iOS
+Simulator); app build verified with `CODE_SIGNING_ALLOWED=NO`.
 
 - Phase 0 — Baseline verification
   - [ ] P0: full test suite green + `CODE_SIGNING_ALLOWED=NO` build, counts recorded
@@ -28,7 +28,7 @@ Progress: **9 / 12 sub-phases** done. Test suites green (`EssentialChess` 143 te
   - [x] 3a: adapters `@MainActor`, `DispatchQueue` hops removed
   - [x] 3b: injectable `currentDate` in `CurriculumViewModel` + deterministic cooldown test
 - Phase 4 — Composable DI (`composition`)
-  - [ ] 4a: convenience init on `DependencyContainer` / `AppComposer` + wiring tests
+  - [x] 4a: convenience init on `DependencyContainer` / `AppComposer` + wiring tests
 
 Tick a checkbox only after its exit criteria pass (tests green + build succeeds).
 
@@ -335,18 +335,23 @@ deterministic under test.
 
 ### Phase 4 — Composable dependency injection (composition)
 
-#### 4a — Injectable container/composer — pending
-- `DependencyContainer`: add a convenience init accepting the stores/loaders
-  (defaulting to the current production instances). Keep the production `init()` as the
-  zero-arg default.
-- `AppComposer`: add `init(container: DependencyContainer)` (production `init()` keeps
-  the current behavior). Wire VMs from the injected container instead of building them.
-- Add `DependencyContainerTests` / `AppComposerTests` (in the app target) that build the
-  container with a test double (e.g. stub `KeyValueStore`) and assert wiring — no UI
-  needed.
+#### 4a — Injectable container/composer — done
+- `DependencyContainer`: gained a 12-parameter designated init (stores/loaders/URLs) with the
+  production `init()` preserved as a zero-arg `convenience init`.
+- `AppComposer`: gained `init(container:)`; zero-arg `convenience init()` builds the
+  production container.
+- `DependencyContainerWiringTests` + `AppComposerWiringTests` added to `EssentialChessAppTests`
+  (test fixtures use isolated `UserDefaults(suiteName:)` suites + temp JSON files; no app
+  UI launched).
+- **Known Swift runtime bug workaround**: on Xcode 26 / iOS 26 simulators, deallocating these
+  `@MainActor` objects inside *synchronous* XCTest corrupted the task-local scope and SIGABRT'd
+  (`malloc: pointer being freed was not allocated`, `swift_task_deinitOnExecutorMainActorBackDeploy`).
+  See swiftlang/swift#87316. Fix: the wiring test methods are declared `async` (no production
+  change needed). Run on iOS Simulator via the `EssentialChessApp` test plan.
 
 Exit criteria: composition root is injectable; new tests build the container without
-running the app.
+running the app. Met: `DependencyContainer` / `AppComposer` are injectable and the wiring
+tests (8) build them with isolated stores and pass.
 
 ## 5. Constraints / Notes
 
