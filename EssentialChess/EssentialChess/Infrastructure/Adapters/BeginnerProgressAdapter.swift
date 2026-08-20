@@ -6,6 +6,7 @@
 import Foundation
 import Combine
 
+@MainActor
 public final class BeginnerProgressAdapter: ObservableObject {
     private let store: BeginnerProgressStore
     private let subject: CurrentValueSubject<BeginnerProgress, Never>
