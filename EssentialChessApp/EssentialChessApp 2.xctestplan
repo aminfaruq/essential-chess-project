@@ -1,0 +1,38 @@
+{
+  "configurations" : [
+    {
+      "id" : "C11DF9B0-088A-4C90-A482-5F03277CC362",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:EssentialChessApp.xcodeproj",
+      "identifier" : "832B0D022FD919F00009FCFE",
+      "name" : "EssentialChessApp"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:EssentialChessApp.xcodeproj",
+        "identifier" : "832B0D182FD919F20009FCFE",
+        "name" : "EssentialChessAppTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:EssentialChessApp.xcodeproj",
+        "identifier" : "832B0D222FD919F20009FCFE",
+        "name" : "EssentialChessAppUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

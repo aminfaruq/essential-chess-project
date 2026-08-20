@@ -25,9 +25,12 @@ public final class AppComposer: ObservableObject {
     public let container: DependencyContainer
     public let viewFactory: ViewFactory
 
-    public init() {
-        // Initialize Core Components
-        self.container = DependencyContainer()
+    public convenience init() {
+        self.init(container: DependencyContainer())
+    }
+
+    public init(container: DependencyContainer) {
+        self.container = container
         self.viewFactory = ViewFactory(container: container)
         
         let adapter = container.progressAdapter
