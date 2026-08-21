@@ -1,5 +1,4 @@
 import UIKit
-internal import SnapKit
 
 extension ChessBoardView {
 
@@ -58,7 +57,13 @@ extension ChessBoardView {
                         imageView.layer.shadowOpacity = 0.6
                     }
                     squareView.addSubview(imageView)
-                    imageView.snp.makeConstraints { make in make.edges.equalToSuperview().inset(inset) }
+                    imageView.translatesAutoresizingMaskIntoConstraints = false
+                    NSLayoutConstraint.activate([
+                        imageView.topAnchor.constraint(equalTo: squareView.topAnchor, constant: inset),
+                        imageView.leadingAnchor.constraint(equalTo: squareView.leadingAnchor, constant: inset),
+                        imageView.trailingAnchor.constraint(equalTo: squareView.trailingAnchor, constant: -inset),
+                        imageView.bottomAnchor.constraint(equalTo: squareView.bottomAnchor, constant: -inset)
+                    ])
                     pieceImageViews[squareString] = imageView
                 }
             }
@@ -104,7 +109,13 @@ extension ChessBoardView {
 
         promotionView.alpha = 0
         self.addSubview(promotionView)
-        promotionView.snp.makeConstraints { make in make.edges.equalToSuperview() }
+        promotionView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            promotionView.topAnchor.constraint(equalTo: topAnchor),
+            promotionView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            promotionView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            promotionView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
         UIView.animate(withDuration: 0.2) { promotionView.alpha = 1.0 }
     }
 
@@ -136,10 +147,21 @@ extension ChessBoardView {
                 }
 
                 sqView.addSubview(hint)
+                hint.translatesAutoresizingMaskIntoConstraints = false
                 if engine?.piece(at: sqStr) != nil {
-                    hint.snp.makeConstraints { make in make.edges.equalToSuperview() }
+                    NSLayoutConstraint.activate([
+                        hint.topAnchor.constraint(equalTo: sqView.topAnchor),
+                        hint.leadingAnchor.constraint(equalTo: sqView.leadingAnchor),
+                        hint.trailingAnchor.constraint(equalTo: sqView.trailingAnchor),
+                        hint.bottomAnchor.constraint(equalTo: sqView.bottomAnchor)
+                    ])
                 } else {
-                    hint.snp.makeConstraints { make in make.center.equalToSuperview(); make.width.height.equalTo(dotSize) }
+                    NSLayoutConstraint.activate([
+                        hint.centerXAnchor.constraint(equalTo: sqView.centerXAnchor),
+                        hint.centerYAnchor.constraint(equalTo: sqView.centerYAnchor),
+                        hint.widthAnchor.constraint(equalToConstant: dotSize),
+                        hint.heightAnchor.constraint(equalToConstant: dotSize)
+                    ])
                 }
                 legalMoveHintViews.append(hint)
             }

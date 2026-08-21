@@ -1,5 +1,4 @@
 import UIKit
-internal import SnapKit
 
 /// A custom, highly interactive chess board view built natively with UIKit.
 /// Acts purely as an I/O interactive board for Analysis and Free Play scenarios.

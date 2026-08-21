@@ -1,5 +1,4 @@
 import UIKit
-internal import SnapKit
 
 /// A base view that contains the shared rendering, interaction, and feedback
 /// machinery for interactive chess boards. Puzzle and Analysis boards extend it

@@ -1,15 +1,26 @@
 import UIKit
-internal import SnapKit
 
 extension ChessBoardView {
 
     func setupContainers() {
         addSubview(boardContainer)
-        boardContainer.snp.makeConstraints { make in make.edges.equalToSuperview() }
+        boardContainer.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            boardContainer.topAnchor.constraint(equalTo: topAnchor),
+            boardContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
+            boardContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
+            boardContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
 
         addSubview(overlayView)
         overlayView.isUserInteractionEnabled = false
-        overlayView.snp.makeConstraints { make in make.edges.equalToSuperview() }
+        overlayView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            overlayView.topAnchor.constraint(equalTo: topAnchor),
+            overlayView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            overlayView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            overlayView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
     }
 
     func setupBoardGrid() {
@@ -24,14 +35,20 @@ extension ChessBoardView {
             let rowStack = UIStackView()
             rowStack.axis = .horizontal
             rowStack.distribution = .fillEqually
+            rowStack.translatesAutoresizingMaskIntoConstraints = false
             boardContainer.addSubview(rowStack)
 
-            rowStack.snp.makeConstraints { make in
-                make.leading.trailing.equalToSuperview()
-                if let prev = previousRowView { make.top.equalTo(prev.snp.bottom) }
-                else { make.top.equalToSuperview() }
-                make.height.equalToSuperview().multipliedBy(1.0 / 8.0)
+            var rowConstraints = [
+                rowStack.leadingAnchor.constraint(equalTo: boardContainer.leadingAnchor),
+                rowStack.trailingAnchor.constraint(equalTo: boardContainer.trailingAnchor),
+                rowStack.heightAnchor.constraint(equalTo: boardContainer.heightAnchor, multiplier: 1.0 / 8.0)
+            ]
+            if let prev = previousRowView {
+                rowConstraints.append(rowStack.topAnchor.constraint(equalTo: prev.bottomAnchor))
+            } else {
+                rowConstraints.append(rowStack.topAnchor.constraint(equalTo: boardContainer.topAnchor))
             }
+            NSLayoutConstraint.activate(rowConstraints)
             previousRowView = rowStack
 
             for file in geometry.files {
@@ -47,15 +64,27 @@ extension ChessBoardView {
                 let highlightOverlay = UIView()
                 highlightOverlay.backgroundColor = highlightColor
                 highlightOverlay.isHidden = true
+                highlightOverlay.translatesAutoresizingMaskIntoConstraints = false
                 squareView.addSubview(highlightOverlay)
-                highlightOverlay.snp.makeConstraints { make in make.edges.equalToSuperview() }
+                NSLayoutConstraint.activate([
+                    highlightOverlay.topAnchor.constraint(equalTo: squareView.topAnchor),
+                    highlightOverlay.leadingAnchor.constraint(equalTo: squareView.leadingAnchor),
+                    highlightOverlay.trailingAnchor.constraint(equalTo: squareView.trailingAnchor),
+                    highlightOverlay.bottomAnchor.constraint(equalTo: squareView.bottomAnchor)
+                ])
                 highlightViews[squareString] = highlightOverlay
 
                 let checkOverlay = UIView()
                 checkOverlay.backgroundColor = UIColor(red: 0.89, green: 0.15, blue: 0.15, alpha: 0.7)
                 checkOverlay.isHidden = true
+                checkOverlay.translatesAutoresizingMaskIntoConstraints = false
                 squareView.addSubview(checkOverlay)
-                checkOverlay.snp.makeConstraints { make in make.edges.equalToSuperview() }
+                NSLayoutConstraint.activate([
+                    checkOverlay.topAnchor.constraint(equalTo: squareView.topAnchor),
+                    checkOverlay.leadingAnchor.constraint(equalTo: squareView.leadingAnchor),
+                    checkOverlay.trailingAnchor.constraint(equalTo: squareView.trailingAnchor),
+                    checkOverlay.bottomAnchor.constraint(equalTo: squareView.bottomAnchor)
+                ])
                 checkHighlightViews[squareString] = checkOverlay
 
                 if file == geometry.files.first {
@@ -63,8 +92,12 @@ extension ChessBoardView {
                     label.text = "\(rank)"
                     label.font = .boldSystemFont(ofSize: 12)
                     label.textColor = isLight ? darkSquareColor : lightSquareColor
+                    label.translatesAutoresizingMaskIntoConstraints = false
                     squareView.addSubview(label)
-                    label.snp.makeConstraints { make in make.top.leading.equalToSuperview().inset(3) }
+                    NSLayoutConstraint.activate([
+                        label.topAnchor.constraint(equalTo: squareView.topAnchor, constant: 3),
+                        label.leadingAnchor.constraint(equalTo: squareView.leadingAnchor, constant: 3)
+                    ])
                 }
 
                 if rank == geometry.ranks.last {
@@ -72,8 +105,12 @@ extension ChessBoardView {
                     label.text = file
                     label.font = .boldSystemFont(ofSize: 12)
                     label.textColor = isLight ? darkSquareColor : lightSquareColor
+                    label.translatesAutoresizingMaskIntoConstraints = false
                     squareView.addSubview(label)
-                    label.snp.makeConstraints { make in make.bottom.trailing.equalToSuperview().inset(3) }
+                    NSLayoutConstraint.activate([
+                        label.bottomAnchor.constraint(equalTo: squareView.bottomAnchor, constant: -3),
+                        label.trailingAnchor.constraint(equalTo: squareView.trailingAnchor, constant: -3)
+                    ])
                 }
             }
         }
