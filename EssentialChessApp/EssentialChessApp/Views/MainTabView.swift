@@ -27,13 +27,13 @@ public struct MainTabView: View {
                 navigationViewModel.selectedTab = newTab
             }
         )) {
-            CurriculumView(scrollToTopTrigger: $curriculumScrollToTopTrigger)
+            CurriculumCoordinatorView(scrollToTopTrigger: $curriculumScrollToTopTrigger)
                 .tabItem {
                     Label("Curriculum", systemImage: "book.fill")
                 }
                 .tag(AppTab.curriculum)
             
-            PuzzleDashboardView()
+            PuzzleCoordinatorView()
                 .tabItem {
                     Label("Puzzle", systemImage: "puzzlepiece.extension.fill")
                 }
