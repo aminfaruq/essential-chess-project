@@ -17,6 +17,7 @@ final class SceneDelegateTests: XCTestCase {
     func test_init_withComposer_usesInjectedComposerInstance() {
         let composer = makeComposer()
         let sut = SceneDelegate(composer: composer)
+        trackForMemoryLeaks(sut)
 
         XCTAssertTrue(sut.composer === composer)
     }
