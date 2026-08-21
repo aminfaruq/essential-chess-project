@@ -15,11 +15,28 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-    private(set) lazy var composer = AppComposer()
+    private var _composer: AppComposer?
+    var composer: AppComposer {
+        get {
+            if let c = _composer {
+                return c
+            }
+            let newComposer = AppComposer()
+            _composer = newComposer
+            return newComposer
+        }
+        set {
+            _composer = newValue
+        }
+    }
+    
+    override init() {
+        super.init()
+    }
     
     convenience init(composer: AppComposer) {
         self.init()
-        self.composer = composer
+        self._composer = composer
     }
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
