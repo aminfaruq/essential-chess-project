@@ -74,7 +74,13 @@ public final class AppComposer: ObservableObject {
         self.settingsVM = SettingsViewModel(
             notificationStorage: container.notificationStorage,
             notificationScheduler: container.notificationScheduler,
-            boardSettingsStorage: container.boardSettingsStorage
+            boardSettingsStorage: container.boardSettingsStorage,
+            onResetProgress: { [container] in
+                container.progressAdapter.update { progress in
+                    progress = UserProgressUpdater.resetAll(progress: progress)
+                }
+                container.beginnerProgressStore.clearProgress()
+            }
         )
     }
     

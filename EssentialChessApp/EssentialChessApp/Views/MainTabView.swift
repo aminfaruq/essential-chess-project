@@ -12,10 +12,15 @@ import EssentialChessUI
 @MainActor
 public struct MainTabView: View {
     @ObservedObject var navigationViewModel: TabNavigationViewModel
+    @ObservedObject var settingsViewModel: SettingsViewModel
     @State private var curriculumScrollToTopTrigger: Int = 0
     
-    public init(navigationViewModel: TabNavigationViewModel) {
+    public init(
+        navigationViewModel: TabNavigationViewModel,
+        settingsViewModel: SettingsViewModel
+    ) {
         self.navigationViewModel = navigationViewModel
+        self.settingsViewModel = settingsViewModel
     }
     
     public var body: some View {
@@ -43,7 +48,7 @@ public struct MainTabView: View {
                 }
                 .tag(AppTab.puzzleMix)
             
-            SettingsView()
+            SettingsView(viewModel: settingsViewModel)
                 .tabItem {
                     Label("Settings", systemImage: "gearshape.fill")
                 }

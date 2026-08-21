@@ -59,7 +59,10 @@ public struct RootView: View {
                     }
                 )
             } else {
-                MainTabView(navigationViewModel: composer.navigationVM)
+                MainTabView(
+                    navigationViewModel: composer.navigationVM,
+                    settingsViewModel: composer.settingsVM
+                )
             }
         }
         .environment(\.locale, Locale(identifier: languageAdapter.currentLanguage))
