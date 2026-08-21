@@ -7,7 +7,7 @@ public protocol ChessGameEngine {
     var gameState: EngineGameState { get }
     var currentMoveId: String? { get }
     var boardPGNElements: [PGNAnnotation] { get }
-
+    
     func forceTurn(to color: EngineColor)
     func piece(at squareString: String) -> EnginePiece?
     func legalMoves(for squareString: String) -> [String]

@@ -1,29 +1,29 @@
 import UIKit
 
 extension PuzzleChessBoardView {
-
+    
     func processUserMove(from sourceStr: String, to targetStr: String, promotionChar: String? = nil) {
         clearLegalMoveHints()
         guard let engine = engine, let validator = puzzleValidator else { return }
-
+        
         if !engine.legalMoves(for: sourceStr).contains(targetStr) {
             selectedSquareString = nil
             feedback.moveIllegal()
             animateSnapback { [weak self] in self?.clearHighlights() }
             return
         }
-
+        
         self.isBoardLocked = true
         let promoSuffix = promotionChar ?? ""
         let moveStringUCI = "\(sourceStr)\(targetStr)\(promoSuffix)"
         let isCapture = engine.piece(at: targetStr) != nil
-
+        
         let isValidByUCI = validator.validate(move: moveStringUCI)
         let isCheckmate = engine.wouldMoveResultInCheckmate(from: sourceStr, to: targetStr, promotion: promotionChar)
-
+        
         if isValidByUCI || isCheckmate {
             clearSolutionArrow()
-
+            
             // Identify if this is a castling move before executing it
             let isKingMove = engine.piece(at: sourceStr)?.kind == .king
             let castlingMoves = [
@@ -31,35 +31,35 @@ extension PuzzleChessBoardView {
                 "e8g8": ("h8", "f8"), "e8c8": ("a8", "d8")
             ]
             let rookMove = isKingMove ? castlingMoves["\(sourceStr)\(targetStr)"] : nil
-
+            
             if engine.move(from: sourceStr, to: targetStr, promotion: promotionChar) {
                 if isCapture {
                     feedback.moveCapture()
                 } else {
                     feedback.playMove()
                 }
-
+                
                 selectedSquareString = nil
                 clearHighlights()
-
+                
                 let finishUserMove = { [weak self] in
                     self?.cleanupGhost()
                     self?.renderPieces()
                     self?.highlightViews[sourceStr]?.isHidden = false
                     self?.highlightViews[targetStr]?.isHidden = false
-
+                    
                     if validator.isCompleted || isCheckmate {
                         self?.isPuzzleCompleted = true
                         self?.feedback.playVictory()
                         self?.onPuzzleCompleted?()
                         return
                     }
-
+                    
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                         self?.makeOpponentMove()
                     }
                 }
-
+                
                 if let rookMove = rookMove, let _ = squareViews[rookMove.0], let targetRookSquare = squareViews[rookMove.1], let rookView = pieceImageViews[rookMove.0] {
                     // Setup Rook Ghost
                     let rookGhost = UIImageView(image: rookView.image)
@@ -67,9 +67,9 @@ extension PuzzleChessBoardView {
                     rookGhost.frame = rookView.convert(rookView.bounds, to: overlayView)
                     overlayView.addSubview(rookGhost)
                     rookView.isHidden = true
-
+                    
                     let rookTargetCenter = targetRookSquare.superview!.convert(targetRookSquare.center, to: overlayView)
-
+                    
                     // Setup King Ghost ONLY if it's tap-to-move
                     var tempKingGhost: UIImageView?
                     var kingTargetCenter: CGPoint?
@@ -82,7 +82,7 @@ extension PuzzleChessBoardView {
                         tempKingGhost = kg
                         kingTargetCenter = targetSquare.superview!.convert(targetSquare.center, to: overlayView)
                     }
-
+                    
                     UIView.animate(withDuration: 0.25, delay: 0.0, options: .curveEaseInOut, animations: {
                         rookGhost.center = rookTargetCenter
                         if let kg = tempKingGhost, let ktc = kingTargetCenter {
@@ -106,42 +106,42 @@ extension PuzzleChessBoardView {
             onPuzzleWrong?()
         }
     }
-
+    
     func processUserMoveForLearnPieces(from sourceStr: String, to targetStr: String, promotionChar: String? = nil) {
         clearLegalMoveHints()
         guard let engine = engine else { return }
-
+        
         if !engine.legalMoves(for: sourceStr).contains(targetStr) {
             selectedSquareString = nil
             feedback.moveIllegal()
             animateSnapback { [weak self] in self?.clearHighlights() }
             return
         }
-
+        
         self.isBoardLocked = true
         let isCapture = engine.piece(at: targetStr) != nil
-
+        
         if engine.move(from: sourceStr, to: targetStr, promotion: promotionChar) {
             if isCapture {
                 feedback.moveCapture()
             } else {
                 feedback.playMove()
             }
-
+            
             selectedSquareString = nil
             clearHighlights()
-
+            
             let finishUserMove = { [weak self] in
                 self?.cleanupGhost()
                 self?.renderPieces()
                 self?.highlightViews[sourceStr]?.isHidden = false
                 self?.highlightViews[targetStr]?.isHidden = false
-
+                
                 let opponentColor = self?.userColor == .white ? EngineColor.black : EngineColor.white
                 var hasTargetsRemaining = false
                 let files = ["a", "b", "c", "d", "e", "f", "g", "h"]
                 let ranks = ["1", "2", "3", "4", "5", "6", "7", "8"]
-
+                
                 for file in files {
                     for rank in ranks {
                         let square = file + rank
@@ -152,7 +152,7 @@ extension PuzzleChessBoardView {
                     }
                     if hasTargetsRemaining { break }
                 }
-
+                
                 if !hasTargetsRemaining {
                     self?.isPuzzleCompleted = true
                     self?.feedback.playVictory()
@@ -162,14 +162,14 @@ extension PuzzleChessBoardView {
                     if let uColor = self?.userColor {
                         self?.engine?.forceTurn(to: uColor)
                     }
-
+                    
                     // Still targets left, user can make next move. Opponent doesn't move.
                     self?.isBoardLocked = false
                 }
             }
-
+            
             finishUserMove()
-
+            
         } else {
             feedback.moveIllegal()
             drawArrow(from: sourceStr, to: targetStr, color: UIColor.systemRed.withAlphaComponent(0.8), isPersistent: false)
@@ -178,17 +178,17 @@ extension PuzzleChessBoardView {
             self.isBoardLocked = false
         }
     }
-
+    
     func makeOpponentMove() {
         guard let opMoveStringUCI = puzzleValidator?.consumeNextMove() else { return }
-
+        
         self.isBoardLocked = true
         let sourceStr = String(opMoveStringUCI.prefix(2))
         let targetStr = String(opMoveStringUCI.dropFirst(2).prefix(2))
         let promoStr = opMoveStringUCI.count == 5 ? String(opMoveStringUCI.last!) : nil
-
+        
         if let sourcePieceView = pieceImageViews[sourceStr], let targetSquareView = squareViews[targetStr] {
-
+            
             // Check for castling
             let isKingMove = engine?.piece(at: sourceStr)?.kind == .king
             let castlingMoves = [
@@ -196,13 +196,13 @@ extension PuzzleChessBoardView {
                 "e8g8": ("h8", "f8"), "e8c8": ("a8", "d8")
             ]
             let rookMove = isKingMove ? castlingMoves["\(sourceStr)\(targetStr)"] : nil
-
+            
             let ghost = UIImageView(image: sourcePieceView.image)
             ghost.contentMode = .scaleAspectFit
             ghost.frame = sourcePieceView.convert(sourcePieceView.bounds, to: overlayView)
             overlayView.addSubview(ghost)
             sourcePieceView.isHidden = true
-
+            
             var rookGhost: UIImageView?
             if let rookMove = rookMove, let rookView = pieceImageViews[rookMove.0] {
                 let rg = UIImageView(image: rookView.image)
@@ -212,10 +212,10 @@ extension PuzzleChessBoardView {
                 rookView.isHidden = true
                 rookGhost = rg
             }
-
+            
             let targetCenterInOverlay = targetSquareView.superview!.convert(targetSquareView.center, to: overlayView)
             let rookTargetCenter = rookMove != nil ? squareViews[rookMove!.1].map { $0.superview!.convert($0.center, to: overlayView) } : nil
-
+            
             UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseInOut, animations: {
                 ghost.center = targetCenterInOverlay
                 if let rg = rookGhost, let rtc = rookTargetCenter {
@@ -231,7 +231,7 @@ extension PuzzleChessBoardView {
                 self?.renderPieces()
                 self?.highlightViews[sourceStr]?.isHidden = false
                 self?.highlightViews[targetStr]?.isHidden = false
-
+                
                 if self?.puzzleValidator?.isCompleted == true {
                     self?.isPuzzleCompleted = true
                     self?.feedback.playVictory()

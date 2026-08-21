@@ -123,7 +123,7 @@ public final class ChessEngine: ChessGameEngine {
     public func legalMoveCount() -> Int {
         guard let position = game.positions[currentIndex] else { return -1 }
         let board = Board(position: position)
-
+        
         var total = 0
         for square in Square.allCases {
             if let piece = position.piece(at: square),
@@ -254,7 +254,7 @@ public final class ChessEngine: ChessGameEngine {
     }
     
     // MARK: - Game State Detection
-
+    
     /// Returns the current game state after the last move.
     public var gameState: EngineGameState {
         guard let position = game.positions[currentIndex] else { return .inProgress }

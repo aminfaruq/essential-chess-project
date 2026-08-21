@@ -1,7 +1,7 @@
 import UIKit
 
 extension ChessBoardView {
-
+    
     func setupContainers() {
         addSubview(boardContainer)
         boardContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -11,7 +11,7 @@ extension ChessBoardView {
             boardContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
             boardContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
-
+        
         addSubview(overlayView)
         overlayView.isUserInteractionEnabled = false
         overlayView.translatesAutoresizingMaskIntoConstraints = false
@@ -22,22 +22,22 @@ extension ChessBoardView {
             overlayView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
-
+    
     func setupBoardGrid() {
         boardContainer.subviews.forEach { $0.removeFromSuperview() }
         squareViews.removeAll()
         highlightViews.removeAll()
         checkHighlightViews.removeAll()
-
+        
         var previousRowView: UIView? = nil
-
+        
         for rank in geometry.ranks {
             let rowStack = UIStackView()
             rowStack.axis = .horizontal
             rowStack.distribution = .fillEqually
             rowStack.translatesAutoresizingMaskIntoConstraints = false
             boardContainer.addSubview(rowStack)
-
+            
             var rowConstraints = [
                 rowStack.leadingAnchor.constraint(equalTo: boardContainer.leadingAnchor),
                 rowStack.trailingAnchor.constraint(equalTo: boardContainer.trailingAnchor),
@@ -50,17 +50,17 @@ extension ChessBoardView {
             }
             NSLayoutConstraint.activate(rowConstraints)
             previousRowView = rowStack
-
+            
             for file in geometry.files {
                 let squareString = "\(file)\(rank)"
                 let squareView = UIView()
                 let isLight = (Int(file.unicodeScalars.first!.value) + rank) % 2 != 0
                 squareView.backgroundColor = isLight ? lightSquareColor : darkSquareColor
-
+                
                 rowStack.addArrangedSubview(squareView)
                 squareViews[squareString] = squareView
                 squareView.accessibilityIdentifier = squareString
-
+                
                 let highlightOverlay = UIView()
                 highlightOverlay.backgroundColor = highlightColor
                 highlightOverlay.isHidden = true
@@ -73,7 +73,7 @@ extension ChessBoardView {
                     highlightOverlay.bottomAnchor.constraint(equalTo: squareView.bottomAnchor)
                 ])
                 highlightViews[squareString] = highlightOverlay
-
+                
                 let checkOverlay = UIView()
                 checkOverlay.backgroundColor = UIColor(red: 0.89, green: 0.15, blue: 0.15, alpha: 0.7)
                 checkOverlay.isHidden = true
@@ -86,7 +86,7 @@ extension ChessBoardView {
                     checkOverlay.bottomAnchor.constraint(equalTo: squareView.bottomAnchor)
                 ])
                 checkHighlightViews[squareString] = checkOverlay
-
+                
                 if file == geometry.files.first {
                     let label = UILabel()
                     label.text = "\(rank)"
@@ -99,7 +99,7 @@ extension ChessBoardView {
                         label.leadingAnchor.constraint(equalTo: squareView.leadingAnchor, constant: 3)
                     ])
                 }
-
+                
                 if rank == geometry.ranks.last {
                     let label = UILabel()
                     label.text = file
@@ -115,12 +115,12 @@ extension ChessBoardView {
             }
         }
     }
-
+    
     func setupGestures() {
         interactionHandler.setup(in: boardContainer) { [weak self] point in
             return self?.geometry.squareString(at: point)
         }
-
+        
         interactionHandler.onSquareTapped = { [weak self] sq in self?.processTap(on: sq) }
         interactionHandler.onDragBegan = { [weak self] sq, _ in return self?.processDragBegan(at: sq) ?? false }
         interactionHandler.onDragChanged = { [weak self] trans in self?.processDragChanged(translation: trans) }
