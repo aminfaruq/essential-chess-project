@@ -11,7 +11,7 @@ import EssentialChess
 
 // MARK: - Presentation Models (Dumb UI Models)
 
-public struct SectionUIModel: Identifiable, Equatable {
+public struct SectionUIModel: Identifiable, Equatable, Hashable {
     public let id: String
     public let title: String
     public let eloRange: String
@@ -31,7 +31,7 @@ public struct SectionUIModel: Identifiable, Equatable {
     }
 }
 
-public struct CategoryUIModel: Identifiable, Equatable {
+public struct CategoryUIModel: Identifiable, Equatable, Hashable {
     public let id: String
     public let title: String
     public let progress: Double
@@ -57,7 +57,7 @@ public struct CategoryUIModel: Identifiable, Equatable {
     }
 }
 
-public enum ExamUIState: Equatable {
+public enum ExamUIState: Equatable, Hashable {
     case locked(reason: String)
     case unlocked(livesText: String)
     case passed(message: String)
