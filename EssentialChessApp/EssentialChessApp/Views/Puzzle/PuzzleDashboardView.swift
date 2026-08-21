@@ -65,7 +65,7 @@ public struct PuzzleDashboardView: View {
                 .padding(.horizontal, 20)
             
             HStack(spacing: 12) {
-                let currentProg = progress ?? composer.container.progressAdapter.currentProgress
+                let currentProg = progress ?? container.progressAdapter.currentProgress
                 let currentProgStreak = currentProg.highestPuzzleStreak <= currentProg.activePuzzleStreak ? "\(currentProg.activePuzzleStreak)" : "\(currentProg.highestPuzzleStreak)"
                 
                 // Actual Rating
