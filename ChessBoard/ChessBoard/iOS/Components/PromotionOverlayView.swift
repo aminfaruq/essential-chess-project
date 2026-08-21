@@ -6,7 +6,6 @@
 //
 
 import UIKit
-internal import SnapKit
 
 /// A standalone modal view that presents pawn promotion choices to the user.
 public final class PromotionOverlayView: UIView {
@@ -44,21 +43,27 @@ public final class PromotionOverlayView: UIView {
             stackContainer.backgroundColor = UIColor(white: 0.15, alpha: 0.95)
         }
         stackContainer.layer.cornerRadius = 12
+        stackContainer.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(stackContainer)
         
-        stackContainer.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-        }
+        NSLayoutConstraint.activate([
+            stackContainer.centerXAnchor.constraint(equalTo: centerXAnchor),
+            stackContainer.centerYAnchor.constraint(equalTo: centerYAnchor)
+        ])
         
         let stack = UIStackView()
         stack.axis = .horizontal
         stack.spacing = 16
         stack.distribution = .fillEqually
+        stack.translatesAutoresizingMaskIntoConstraints = false
         stackContainer.addSubview(stack)
         
-        stack.snp.makeConstraints { make in
-            make.edges.equalToSuperview().inset(16)
-        }
+        NSLayoutConstraint.activate([
+            stack.topAnchor.constraint(equalTo: stackContainer.topAnchor, constant: 16),
+            stack.leadingAnchor.constraint(equalTo: stackContainer.leadingAnchor, constant: 16),
+            stack.trailingAnchor.constraint(equalTo: stackContainer.trailingAnchor, constant: -16),
+            stack.bottomAnchor.constraint(equalTo: stackContainer.bottomAnchor, constant: -16)
+        ])
         
         let choices = ["q", "n", "r", "b"]
         
@@ -67,9 +72,11 @@ public final class PromotionOverlayView: UIView {
             let imageView = UIImageView(image: UIImage(named: pieceImageName))
             imageView.contentMode = .scaleAspectFit
             imageView.isUserInteractionEnabled = true
-            imageView.snp.makeConstraints { make in
-                make.width.height.equalTo(60)
-            }
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                imageView.widthAnchor.constraint(equalToConstant: 60),
+                imageView.heightAnchor.constraint(equalToConstant: 60)
+            ])
             
             let tap = PromotionTapGesture(target: self, action: #selector(handlePieceTap(_:)))
             tap.choice = choice

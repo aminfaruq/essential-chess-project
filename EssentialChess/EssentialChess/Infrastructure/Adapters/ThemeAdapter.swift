@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import OSLog
 
+@MainActor
 public final class ThemeAdapter: ObservableObject {
     
     private let store: ThemeLoader
@@ -30,9 +31,9 @@ public final class ThemeAdapter: ObservableObject {
     
     public func load(completion: @escaping () -> Void) {
         store.retrieve { [weak self] result in
-            DispatchQueue.main.async {
+            Task { @MainActor [weak self] in
                 guard let self = self else { return }
-
+                
                 switch result {
                 case .success(let settings):
                     if let settings = settings {

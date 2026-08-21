@@ -323,15 +323,16 @@ final class CurriculumViewModelTests: XCTestCase {
         XCTAssertEqual(sut.sections[0].categories[1].examState, .locked(reason: "Complete all themes to unlock"))
     }
 
-    func test_load_examOnCooldown_showsCooldownState() {
-        let (sut, curriculumSubject, mixPoolSubject, progressSubject) = makeSUT()
+    func test_load_examOnCooldown_showsCooldownState_deterministically() {
+        let now = Date(timeIntervalSince1970: 1_000_000_000)
+        let (sut, curriculumSubject, mixPoolSubject, progressSubject) = makeSUT(now: now)
         let puzzle = Puzzle(id: "p1", fen: "", moves: [], rating: 500, tags: [])
         let subTheme = SubTheme(id: "st1", title: "ST", totalPuzzles: 1, puzzles: [puzzle])
         let category = Category(id: "c1", title: "Cat", isExamMode: false, description: nil, totalPuzzles: nil, puzzles: nil, subThemes: [subTheme])
         let exam = Category(id: "exam_1", title: "Exam", isExamMode: true, description: nil, totalPuzzles: nil, puzzles: nil, subThemes: nil)
         let section = EloSection(id: "s1", title: "Sec", eloRange: "100-200", isLockedByDefault: false, categories: [category, exam])
         let curriculum = Curriculum(version: "1", metadata: makeMetadata(), sections: [section])
-        let recentFail = Date().addingTimeInterval(-1800)
+        let recentFail = now.addingTimeInterval(-1800)
         let progress = UserProgress(
             hiddenRating: 1500, onboardingComplete: true, completedPuzzleIDs: ["p1"],
             passedExamIDs: [], examFailureTimes: ["exam_1": recentFail], unlockedFeatures: []
@@ -344,6 +345,30 @@ final class CurriculumViewModelTests: XCTestCase {
         flushMainQueue()
 
         XCTAssertEqual(sut.sections[0].categories[1].examState, .onCooldown(availableIn: "On Cooldown"))
+    }
+
+    func test_load_examAfterCooldownExpired_showsUnlockedState_deterministically() {
+        let now = Date(timeIntervalSince1970: 1_000_000_000)
+        let (sut, curriculumSubject, mixPoolSubject, progressSubject) = makeSUT(now: now)
+        let puzzle = Puzzle(id: "p1", fen: "", moves: [], rating: 500, tags: [])
+        let subTheme = SubTheme(id: "st1", title: "ST", totalPuzzles: 1, puzzles: [puzzle])
+        let category = Category(id: "c1", title: "Cat", isExamMode: false, description: nil, totalPuzzles: nil, puzzles: nil, subThemes: [subTheme])
+        let exam = Category(id: "exam_1", title: "Exam", isExamMode: true, description: nil, totalPuzzles: nil, puzzles: nil, subThemes: nil)
+        let section = EloSection(id: "s1", title: "Sec", eloRange: "100-200", isLockedByDefault: false, categories: [category, exam])
+        let curriculum = Curriculum(version: "1", metadata: makeMetadata(), sections: [section])
+        let expiredFail = now.addingTimeInterval(-(4 * 3600))
+        let progress = UserProgress(
+            hiddenRating: 1500, onboardingComplete: true, completedPuzzleIDs: ["p1"],
+            passedExamIDs: [], examFailureTimes: ["exam_1": expiredFail], unlockedFeatures: []
+        )
+
+        sut.load()
+        curriculumSubject.send(curriculum)
+        mixPoolSubject.send(makeMixPool())
+        progressSubject.send(progress)
+        flushMainQueue()
+
+        XCTAssertEqual(sut.sections[0].categories[1].examState, .unlocked(livesText: "3 lives · 10 random puzzles"))
     }
 
     func test_load_unlockedExam_showsUnlockedState() {
@@ -486,6 +511,7 @@ final class CurriculumViewModelTests: XCTestCase {
     }
 
     private func makeSUT(
+        now: Date = Date(),
         file: StaticString = #filePath,
         line: UInt = #line
     ) -> (
@@ -501,7 +527,8 @@ final class CurriculumViewModelTests: XCTestCase {
         let sut = CurriculumViewModel(
             curriculumPublisher: { curriculumSubject.eraseToAnyPublisher() },
             mixPoolPublisher: { mixPoolSubject.eraseToAnyPublisher() },
-            progressPublisher: { progressSubject.eraseToAnyPublisher() }
+            progressPublisher: { progressSubject.eraseToAnyPublisher() },
+            currentDate: { now }
         )
 
         trackForMemoryLeaks(sut, file: file, line: line)

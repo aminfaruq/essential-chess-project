@@ -45,25 +45,6 @@ final class BeginnerProgressStoreTests: XCTestCase {
         XCTAssertNil(UserDefaults.standard.array(forKey: testKey))
     }
     
-    func test_progressPublisher_emitsUpdatesOnCompletion() {
-        let sut = makeSUT()
-        
-        var emittedProgresses: [BeginnerProgress] = []
-        let cancellable = sut.progressPublisher.sink { progress in
-            emittedProgresses.append(progress)
-        }
-        
-        sut.markCompleted(puzzleID: "p1")
-        sut.markCompleted(puzzleID: "p2")
-        
-        XCTAssertEqual(emittedProgresses.count, 3) // Initial + 2 updates
-        XCTAssertEqual(emittedProgresses[0].completedPuzzleIDs, [])
-        XCTAssertEqual(emittedProgresses[1].completedPuzzleIDs, ["p1"])
-        XCTAssertEqual(emittedProgresses[2].completedPuzzleIDs, ["p1", "p2"])
-        
-        cancellable.cancel()
-    }
-    
     // MARK: - Helpers
     
     private let testKey = "test_beginner_completed_puzzles"

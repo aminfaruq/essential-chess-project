@@ -7,6 +7,7 @@ import XCTest
 import UserNotifications
 import EssentialChess
 
+@MainActor
 final class UserNotificationsAdapterTests: XCTestCase {
 
     func test_requestPermission_requestsAuthorizationWithCorrectOptions() {

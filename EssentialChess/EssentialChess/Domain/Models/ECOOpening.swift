@@ -5,7 +5,7 @@
 
 import Foundation
 
-public struct ECOOpening: Equatable, Codable {
+public struct ECOOpening: Equatable {
     public let eco: String
     public let name: String
     

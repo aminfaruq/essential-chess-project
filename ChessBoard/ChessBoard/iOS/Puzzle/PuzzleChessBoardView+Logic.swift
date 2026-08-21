@@ -1,22 +1,6 @@
-//
-//  PuzzleChessBoardView+Logic.swift
-//  NativeChessBoard
-//
-//  Created by Amin faruq on 08/06/26.
-//
-
 import UIKit
 
 extension PuzzleChessBoardView {
-    
-    func routeUserMove(from sourceStr: String, to targetStr: String, promotionChar: String? = nil) {
-        switch puzzleMode {
-        case .standard:
-            processUserMove(from: sourceStr, to: targetStr, promotionChar: promotionChar)
-        case .learnThePieces:
-            processUserMoveForLearnPieces(from: sourceStr, to: targetStr, promotionChar: promotionChar)
-        }
-    }
     
     func processUserMove(from sourceStr: String, to targetStr: String, promotionChar: String? = nil) {
         clearLegalMoveHints()
@@ -24,8 +8,7 @@ extension PuzzleChessBoardView {
         
         if !engine.legalMoves(for: sourceStr).contains(targetStr) {
             selectedSquareString = nil
-            HapticManager.shared.moveIllegal()
-            SoundManager.shared.playError()
+            feedback.moveIllegal()
             animateSnapback { [weak self] in self?.clearHighlights() }
             return
         }
@@ -51,10 +34,9 @@ extension PuzzleChessBoardView {
             
             if engine.move(from: sourceStr, to: targetStr, promotion: promotionChar) {
                 if isCapture {
-                    HapticManager.shared.moveCapture()
-                    SoundManager.shared.playCapture()
+                    feedback.moveCapture()
                 } else {
-                    SoundManager.shared.playMove()
+                    feedback.playMove()
                 }
                 
                 selectedSquareString = nil
@@ -68,7 +50,7 @@ extension PuzzleChessBoardView {
                     
                     if validator.isCompleted || isCheckmate {
                         self?.isPuzzleCompleted = true
-                        SoundManager.shared.playVictory()
+                        self?.feedback.playVictory()
                         self?.onPuzzleCompleted?()
                         return
                     }
@@ -116,9 +98,8 @@ extension PuzzleChessBoardView {
                 }
             }
         } else {
-            HapticManager.shared.moveIllegal()
-            SoundManager.shared.playError()
-            drawNativeRedArrow(from: sourceStr, to: targetStr)
+            feedback.moveIllegal()
+            drawArrow(from: sourceStr, to: targetStr, color: UIColor.systemRed.withAlphaComponent(0.8), isPersistent: false)
             selectedSquareString = nil
             animateSnapback { self.clearHighlights() }
             self.isBoardLocked = false
@@ -132,8 +113,7 @@ extension PuzzleChessBoardView {
         
         if !engine.legalMoves(for: sourceStr).contains(targetStr) {
             selectedSquareString = nil
-            HapticManager.shared.moveIllegal()
-            SoundManager.shared.playError()
+            feedback.moveIllegal()
             animateSnapback { [weak self] in self?.clearHighlights() }
             return
         }
@@ -143,10 +123,9 @@ extension PuzzleChessBoardView {
         
         if engine.move(from: sourceStr, to: targetStr, promotion: promotionChar) {
             if isCapture {
-                HapticManager.shared.moveCapture()
-                SoundManager.shared.playCapture()
+                feedback.moveCapture()
             } else {
-                SoundManager.shared.playMove()
+                feedback.playMove()
             }
             
             selectedSquareString = nil
@@ -176,7 +155,7 @@ extension PuzzleChessBoardView {
                 
                 if !hasTargetsRemaining {
                     self?.isPuzzleCompleted = true
-                    SoundManager.shared.playVictory()
+                    self?.feedback.playVictory()
                     self?.onPuzzleCompleted?()
                 } else {
                     // Force the turn back to the user's color so they can move again
@@ -192,9 +171,8 @@ extension PuzzleChessBoardView {
             finishUserMove()
             
         } else {
-            HapticManager.shared.moveIllegal()
-            SoundManager.shared.playError()
-            drawNativeRedArrow(from: sourceStr, to: targetStr)
+            feedback.moveIllegal()
+            drawArrow(from: sourceStr, to: targetStr, color: UIColor.systemRed.withAlphaComponent(0.8), isPersistent: false)
             selectedSquareString = nil
             animateSnapback { self.clearHighlights() }
             self.isBoardLocked = false
@@ -248,7 +226,7 @@ extension PuzzleChessBoardView {
                 rookGhost?.removeFromSuperview()
                 let isCapture = self?.engine?.piece(at: targetStr) != nil
                 _ = self?.engine?.move(from: sourceStr, to: targetStr, promotion: promoStr)
-                if isCapture { SoundManager.shared.playCapture() } else { SoundManager.shared.playMove() }
+                if isCapture { self?.feedback.playCapture() } else { self?.feedback.playMove() }
                 self?.clearHighlights()
                 self?.renderPieces()
                 self?.highlightViews[sourceStr]?.isHidden = false
@@ -256,7 +234,7 @@ extension PuzzleChessBoardView {
                 
                 if self?.puzzleValidator?.isCompleted == true {
                     self?.isPuzzleCompleted = true
-                    SoundManager.shared.playVictory()
+                    self?.feedback.playVictory()
                     self?.onPuzzleCompleted?()
                 } else {
                     self?.isBoardLocked = false
@@ -265,7 +243,7 @@ extension PuzzleChessBoardView {
         } else {
             let isCapture = self.engine?.piece(at: targetStr) != nil
             _ = self.engine?.move(from: sourceStr, to: targetStr, promotion: promoStr)
-            if isCapture { SoundManager.shared.playCapture() } else { SoundManager.shared.playMove() }
+            if isCapture { feedback.playCapture() } else { feedback.playMove() }
             self.clearHighlights()
             self.renderPieces()
             self.isBoardLocked = false

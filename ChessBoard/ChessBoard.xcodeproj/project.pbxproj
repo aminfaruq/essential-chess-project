@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		83CA9CAA2FECF3DF00F0031B /* ChessBoard.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83CA9CA02FECF3DF00F0031B /* ChessBoard.framework */; };
 		83CA9CBC2FECF4C100F0031B /* ChessKit in Frameworks */ = {isa = PBXBuildFile; productRef = 83CA9CBB2FECF4C100F0031B /* ChessKit */; };
-		83CA9CBF2FECF4EA00F0031B /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 83CA9CBE2FECF4EA00F0031B /* SnapKit */; };
 		83FE85F02FFD0DEA008A980D /* ChessBoard.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 83FE85EF2FFD0DEA008A980D /* ChessBoard.xctestplan */; };
 /* End PBXBuildFile section */
 
@@ -48,7 +47,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				83CA9CBC2FECF4C100F0031B /* ChessKit in Frameworks */,
-				83CA9CBF2FECF4EA00F0031B /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -114,7 +112,6 @@
 			name = ChessBoard;
 			packageProductDependencies = (
 				83CA9CBB2FECF4C100F0031B /* ChessKit */,
-				83CA9CBE2FECF4EA00F0031B /* SnapKit */,
 			);
 			productName = ChessBoard;
 			productReference = 83CA9CA02FECF3DF00F0031B /* ChessBoard.framework */;
@@ -172,7 +169,6 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				83CA9CBA2FECF4C100F0031B /* XCRemoteSwiftPackageReference "chesskit-swift" */,
-				83CA9CBD2FECF4EA00F0031B /* XCRemoteSwiftPackageReference "SnapKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 83CA9CA12FECF3DF00F0031B /* Products */;
@@ -679,14 +675,6 @@
 				minimumVersion = 0.9.0;
 			};
 		};
-		83CA9CBD2FECF4EA00F0031B /* XCRemoteSwiftPackageReference "SnapKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.0.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -694,11 +682,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 83CA9CBA2FECF4C100F0031B /* XCRemoteSwiftPackageReference "chesskit-swift" */;
 			productName = ChessKit;
-		};
-		83CA9CBE2FECF4EA00F0031B /* SnapKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 83CA9CBD2FECF4EA00F0031B /* XCRemoteSwiftPackageReference "SnapKit" */;
-			productName = SnapKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

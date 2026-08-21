@@ -9,6 +9,7 @@ import XCTest
 import Combine
 import EssentialChess
 
+@MainActor
 final class LanguageAdapterTests: XCTestCase {
     
     func test_init_setsCurrentLanguageFromStore() {

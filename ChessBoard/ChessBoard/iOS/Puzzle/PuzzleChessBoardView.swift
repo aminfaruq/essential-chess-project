@@ -1,22 +1,13 @@
 import UIKit
-internal import SnapKit
 
 /// A custom, highly interactive chess board view built natively with UIKit.
 /// Acts purely as a UI Orchestrator, delegating business logic to the Domain layer.
-public final class PuzzleChessBoardView: UIView {
+public final class PuzzleChessBoardView: ChessBoardView {
     
     // MARK: - Callbacks
     public var onPuzzleCompleted: (() -> Void)?
     public var onPuzzleWrong: (() -> Void)?
     public var onPuzzleReady: ((String) -> Void)?
-    
-    // MARK: - Internal Dependencies & State
-    var userColor: EngineColor = .white
-    
-    // MARK: - Internal Dependencies & State (Accessible by Extensions)
-    var engine: ChessEngine?
-    var puzzleValidator: PuzzleValidator?
-    let interactionHandler = BoardInteractionHandler()
     
     public enum PuzzleMode {
         case standard
@@ -25,59 +16,29 @@ public final class PuzzleChessBoardView: UIView {
     
     var puzzleMode: PuzzleMode = .standard
     var isPuzzleCompleted = false
-    var isBoardLocked = true
-    var selectedSquareString: String?
+    var puzzleValidator: PuzzleValidator?
     
-    var squareViews: [String: UIView] = [:]
-    var pieceImageViews: [String: UIImageView] = [:]
-    var highlightViews: [String: UIView] = [:]
-    var checkHighlightViews: [String: UIView] = [:]
-    var legalMoveHintViews: [UIView] = []
+    override var interactionLocked: Bool { isBoardLocked || isPuzzleCompleted }
     
-    var solutionArrowContainer: UIView?
-
-    
-    var ghostPieceView: UIImageView?
-    var dragStartOriginalCenter: CGPoint = .zero
-    
-    // MARK: - Theme & Geometry
-    var lightSquareColor = UIColor(red: 0.94, green: 0.85, blue: 0.71, alpha: 1.0)
-    var darkSquareColor = UIColor(red: 0.71, green: 0.53, blue: 0.39, alpha: 1.0)
-    var highlightColor = UIColor.systemYellow.withAlphaComponent(0.35)
-    var currentPieceTheme: String = "default"
-    
-    let boardContainer = UIView()
-    let overlayView = UIView()
-    
-    var geometry: BoardGeometry {
-        // STATIC orientation: The board is flipped ONLY if the user is playing Black.
-        let flipped = userColor == .black
-        let currentSize = boardContainer.bounds.isEmpty ? bounds.size : boardContainer.bounds.size
-        return BoardGeometry(bounds: currentSize, isFlipped: flipped)
+    override func handleMove(from sourceStr: String, to targetStr: String, promotionChar: String? = nil) {
+        switch puzzleMode {
+        case .standard:
+            processUserMove(from: sourceStr, to: targetStr, promotionChar: promotionChar)
+        case .learnThePieces:
+            processUserMoveForLearnPieces(from: sourceStr, to: targetStr, promotionChar: promotionChar)
+        }
     }
     
-    public var userColorName: String {
-        return userColor == .black ? "Black" : "White"
-    }
-    
-    // MARK: - Initialization
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupContainers()
-        setupBoardGrid()
-        setupGestures()
-    }
-    
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setupContainers()
-        setupBoardGrid()
-        setupGestures()
+    override func alternativePieceImage(for piece: EnginePiece, at square: String) -> (image: UIImage, inset: CGFloat)? {
+        guard puzzleMode == .learnThePieces, piece.color != userColor,
+              let image = UIImage(systemName: "star.fill")?.withTintColor(.systemYellow, renderingMode: .alwaysOriginal)
+        else { return nil }
+        return (image, 10)
     }
     
     // MARK: - Public API
     public func startPuzzle(fen: String, moves: [String]) {
-        self.engine = ChessEngine(fen: fen)
+        self.engine = engineFactory(fen)
         self.puzzleValidator = PuzzleValidator(expectedMoves: moves)
         
         // The user plays the opposite of the starting FEN's turn.
@@ -104,7 +65,7 @@ public final class PuzzleChessBoardView: UIView {
     }
     
     public func startLearnThePiecesPuzzle(fen: String) {
-        self.engine = ChessEngine(fen: fen)
+        self.engine = engineFactory(fen)
         self.puzzleValidator = PuzzleValidator(expectedMoves: [])
         
         // In Learn The Pieces, there is no initial opponent move.
@@ -127,36 +88,8 @@ public final class PuzzleChessBoardView: UIView {
         onPuzzleReady?(self.userColorName)
     }
     
-    public func setPieceTheme(_ themePrefix: String) {
-        self.currentPieceTheme = themePrefix
-        renderPieces()
-    }
-    
-    public func setBoardTheme(light: UIColor, dark: UIColor) {
-        self.lightSquareColor = light
-        self.darkSquareColor = dark
-        setupBoardGrid()
-        renderPieces()
-    }
-    
-    /// Enables or disables haptic feedback for the chess board interactions.
-    public func setHapticEnabled(_ isEnabled: Bool) {
-        HapticManager.shared.isEnabled = isEnabled
-    }
-    
-    /// Enables or disables sound effects for the chess board.
-    public func setSoundEnabled(_ isEnabled: Bool) {
-        SoundManager.shared.isEnabled = isEnabled
-    }
-    
-    public func setHighlightColor(_ baseColor: UIColor, alpha: CGFloat = 0.35) {
-        self.highlightColor = baseColor.withAlphaComponent(alpha)
-        highlightViews.values.forEach { $0.backgroundColor = self.highlightColor }
-    }
-    
     public func showHint() {
         guard let expectedMove = puzzleValidator?.peekNextMove(), !isPuzzleCompleted else { return }
-//        clearHighlights()
         if let view = squareViews[String(expectedMove.prefix(2))] {
             view.layer.borderWidth = 4
             view.layer.borderColor = UIColor.systemBlue.withAlphaComponent(0.8).cgColor
@@ -167,6 +100,6 @@ public final class PuzzleChessBoardView: UIView {
         guard let expectedMove = puzzleValidator?.peekNextMove(), !isPuzzleCompleted else { return }
         let sourceStr = String(expectedMove.prefix(2))
         let targetStr = String(expectedMove.dropFirst(2).prefix(2))
-        drawGreenSolutionArrow(from: sourceStr, to: targetStr)
+        drawArrow(from: sourceStr, to: targetStr, color: UIColor.systemGreen.withAlphaComponent(0.8), isPersistent: true)
     }
 }

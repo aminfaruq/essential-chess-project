@@ -15,6 +15,7 @@ public protocol UserNotificationCenterProtocol {
 
 extension UNUserNotificationCenter: UserNotificationCenterProtocol {}
 
+@MainActor
 public final class UserNotificationsAdapter: NotificationSchedulerLoader {
     private let center: UserNotificationCenterProtocol
 
@@ -22,9 +23,9 @@ public final class UserNotificationsAdapter: NotificationSchedulerLoader {
         self.center = center
     }
     
-    public func requestPermission(completion: @escaping (Bool) -> Void) {
+    public func requestPermission(completion: @escaping @MainActor (Bool) -> Void) {
         center.requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 if let error = error {
                     os_log(.error, "UserNotificationsAdapter: Permission request failed: %{public}@", error.localizedDescription)
                 }
@@ -33,7 +34,7 @@ public final class UserNotificationsAdapter: NotificationSchedulerLoader {
         }
     }
     
-    public func scheduleDailyReminder(hour: Int, minute: Int, title: String, body: String, completion: @escaping (Error?) -> Void) {
+    public func scheduleDailyReminder(hour: Int, minute: Int, title: String, body: String, completion: @escaping @MainActor (Error?) -> Void) {
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body
@@ -47,7 +48,7 @@ public final class UserNotificationsAdapter: NotificationSchedulerLoader {
         let request = UNNotificationRequest(identifier: "dailyPracticeReminder", content: content, trigger: trigger)
         
         center.add(request) { error in
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 if let error = error {
                     os_log(.error, "UserNotificationsAdapter: Failed to schedule reminder: %{public}@", error.localizedDescription)
                 }

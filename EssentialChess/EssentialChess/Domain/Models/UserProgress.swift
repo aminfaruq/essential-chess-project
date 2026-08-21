@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum ProFeature: String, Codable, CaseIterable, Hashable {
+public enum ProFeature: String, Hashable, CaseIterable {
     case openingStudy
 }
 

@@ -1,5 +1,5 @@
 {
-  "originHash" : "3125e73a8c3669e81dcbc4a3c9c696c8ee49218ec5be58192deafed21b603af3",
+  "originHash" : "9999680fb9832f6ca41953a30884f5b0d8f5a57a995f0b43e8b69fc41df079f7",
   "pins" : [
     {
       "identity" : "chesskit-swift",
@@ -8,15 +8,6 @@
       "state" : {
         "revision" : "44ef7a1aa9da25bf0a9606a8960591a4dde3fad2",
         "version" : "0.17.0"
-      }
-    },
-    {
-      "identity" : "snapkit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SnapKit/SnapKit.git",
-      "state" : {
-        "revision" : "2842e6e84e82eb9a8dac0100ca90d9444b0307f4",
-        "version" : "5.7.1"
       }
     }
   ],

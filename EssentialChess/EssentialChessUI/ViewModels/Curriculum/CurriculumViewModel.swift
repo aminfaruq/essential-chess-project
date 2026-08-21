@@ -11,7 +11,7 @@ import EssentialChess
 
 // MARK: - Presentation Models (Dumb UI Models)
 
-public struct SectionUIModel: Identifiable, Equatable {
+public struct SectionUIModel: Identifiable, Equatable, Hashable {
     public let id: String
     public let title: String
     public let eloRange: String
@@ -31,7 +31,7 @@ public struct SectionUIModel: Identifiable, Equatable {
     }
 }
 
-public struct CategoryUIModel: Identifiable, Equatable {
+public struct CategoryUIModel: Identifiable, Equatable, Hashable {
     public let id: String
     public let title: String
     public let progress: Double
@@ -57,7 +57,7 @@ public struct CategoryUIModel: Identifiable, Equatable {
     }
 }
 
-public enum ExamUIState: Equatable {
+public enum ExamUIState: Equatable, Hashable {
     case locked(reason: String)
     case unlocked(livesText: String)
     case passed(message: String)
@@ -116,17 +116,20 @@ public final class CurriculumViewModel: ObservableObject {
     private let curriculumPublisher: () -> AnyPublisher<Curriculum, Error>
     private let mixPoolPublisher: () -> AnyPublisher<MixPool, Error>
     private let progressPublisher: () -> AnyPublisher<UserProgress, Never>
+    private let currentDate: () -> Date
     
     private var cancellables = Set<AnyCancellable>()
     
     public init(
         curriculumPublisher: @escaping () -> AnyPublisher<Curriculum, Error>,
         mixPoolPublisher: @escaping () -> AnyPublisher<MixPool, Error>,
-        progressPublisher: @escaping () -> AnyPublisher<UserProgress, Never>
+        progressPublisher: @escaping () -> AnyPublisher<UserProgress, Never>,
+        currentDate: @escaping () -> Date = { Date() }
     ) {
         self.curriculumPublisher = curriculumPublisher
         self.mixPoolPublisher = mixPoolPublisher
         self.progressPublisher = progressPublisher
+        self.currentDate = currentDate
     }
     
     public func load() {
@@ -236,7 +239,7 @@ public final class CurriculumViewModel: ObservableObject {
         if sectionProgress < 0.99 {
             return .locked(reason: "Complete all themes to unlock")
         }
-        if let failTime = progress.examFailureTimes[category.id], Date().timeIntervalSince(failTime) < (3 * 3600) {
+        if let failTime = progress.examFailureTimes[category.id], currentDate().timeIntervalSince(failTime) < (3 * 3600) {
             return .onCooldown(availableIn: "On Cooldown")
         }
         

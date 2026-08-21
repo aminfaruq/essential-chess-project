@@ -6,6 +6,7 @@
 import Foundation
 import Combine
 
+@MainActor
 public final class LanguageAdapter: ObservableObject {
     private var store: LanguageStore
     
@@ -17,17 +18,13 @@ public final class LanguageAdapter: ObservableObject {
     }
     
     public func load() {
-        DispatchQueue.main.async {
-            self.currentLanguage = self.store.languageCode
-        }
+        currentLanguage = store.languageCode
     }
     
     public func update(languageCode: String) {
         guard currentLanguage != languageCode else { return }
         
-        DispatchQueue.main.async {
-            self.store.languageCode = languageCode
-            self.currentLanguage = languageCode
-        }
+        store.languageCode = languageCode
+        currentLanguage = languageCode
     }
 }

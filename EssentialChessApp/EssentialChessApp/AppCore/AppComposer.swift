@@ -10,6 +10,7 @@ import Combine
 import EssentialChess
 import EssentialChessUI
 
+@MainActor
 public final class AppComposer: ObservableObject {
     @Published public private(set) var isReady: Bool = false
     
@@ -24,9 +25,12 @@ public final class AppComposer: ObservableObject {
     public let container: DependencyContainer
     public let viewFactory: ViewFactory
 
-    public init() {
-        // Initialize Core Components
-        self.container = DependencyContainer()
+    public convenience init() {
+        self.init(container: DependencyContainer())
+    }
+
+    public init(container: DependencyContainer) {
+        self.container = container
         self.viewFactory = ViewFactory(container: container)
         
         let adapter = container.progressAdapter
@@ -59,7 +63,7 @@ public final class AppComposer: ObservableObject {
                 }
                 return Fail(error: FileCurriculumLoader.Error.invalidData()).eraseToAnyPublisher()
             },
-            progressPublisher: { [container] in container.beginnerProgressStore.progressPublisher }
+            progressPublisher: { [container] in container.beginnerProgressAdapter.publisher() }
         )
         
         self.streakVM = StreakViewModel(progressPublisher: adapter.publisher())
@@ -70,7 +74,13 @@ public final class AppComposer: ObservableObject {
         self.settingsVM = SettingsViewModel(
             notificationStorage: container.notificationStorage,
             notificationScheduler: container.notificationScheduler,
-            boardSettingsStorage: container.boardSettingsStorage
+            boardSettingsStorage: container.boardSettingsStorage,
+            onResetProgress: { [container] in
+                container.progressAdapter.update { progress in
+                    progress = UserProgressUpdater.resetAll(progress: progress)
+                }
+                container.beginnerProgressStore.clearProgress()
+            }
         )
     }
     

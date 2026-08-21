@@ -7,6 +7,7 @@ import XCTest
 import EssentialChess
 @testable import EssentialChessUI
 
+@MainActor
 final class SettingsViewModelTests: XCTestCase {
 
     // MARK: - Init Tests
@@ -165,12 +166,26 @@ final class SettingsViewModelTests: XCTestCase {
         XCTAssertTrue(boardStorage.isSoundEnabled)
     }
 
+    // MARK: - resetProgress Tests
+
+    func test_resetProgress_triggersOnResetProgressCallback() {
+        var resetCallCount = 0
+        let (sut, _, _, _) = makeSUT(onResetProgress: {
+            resetCallCount += 1
+        })
+
+        sut.resetProgress()
+
+        XCTAssertEqual(resetCallCount, 1)
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(
         initialReminderState: Bool = false,
         initialHaptic: Bool = true,
-        initialSound: Bool = true
+        initialSound: Bool = true,
+        onResetProgress: (() -> Void)? = nil
     ) -> (sut: SettingsViewModel, storage: NotificationStoragePortSpy, scheduler: NotificationSchedulerSpy, boardStorage: BoardSettingsStoragePortSpy) {
         let storage = NotificationStoragePortSpy()
         storage.isDailyReminderEnabled = initialReminderState
@@ -182,7 +197,8 @@ final class SettingsViewModelTests: XCTestCase {
         let sut = SettingsViewModel(
             notificationStorage: storage,
             notificationScheduler: scheduler,
-            boardSettingsStorage: boardSettingsStorage
+            boardSettingsStorage: boardSettingsStorage,
+            onResetProgress: onResetProgress
         )
 
         trackForMemoryLeaks(sut)
@@ -212,6 +228,7 @@ class BoardSettingsStoragePortSpy: BoardSettingsStore {
     var soundWriteCount = 0
 }
 
+@MainActor
 class NotificationSchedulerSpy: NotificationSchedulerLoader {
     var requestPermissionCallCount = 0
     var permissionToGrant = false
@@ -226,12 +243,12 @@ class NotificationSchedulerSpy: NotificationSchedulerLoader {
 
     var cancelDailyReminderCallCount = 0
 
-    func requestPermission(completion: @escaping (Bool) -> Void) {
+    func requestPermission(completion: @escaping @MainActor (Bool) -> Void) {
         requestPermissionCallCount += 1
         completion(permissionToGrant)
     }
 
-    func scheduleDailyReminder(hour: Int, minute: Int, title: String, body: String, completion: @escaping (Error?) -> Void) {
+    func scheduleDailyReminder(hour: Int, minute: Int, title: String, body: String, completion: @escaping @MainActor (Error?) -> Void) {
         scheduledReminders.append(ScheduledReminder(hour: hour, minute: minute, title: title, body: body))
         completion(nil)
     }

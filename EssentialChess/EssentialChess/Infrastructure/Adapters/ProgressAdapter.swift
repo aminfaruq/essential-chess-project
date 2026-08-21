@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import OSLog
 
+@MainActor
 public final class ProgressAdapter {
     private let store: ProgressLoader
     private let subject: CurrentValueSubject<UserProgress, Never>
@@ -31,7 +32,7 @@ public final class ProgressAdapter {
     
     public func load(completion: @escaping () -> Void) {
         store.retrieve { [weak self] result in
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 switch result {
                 case .success(let progress):
                     if let progress = progress {
@@ -50,13 +51,7 @@ public final class ProgressAdapter {
         modifier(&current)
         
         // Publish on the main thread to satisfy Combine/SwiftUI requirements
-        if Thread.isMainThread {
-            subject.send(current)
-        } else {
-            DispatchQueue.main.async { [subject] in
-                subject.send(current)
-            }
-        }
+        subject.send(current)
         
         // Save to UserDefaults in the background
         store.insert(current) { _ in }

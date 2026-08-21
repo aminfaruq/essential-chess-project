@@ -7,6 +7,7 @@ import Foundation
 import EssentialChess
 import Combine
 
+@MainActor
 public final class SettingsViewModel: ObservableObject {
     @Published public var isDailyReminderEnabled: Bool = false
     @Published public var isHapticEnabled: Bool = true
@@ -15,19 +16,26 @@ public final class SettingsViewModel: ObservableObject {
     private var notificationStorage: NotificationStore
     private let notificationScheduler: NotificationSchedulerLoader
     private var boardSettingsStorage: BoardSettingsStore
+    private let onResetProgress: (() -> Void)?
     
     public init(
         notificationStorage: NotificationStore,
         notificationScheduler: NotificationSchedulerLoader,
-        boardSettingsStorage: BoardSettingsStore
+        boardSettingsStorage: BoardSettingsStore,
+        onResetProgress: (() -> Void)? = nil
     ) {
         self.notificationStorage = notificationStorage
         self.notificationScheduler = notificationScheduler
         self.boardSettingsStorage = boardSettingsStorage
+        self.onResetProgress = onResetProgress
         
         self.isDailyReminderEnabled = notificationStorage.isDailyReminderEnabled
         self.isHapticEnabled = boardSettingsStorage.isHapticEnabled
         self.isSoundEnabled = boardSettingsStorage.isSoundEnabled
+    }
+    
+    public func resetProgress() {
+        onResetProgress?()
     }
     
     public func setDailyReminder(enabled: Bool) {
@@ -64,10 +72,8 @@ public final class SettingsViewModel: ObservableObject {
                 ) { error in
                     if error != nil {
                         // Scheduling failed — revert toggle state
-                        DispatchQueue.main.async {
-                            self.updateStorage(enabled: false)
-                            self.isDailyReminderEnabled = false
-                        }
+                        self.updateStorage(enabled: false)
+                        self.isDailyReminderEnabled = false
                     }
                 }
                 self.updateStorage(enabled: true)
@@ -83,9 +89,7 @@ public final class SettingsViewModel: ObservableObject {
     }
     
     private func updateStorage(enabled: Bool) {
-        DispatchQueue.main.async {
-            self.isDailyReminderEnabled = enabled
-            self.notificationStorage.isDailyReminderEnabled = enabled
-        }
+        self.isDailyReminderEnabled = enabled
+        self.notificationStorage.isDailyReminderEnabled = enabled
     }
 }

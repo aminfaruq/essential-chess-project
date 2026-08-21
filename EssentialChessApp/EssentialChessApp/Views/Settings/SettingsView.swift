@@ -10,15 +10,14 @@ import EssentialChessUI
 import EssentialChess
 
 public struct SettingsView: View {
-    @EnvironmentObject var composer: AppComposer
+    @ObservedObject var viewModel: SettingsViewModel
     @EnvironmentObject var themeAdapter: ThemeAdapter
     @EnvironmentObject var languageAdapter: LanguageAdapter
     @State private var showingResetAlert = false
-    @State private var isDailyReminderEnabled = false
-    @State private var isHapticEnabled = true
-    @State private var isSoundEnabled = true
     
-    public init() {}
+    public init(viewModel: SettingsViewModel) {
+        self.viewModel = viewModel
+    }
     
     private let pieceThemes: [(id: String, label: String)] = [
         ("default", "Standard"),
@@ -81,21 +80,15 @@ public struct SettingsView: View {
                     
                     Section {
                         Toggle("Haptic Feedback", isOn: Binding(
-                            get: { self.isHapticEnabled },
-                            set: { newValue in
-                                self.isHapticEnabled = newValue
-                                composer.settingsVM.setHaptic(enabled: newValue)
-                            }
+                            get: { viewModel.isHapticEnabled },
+                            set: { viewModel.setHaptic(enabled: $0) }
                         ))
                         .tint(AppColors.accent)
                         .font(.system(size: 16))
                         
                         Toggle("Sound Effects", isOn: Binding(
-                            get: { self.isSoundEnabled },
-                            set: { newValue in
-                                self.isSoundEnabled = newValue
-                                composer.settingsVM.setSound(enabled: newValue)
-                            }
+                            get: { viewModel.isSoundEnabled },
+                            set: { viewModel.setSound(enabled: $0) }
                         ))
                         .tint(AppColors.accent)
                         .font(.system(size: 16))
@@ -107,11 +100,8 @@ public struct SettingsView: View {
                     
                     Section {
                         Toggle("Daily Practice Reminder", isOn: Binding(
-                            get: { self.isDailyReminderEnabled },
-                            set: { newValue in
-                                self.isDailyReminderEnabled = newValue
-                                composer.settingsVM.setDailyReminder(enabled: newValue)
-                            }
+                            get: { viewModel.isDailyReminderEnabled },
+                            set: { viewModel.setDailyReminder(enabled: $0) }
                         ))
                         .tint(AppColors.accent)
                         .font(.system(size: 16))
@@ -153,25 +143,11 @@ public struct SettingsView: View {
             .alert("Are you sure you want to reset all your progress?", isPresented: $showingResetAlert) {
                 Button("No", role: .cancel) { }
                 Button("Yes, Reset", role: .destructive) {
-                    resetProgress()
+                    viewModel.resetProgress()
                 }
             } message: {
                 Text("This action cannot be undone.")
             }
-        }
-        .onAppear {
-            self.isDailyReminderEnabled = composer.settingsVM.isDailyReminderEnabled
-            self.isHapticEnabled = composer.settingsVM.isHapticEnabled
-            self.isSoundEnabled = composer.settingsVM.isSoundEnabled
-        }
-        .onReceive(composer.settingsVM.$isDailyReminderEnabled) { enabled in
-            self.isDailyReminderEnabled = enabled
-        }
-        .onReceive(composer.settingsVM.$isHapticEnabled) { enabled in
-            self.isHapticEnabled = enabled
-        }
-        .onReceive(composer.settingsVM.$isSoundEnabled) { enabled in
-            self.isSoundEnabled = enabled
         }
     }
     
@@ -229,19 +205,6 @@ public struct SettingsView: View {
         }
         .listRowBackground(AppColors.surface)
         .hoverEffect(.highlight)
-    }
-    
-    private func resetProgress() {
-        composer.container.progressAdapter.update { progress in
-            progress.completedPuzzleIDs.removeAll()
-            progress.passedExamIDs.removeAll()
-            progress.examFailureTimes.removeAll()
-            progress.highestPuzzleStreak = 0
-            progress.highestPuzzleStorm = 0
-            progress.activePuzzleStreak = 0
-            progress.onboardingComplete = false
-        }
-        composer.container.beginnerProgressStore.clearProgress()
     }
 }
 

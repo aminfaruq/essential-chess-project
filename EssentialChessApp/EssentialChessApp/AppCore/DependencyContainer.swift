@@ -11,6 +11,7 @@ import EssentialChessUI
 import Combine
 
 /// Holds all pure infrastructure adapters, loaders, and stores.
+@MainActor
 public final class DependencyContainer: ObservableObject {
     public let progressAdapter: ProgressAdapter
     public let themeAdapter: ThemeAdapter
@@ -25,44 +26,69 @@ public final class DependencyContainer: ObservableObject {
     public let mixPoolLoader: FileMixPoolLoader?
     public let beginnerCurriculumLoader: FileCurriculumLoader?
     public let beginnerProgressStore: UserDefaultsBeginnerProgressStore
+    public let beginnerProgressAdapter: BeginnerProgressAdapter
     
     public let languageAdapter: LanguageAdapter
     
-    public init() {
-        let themeStore = UserDefaultsThemeStore()
+    public convenience init() {
+        self.init(
+            themeStore: UserDefaultsThemeStore(),
+            progressStore: UbiquitousProgressStore(),
+            beginnerProgressStore: UserDefaultsBeginnerProgressStore(),
+            notificationStorage: UserDefaultsNotificationStore(),
+            notificationScheduler: UserNotificationsAdapter(),
+            boardSettingsStorage: UserDefaultsBoardSettingsStore(),
+            languageStore: UserDefaultsLanguageStore(),
+            reader: LocalFileReader(),
+            curriculumURL: Bundle.main.url(forResource: "curriculum_final_v2", withExtension: "json"),
+            mixPoolURL: Bundle.main.url(forResource: "healthy_mix_pool", withExtension: "json"),
+            beginnerCurriculumURL: Bundle.main.url(forResource: "beginner_curriculum", withExtension: "json")
+        )
+    }
+
+    public init(
+        themeStore: ThemeLoader,
+        progressStore: ProgressLoader,
+        beginnerProgressStore: UserDefaultsBeginnerProgressStore,
+        notificationStorage: NotificationStore,
+        notificationScheduler: NotificationSchedulerLoader,
+        boardSettingsStorage: BoardSettingsStore,
+        languageStore: LanguageStore,
+        reader: FileReaderLoader,
+        curriculumURL: URL?,
+        mixPoolURL: URL?,
+        beginnerCurriculumURL: URL?
+    ) {
         self.themeAdapter = ThemeAdapter(store: themeStore)
         
-        let progressStore = UbiquitousProgressStore()
         self.progressAdapter = ProgressAdapter(store: progressStore)
         
-        self.beginnerProgressStore = UserDefaultsBeginnerProgressStore()
+        self.beginnerProgressStore = beginnerProgressStore
+        self.beginnerProgressAdapter = BeginnerProgressAdapter(store: beginnerProgressStore)
         
-        self.notificationStorage = UserDefaultsNotificationStore()
-        self.notificationScheduler = UserNotificationsAdapter()
-        self.boardSettingsStorage = UserDefaultsBoardSettingsStore()
+        self.notificationStorage = notificationStorage
+        self.notificationScheduler = notificationScheduler
+        self.boardSettingsStorage = boardSettingsStorage
         
-        let reader = LocalFileReader()
-        
-        if let currUrl = Bundle.main.url(forResource: "curriculum_final_v2", withExtension: "json") {
+        if let currUrl = curriculumURL {
             self.curriculumLoader = FileCurriculumLoader(url: currUrl, reader: reader)
         } else {
             self.curriculumLoader = nil
         }
         
-        if let mixUrl = Bundle.main.url(forResource: "healthy_mix_pool", withExtension: "json") {
+        if let mixUrl = mixPoolURL {
             self.mixPoolLoader = FileMixPoolLoader(url: mixUrl, reader: reader)
         } else {
             self.mixPoolLoader = nil
         }
         
-        if let begUrl = Bundle.main.url(forResource: "beginner_curriculum", withExtension: "json") {
+        if let begUrl = beginnerCurriculumURL {
             self.beginnerCurriculumLoader = FileCurriculumLoader(url: begUrl, reader: reader)
         } else {
             self.beginnerCurriculumLoader = nil
         }
         
-        let languageStorage = UserDefaultsLanguageStore()
-        self.languageAdapter = LanguageAdapter(store: languageStorage)
+        self.languageAdapter = LanguageAdapter(store: languageStore)
         
         setupUbiquitousSync()
     }
