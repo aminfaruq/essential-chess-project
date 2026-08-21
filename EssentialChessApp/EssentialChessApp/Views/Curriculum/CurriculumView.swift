@@ -10,60 +10,59 @@ import EssentialChessUI
 
 public struct CurriculumView: View {
     @EnvironmentObject var curriculumVM: CurriculumViewModel
-    //@EnvironmentObject var beginnerVM: BeginnerCurriculumViewModel
     
     @Binding var scrollToTopTrigger: Int
+    private let onSelectSection: ((SectionUIModel) -> Void)?
     
-    public init(scrollToTopTrigger: Binding<Int> = .constant(0)) {
+    public init(
+        scrollToTopTrigger: Binding<Int> = .constant(0),
+        onSelectSection: ((SectionUIModel) -> Void)? = nil
+    ) {
         self._scrollToTopTrigger = scrollToTopTrigger
+        self.onSelectSection = onSelectSection
     }
     
     public var body: some View {
-        NavigationStack {
-            ZStack {
-                AppColors.background.ignoresSafeArea()
-                
-                ScrollViewReader { proxy in
-                    ScrollView {
-                        VStack(spacing: 12) {
-                            /*ForEach(beginnerVM.sections) { sectionModel in
-                                SectionCard(model: sectionModel)
-                            }*/
-                            
-                            ForEach(curriculumVM.sections) { sectionModel in
-                                SectionCard(model: sectionModel)
-                            }
-                        }
-                        .id("top")
-                        .padding(.horizontal, 20)
-                        .padding(.top, 8)
-                        .padding(.bottom, 32)
-                    }
-                    .onChange(of: scrollToTopTrigger) { _, _ in
-                        withAnimation {
-                            proxy.scrollTo("top", anchor: .top)
+        ZStack {
+            AppColors.background.ignoresSafeArea()
+            
+            ScrollViewReader { proxy in
+                ScrollView {
+                    VStack(spacing: 12) {
+                        ForEach(curriculumVM.sections) { sectionModel in
+                            SectionCard(
+                                model: sectionModel,
+                                onSelect: { section in
+                                    onSelectSection?(section)
+                                }
+                            )
                         }
                     }
+                    .id("top")
+                    .padding(.horizontal, 20)
+                    .padding(.top, 8)
+                    .padding(.bottom, 32)
                 }
-            }
-            .navigationTitle("Chess Academy")
-            .navigationBarTitleDisplayMode(.large)
-            .toolbarBackground(AppColors.background, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    StreakView()
+                .onChange(of: scrollToTopTrigger) { _, _ in
+                    withAnimation {
+                        proxy.scrollTo("top", anchor: .top)
+                    }
                 }
             }
         }
-        
+        .navigationTitle("Chess Academy")
+        .navigationBarTitleDisplayMode(.large)
+        .toolbarBackground(AppColors.background, for: .navigationBar)
+        .toolbarColorScheme(.dark, for: .navigationBar)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                StreakView()
+            }
+        }
         .onAppear {
             if curriculumVM.sections.isEmpty {
                 curriculumVM.load()
             }
-            /*if beginnerVM.sections.isEmpty {
-                beginnerVM.load()
-            }*/
         }
         .alert("Failed to Load Curriculum", isPresented: isShowingError) {
             Button("Retry") {
@@ -89,8 +88,8 @@ public struct CurriculumView: View {
 
 private struct SectionCard: View {
     let model: SectionUIModel
+    let onSelect: (SectionUIModel) -> Void
     
-    @State private var navigateToDetail = false
     @State private var showLockedAlert = false
     
     var body: some View {
@@ -98,7 +97,7 @@ private struct SectionCard: View {
             if !model.isUnlocked {
                 showLockedAlert = true
             } else {
-                navigateToDetail = true
+                onSelect(model)
             }
         } label: {
             VStack(alignment: .leading, spacing: 16) {
@@ -166,9 +165,6 @@ private struct SectionCard: View {
             .shadow(color: Color.black.opacity(0.2), radius: 8, x: 0, y: 4)
         }
         .buttonStyle(.plain)
-        .navigationDestination(isPresented: $navigateToDetail) {
-            SectionDetailView(model: model)
-        }
         .alert("Section Locked", isPresented: $showLockedAlert) {
             Button("OK", role: .cancel) { }
         } message: {

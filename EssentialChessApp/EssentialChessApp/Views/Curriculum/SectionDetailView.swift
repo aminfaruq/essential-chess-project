@@ -12,11 +12,21 @@ import EssentialChess
 
 struct SectionDetailView: View {
     let model: SectionUIModel
-    @EnvironmentObject var viewFactory: ViewFactory
-    @EnvironmentObject var container: DependencyContainer
+    private let onSelectTheme: ((SubThemeUIModel) -> Void)?
+    private let onSelectExam: ((CategoryUIModel) -> Void)?
+    
     @State private var expandedCategoryID: String?
     @State private var refreshTrigger = UUID()
-    @State private var selectedTheme: SubThemeUIModel?
+    
+    public init(
+        model: SectionUIModel,
+        onSelectTheme: ((SubThemeUIModel) -> Void)? = nil,
+        onSelectExam: ((CategoryUIModel) -> Void)? = nil
+    ) {
+        self.model = model
+        self.onSelectTheme = onSelectTheme
+        self.onSelectExam = onSelectExam
+    }
     
     private var nonExamCategories: [CategoryUIModel] { model.categories.filter { !$0.isExamMode } }
     private var examCategory: CategoryUIModel? { model.categories.first { $0.isExamMode } }
@@ -40,15 +50,20 @@ struct SectionDetailView: View {
                                 }
                             },
                             onSelectTheme: { theme in
-                                selectedTheme = theme
+                                onSelectTheme?(theme)
                             },
                             refreshTrigger: refreshTrigger
                         )
                     }
                     
                     if let exam = examCategory {
-                        ExamCard(category: exam)
-                            .padding(.top, 8)
+                        ExamCard(
+                            category: exam,
+                            onSelect: { examCategory in
+                                onSelectExam?(examCategory)
+                            }
+                        )
+                        .padding(.top, 8)
                     }
                 }
                 .padding(.horizontal, 20)
@@ -63,21 +78,6 @@ struct SectionDetailView: View {
         .toolbar(.hidden, for: .tabBar)
         .onAppear {
             refreshTrigger = UUID()
-        }
-        .navigationDestination(item: $selectedTheme) { theme in
-            if theme.isBeginnerMode {
-                let completed = container.beginnerProgressStore.currentProgress.completedPuzzleIDs
-                let initialIndex = theme.puzzles.firstIndex(where: { !completed.contains($0.id) }) ?? 0
-                
-                LearnPiecesPuzzleSessionView(
-                    themeId: theme.id,
-                    title: theme.title,
-                    puzzles: theme.puzzles,
-                    initialIndex: initialIndex
-                )
-            } else {
-                viewFactory.makePuzzleSessionView(title: theme.title, puzzles: theme.puzzles)
-            }
         }
     }
 }
@@ -167,10 +167,8 @@ private struct CategoryCard: View {
 }
 
 private struct ExamCard: View {
-    @EnvironmentObject var viewFactory: ViewFactory
-    @State private var showExam = false
-    
     let category: CategoryUIModel
+    let onSelect: (CategoryUIModel) -> Void
     
     private var isPassed: Bool {
         if case .passed = category.examState { return true }; return false
@@ -187,7 +185,7 @@ private struct ExamCard: View {
     var body: some View {
         Button {
             if isUnlocked && !isPassed && !onCooldown {
-                showExam = true
+                onSelect(category)
             }
         } label: {
             VStack(alignment: .leading, spacing: 10) {
@@ -236,12 +234,6 @@ private struct ExamCard: View {
         .disabled(!isUnlocked || isPassed)
         .buttonStyle(.plain)
         .hoverEffect(.highlight)
-        .fullScreenCover(isPresented: $showExam) {
-            // Point to the Composer factory to assemble the Exam screen
-            // Make sure you create this function in AppComposer later
-            // composer.makeExamSessionView(for: category.id, title: category.title)
-            viewFactory.makeExamSessionView(for: category.id, title: category.title)
-        }
     }
     
     private var subtitleText: String {
