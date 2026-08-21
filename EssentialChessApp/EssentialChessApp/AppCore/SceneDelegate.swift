@@ -15,19 +15,33 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-    private let composer = AppComposer()
+    private(set) lazy var composer = AppComposer()
+    
+    convenience init(composer: AppComposer) {
+        self.init()
+        self.composer = composer
+    }
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        let window = UIWindow(windowScene: windowScene)
         
+        #if DEBUG
+        if NSClassFromString("XCTestCase") != nil {
+            return
+        }
+        #endif
+        
+        let window = UIWindow(windowScene: windowScene)
+        configureWindow(window)
+        self.window = window
+        window.makeKeyAndVisible()
+    }
+    
+    func configureWindow(_ window: UIWindow) {
         let rootViewController = UIHostingController(
             rootView: AppRootView(composer: composer)
         )
-        
         window.rootViewController = rootViewController
-        self.window = window
-        window.makeKeyAndVisible()
     }
 }
 
