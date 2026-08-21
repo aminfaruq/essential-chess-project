@@ -8,7 +8,7 @@ import EssentialChess
 import EssentialChessUI
 
 public struct PuzzleDashboardView: View {
-    @EnvironmentObject var composer: AppComposer
+    @EnvironmentObject var container: DependencyContainer
     @State private var progress: UserProgress?
     
     private let onSelectMix: (() -> Void)?
@@ -46,10 +46,10 @@ public struct PuzzleDashboardView: View {
         .toolbarColorScheme(.dark, for: .navigationBar)
         .onAppear {
             if progress == nil {
-                progress = composer.container.progressAdapter.currentProgress
+                progress = container.progressAdapter.currentProgress
             }
         }
-        .onReceive(composer.container.progressAdapter.publisher()) { newProgress in
+        .onReceive(container.progressAdapter.publisher()) { newProgress in
             self.progress = newProgress
         }
     }

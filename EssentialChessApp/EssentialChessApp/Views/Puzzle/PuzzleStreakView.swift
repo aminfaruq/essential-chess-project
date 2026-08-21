@@ -9,17 +9,19 @@ import EssentialChess
 import EssentialChessUI
 
 public struct PuzzleStreakView: View {
-    @EnvironmentObject var composer: AppComposer
+    @EnvironmentObject var viewFactory: ViewFactory
     @State private var viewModel: PuzzleStreakViewModel?
     
-    public init() {}
+    public init(viewModel: PuzzleStreakViewModel? = nil) {
+        self._viewModel = State(initialValue: viewModel)
+    }
     
     public var body: some View {
         ZStack {
             AppColors.background.ignoresSafeArea()
             
             if let vm = viewModel {
-                PuzzleStreakContainerView(vm: vm)
+                PuzzleStreakActiveView(vm: vm)
             } else {
                 VStack(spacing: 16) {
                     ProgressView()
@@ -36,7 +38,7 @@ public struct PuzzleStreakView: View {
         .toolbar(.hidden, for: .tabBar)
         .onAppear {
             if viewModel == nil {
-                composer.viewFactory.fetchPuzzleStreakViewModel { fetchedVM in
+                viewFactory.fetchPuzzleStreakViewModel { fetchedVM in
                     self.viewModel = fetchedVM
                 }
             }
@@ -46,19 +48,10 @@ public struct PuzzleStreakView: View {
 
 // MARK: - Subviews
 
-private struct PuzzleStreakContainerView: View {
-    @ObservedObject var vm: PuzzleStreakViewModel
-    @EnvironmentObject var container: DependencyContainer
-    
-    var body: some View {
-        PuzzleStreakActiveView(vm: vm)
-    }
-}
-
 private struct PuzzleStreakActiveView: View {
     @ObservedObject var vm: PuzzleStreakViewModel
     @EnvironmentObject var themeAdapter: ThemeAdapter
-    @EnvironmentObject var composer: AppComposer
+    @EnvironmentObject var settingsVM: SettingsViewModel
     @StateObject private var boardController = ChessBoardController()
     
     var body: some View {
@@ -150,8 +143,8 @@ private struct PuzzleStreakActiveView: View {
                 opacity: themeAdapter.currentTheme.boardTheme.darkSquareColor.alpha
             ),
             pieceTheme: themeAdapter.currentTheme.pieceTheme,
-            isHapticEnabled: composer.settingsVM.isHapticEnabled,
-            isSoundEnabled: composer.settingsVM.isSoundEnabled
+            isHapticEnabled: settingsVM.isHapticEnabled,
+            isSoundEnabled: settingsVM.isSoundEnabled
         )
         .equatable()
         .aspectRatio(1, contentMode: .fit)

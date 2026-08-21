@@ -11,17 +11,19 @@ import EssentialChess
 import EssentialChessUI
 
 public struct PuzzleMixView: View {
-    @EnvironmentObject var composer: AppComposer
+    @EnvironmentObject var viewFactory: ViewFactory
     @State private var viewModel: PuzzleMixViewModel?
     
-    public init() {}
+    public init(viewModel: PuzzleMixViewModel? = nil) {
+        self._viewModel = State(initialValue: viewModel)
+    }
     
     public var body: some View {
         ZStack {
             AppColors.background.ignoresSafeArea()
             
             if let vm = viewModel {
-                PuzzleMixContainerView(vm: vm)
+                PuzzleMixActiveView(vm: vm)
             } else {
                 VStack(spacing: 16) {
                     ProgressView()
@@ -38,7 +40,7 @@ public struct PuzzleMixView: View {
         .toolbar(.hidden, for: .tabBar)
         .onAppear {
             if viewModel == nil {
-                composer.viewFactory.fetchPuzzleMixViewModel { fetchedVM in
+                viewFactory.fetchPuzzleMixViewModel { fetchedVM in
                     self.viewModel = fetchedVM
                 }
             }
@@ -48,19 +50,10 @@ public struct PuzzleMixView: View {
 
 // MARK: - Subviews
 
-private struct PuzzleMixContainerView: View {
-    @ObservedObject var vm: PuzzleMixViewModel
-    @EnvironmentObject var container: DependencyContainer
-    
-    var body: some View {
-        PuzzleMixActiveView(vm: vm)
-    }
-}
-
 private struct PuzzleMixActiveView: View {
     @ObservedObject var vm: PuzzleMixViewModel
     @EnvironmentObject var themeAdapter: ThemeAdapter
-    @EnvironmentObject var composer: AppComposer
+    @EnvironmentObject var settingsVM: SettingsViewModel
     @StateObject private var boardController = ChessBoardController()
     
     @State private var showHintWarning: Bool = false
@@ -197,8 +190,8 @@ private struct PuzzleMixActiveView: View {
                 opacity: themeAdapter.currentTheme.boardTheme.darkSquareColor.alpha
             ),
             pieceTheme: themeAdapter.currentTheme.pieceTheme,
-            isHapticEnabled: composer.settingsVM.isHapticEnabled,
-            isSoundEnabled: composer.settingsVM.isSoundEnabled
+            isHapticEnabled: settingsVM.isHapticEnabled,
+            isSoundEnabled: settingsVM.isSoundEnabled
         )
         .equatable()
         //.padding(.horizontal, 16)
