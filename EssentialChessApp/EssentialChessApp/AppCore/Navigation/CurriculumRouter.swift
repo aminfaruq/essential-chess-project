@@ -7,6 +7,7 @@
 
 import SwiftUI
 import EssentialChessUI
+import Combine
 
 @MainActor
 public final class CurriculumRouter: ObservableObject {
