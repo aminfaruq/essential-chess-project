@@ -16,19 +16,26 @@ public final class SettingsViewModel: ObservableObject {
     private var notificationStorage: NotificationStore
     private let notificationScheduler: NotificationSchedulerLoader
     private var boardSettingsStorage: BoardSettingsStore
+    private let onResetProgress: (() -> Void)?
     
     public init(
         notificationStorage: NotificationStore,
         notificationScheduler: NotificationSchedulerLoader,
-        boardSettingsStorage: BoardSettingsStore
+        boardSettingsStorage: BoardSettingsStore,
+        onResetProgress: (() -> Void)? = nil
     ) {
         self.notificationStorage = notificationStorage
         self.notificationScheduler = notificationScheduler
         self.boardSettingsStorage = boardSettingsStorage
+        self.onResetProgress = onResetProgress
         
         self.isDailyReminderEnabled = notificationStorage.isDailyReminderEnabled
         self.isHapticEnabled = boardSettingsStorage.isHapticEnabled
         self.isSoundEnabled = boardSettingsStorage.isSoundEnabled
+    }
+    
+    public func resetProgress() {
+        onResetProgress?()
     }
     
     public func setDailyReminder(enabled: Bool) {

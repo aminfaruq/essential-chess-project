@@ -166,12 +166,26 @@ final class SettingsViewModelTests: XCTestCase {
         XCTAssertTrue(boardStorage.isSoundEnabled)
     }
 
+    // MARK: - resetProgress Tests
+
+    func test_resetProgress_triggersOnResetProgressCallback() {
+        var resetCallCount = 0
+        let (sut, _, _, _) = makeSUT(onResetProgress: {
+            resetCallCount += 1
+        })
+
+        sut.resetProgress()
+
+        XCTAssertEqual(resetCallCount, 1)
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(
         initialReminderState: Bool = false,
         initialHaptic: Bool = true,
-        initialSound: Bool = true
+        initialSound: Bool = true,
+        onResetProgress: (() -> Void)? = nil
     ) -> (sut: SettingsViewModel, storage: NotificationStoragePortSpy, scheduler: NotificationSchedulerSpy, boardStorage: BoardSettingsStoragePortSpy) {
         let storage = NotificationStoragePortSpy()
         storage.isDailyReminderEnabled = initialReminderState
@@ -183,7 +197,8 @@ final class SettingsViewModelTests: XCTestCase {
         let sut = SettingsViewModel(
             notificationStorage: storage,
             notificationScheduler: scheduler,
-            boardSettingsStorage: boardSettingsStorage
+            boardSettingsStorage: boardSettingsStorage,
+            onResetProgress: onResetProgress
         )
 
         trackForMemoryLeaks(sut)
