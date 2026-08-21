@@ -9,6 +9,7 @@ import SwiftUI
 import EssentialChess
 import EssentialChessUI
 
+@MainActor
 public struct CurriculumCoordinatorView: View {
     @StateObject private var router: CurriculumRouter
     @EnvironmentObject var viewFactory: ViewFactory
@@ -17,7 +18,7 @@ public struct CurriculumCoordinatorView: View {
     @Binding var scrollToTopTrigger: Int
     
     public init(
-        router: CurriculumRouter = CurriculumRouter(),
+        router: CurriculumRouter,
         scrollToTopTrigger: Binding<Int> = .constant(0)
     ) {
         _router = StateObject(wrappedValue: router)

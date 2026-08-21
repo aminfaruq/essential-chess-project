@@ -6,11 +6,12 @@
 //
 
 import SwiftUI
+import Combine
 
 public struct PuzzleCoordinatorView: View {
     @StateObject private var router: PuzzleRouter
     
-    public init(router: PuzzleRouter = PuzzleRouter()) {
+    public init(router: PuzzleRouter) {
         _router = StateObject(wrappedValue: router)
     }
     

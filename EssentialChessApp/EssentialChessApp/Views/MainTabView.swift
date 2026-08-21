@@ -9,6 +9,7 @@ import SwiftUI
 import EssentialChess
 import EssentialChessUI
 
+@MainActor
 public struct MainTabView: View {
     @ObservedObject var navigationViewModel: TabNavigationViewModel
     @State private var curriculumScrollToTopTrigger: Int = 0
@@ -27,13 +28,16 @@ public struct MainTabView: View {
                 navigationViewModel.selectedTab = newTab
             }
         )) {
-            CurriculumCoordinatorView(scrollToTopTrigger: $curriculumScrollToTopTrigger)
+            CurriculumCoordinatorView(
+                router: CurriculumRouter(),
+                scrollToTopTrigger: $curriculumScrollToTopTrigger
+            )
                 .tabItem {
                     Label("Curriculum", systemImage: "book.fill")
                 }
                 .tag(AppTab.curriculum)
             
-            PuzzleCoordinatorView()
+            PuzzleCoordinatorView(router: PuzzleRouter())
                 .tabItem {
                     Label("Puzzle", systemImage: "puzzlepiece.extension.fill")
                 }
