@@ -6,7 +6,7 @@ import ChessBoard
 public struct LearnPiecesPuzzleSessionView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var themeAdapter: ThemeAdapter
-    @EnvironmentObject var composer: AppComposer
+    @EnvironmentObject var settingsVM: SettingsViewModel
     @EnvironmentObject var container: DependencyContainer
     
     let themeId: String?
@@ -156,8 +156,8 @@ public struct LearnPiecesPuzzleSessionView: View {
                 opacity: themeAdapter.currentTheme.boardTheme.darkSquareColor.alpha
             ),
             pieceTheme: themeAdapter.currentTheme.pieceTheme,
-            isHapticEnabled: composer.settingsVM.isHapticEnabled,
-            isSoundEnabled: composer.settingsVM.isSoundEnabled
+            isHapticEnabled: settingsVM.isHapticEnabled,
+            isSoundEnabled: settingsVM.isSoundEnabled
         )
         .equatable()
         .aspectRatio(1, contentMode: .fit)

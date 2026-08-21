@@ -13,7 +13,7 @@ public struct PlacementTestView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var viewModel: OnboardingViewModel
     @EnvironmentObject var themeAdapter: ThemeAdapter
-    @EnvironmentObject var composer: AppComposer
+    @EnvironmentObject var settingsVM: SettingsViewModel
 
     @StateObject private var boardController = ChessBoardController()
     
@@ -60,8 +60,8 @@ public struct PlacementTestView: View {
                             opacity: themeAdapter.currentTheme.boardTheme.darkSquareColor.alpha
                         ),
                         pieceTheme: themeAdapter.currentTheme.pieceTheme,
-                        isHapticEnabled: composer.settingsVM.isHapticEnabled,
-                        isSoundEnabled: composer.settingsVM.isSoundEnabled
+                        isHapticEnabled: settingsVM.isHapticEnabled,
+                        isSoundEnabled: settingsVM.isSoundEnabled
                     )
                     .equatable()
                     //.padding(.horizontal, 16)

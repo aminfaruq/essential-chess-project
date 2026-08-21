@@ -12,7 +12,7 @@ import EssentialChessUI
 public struct PuzzleSessionView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var themeAdapter: ThemeAdapter
-    @EnvironmentObject var composer: AppComposer
+    @EnvironmentObject var settingsVM: SettingsViewModel
 
     @StateObject private var boardVM: PuzzleBoardViewModel
     @StateObject private var boardController = ChessBoardController()
@@ -108,8 +108,8 @@ public struct PuzzleSessionView: View {
                 opacity: themeAdapter.currentTheme.boardTheme.darkSquareColor.alpha
             ),
             pieceTheme: themeAdapter.currentTheme.pieceTheme,
-            isHapticEnabled: composer.settingsVM.isHapticEnabled,
-            isSoundEnabled: composer.settingsVM.isSoundEnabled
+            isHapticEnabled: settingsVM.isHapticEnabled,
+            isSoundEnabled: settingsVM.isSoundEnabled
         )
         .equatable()
         //.padding(.horizontal, 16)
