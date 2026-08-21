@@ -11,36 +11,46 @@ public struct PuzzleDashboardView: View {
     @EnvironmentObject var composer: AppComposer
     @State private var progress: UserProgress?
     
-    public init() {}
+    private let onSelectMix: (() -> Void)?
+    private let onSelectStreak: (() -> Void)?
+    private let onSelectStorm: (() -> Void)?
+    
+    public init(
+        onSelectMix: (() -> Void)? = nil,
+        onSelectStreak: (() -> Void)? = nil,
+        onSelectStorm: (() -> Void)? = nil
+    ) {
+        self.onSelectMix = onSelectMix
+        self.onSelectStreak = onSelectStreak
+        self.onSelectStorm = onSelectStorm
+    }
     
     public var body: some View {
-        NavigationStack {
-            ZStack {
-                AppColors.background.ignoresSafeArea()
-                
-                ScrollView {
-                    VStack(spacing: 32) {
-                        // Achievement Section
-                        achievementSection
-                        
-                        // Menu Section
-                        menuSection
-                    }
-                    .padding(.vertical, 24)
+        ZStack {
+            AppColors.background.ignoresSafeArea()
+            
+            ScrollView {
+                VStack(spacing: 32) {
+                    // Achievement Section
+                    achievementSection
+                    
+                    // Menu Section
+                    menuSection
                 }
+                .padding(.vertical, 24)
             }
-            .navigationTitle("Puzzle")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(AppColors.background, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
-            .onAppear {
-                if progress == nil {
-                    progress = composer.container.progressAdapter.currentProgress
-                }
+        }
+        .navigationTitle("Puzzle")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(AppColors.background, for: .navigationBar)
+        .toolbarColorScheme(.dark, for: .navigationBar)
+        .onAppear {
+            if progress == nil {
+                progress = composer.container.progressAdapter.currentProgress
             }
-            .onReceive(composer.container.progressAdapter.publisher()) { newProgress in
-                self.progress = newProgress
-            }
+        }
+        .onReceive(composer.container.progressAdapter.publisher()) { newProgress in
+            self.progress = newProgress
         }
     }
     
@@ -124,7 +134,9 @@ public struct PuzzleDashboardView: View {
                 .padding(.horizontal, 20)
             
             VStack(spacing: 16) {
-                NavigationLink(destination: PuzzleMixView()) {
+                Button {
+                    onSelectMix?()
+                } label: {
                     menuCard(
                         title: "Puzzle Mix",
                         subtitle: "A mix of tactical themes to improve your overall vision.",
@@ -133,8 +145,12 @@ public struct PuzzleDashboardView: View {
                         isNew: false
                     )
                 }
+                .buttonStyle(.plain)
+                .hoverEffect(.highlight)
                 
-                NavigationLink(destination: PuzzleStreakView()) {
+                Button {
+                    onSelectStreak?()
+                } label: {
                     menuCard(
                         title: "Puzzle Streak",
                         subtitle: "Solve as many puzzles as you can without making a mistake.",
@@ -143,8 +159,12 @@ public struct PuzzleDashboardView: View {
                         isNew: false
                     )
                 }
+                .buttonStyle(.plain)
+                .hoverEffect(.highlight)
                 
-                NavigationLink(destination: PuzzleStormView()) {
+                Button {
+                    onSelectStorm?()
+                } label: {
                     menuCard(
                         title: "Puzzle Storm",
                         subtitle: "Race against the clock to solve as many puzzles as possible.",
@@ -153,6 +173,8 @@ public struct PuzzleDashboardView: View {
                         isNew: false
                     )
                 }
+                .buttonStyle(.plain)
+                .hoverEffect(.highlight)
             }
             .padding(.horizontal, 20)
         }
